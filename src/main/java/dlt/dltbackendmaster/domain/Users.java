@@ -47,9 +47,10 @@ public class Users implements java.io.Serializable {
 	private Byte isCredentialsExpired;
 	private Byte isEnabled;
 	private int createdBy;
-	private Date dateCreated;
+	private Date createdAt;
 	private Integer updatedBy;
-	private Date dateUpdated;
+	private Date updatedAt;
+	private String offlineId;
 
 	public Users() {
 	}
@@ -66,7 +67,7 @@ public class Users implements java.io.Serializable {
 		this.password = password;
 		this.status = status;
 		this.createdBy = createdBy;
-		this.dateCreated = dateCreated;
+		this.createdAt = dateCreated;
 	}
 
 	public Users(Locality locality, Partners partner, Profiles profiles, Us us, String surname, String name,
@@ -90,9 +91,9 @@ public class Users implements java.io.Serializable {
 		this.isCredentialsExpired = isCredentialsExpired;
 		this.isEnabled = isEnabled;
 		this.createdBy = createdBy;
-		this.dateCreated = dateCreated;
+		this.createdAt = dateCreated;
 		this.updatedBy = updatedBy;
-		this.dateUpdated = dateUpdated;
+		this.updatedAt = dateUpdated;
 	}
 	
 
@@ -119,9 +120,9 @@ public class Users implements java.io.Serializable {
 		this.isCredentialsExpired = isCredentialsExpired;
 		this.isEnabled = isEnabled;
 		this.createdBy = createdBy;
-		this.dateCreated = dateCreated;
+		this.createdAt = dateCreated;
 		this.updatedBy = updatedBy;
-		this.dateUpdated = dateUpdated;
+		this.updatedAt = dateUpdated;
 	}
 
 	@Id
@@ -301,16 +302,6 @@ public class Users implements java.io.Serializable {
 		this.createdBy = createdBy;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "date_created", nullable = false, length = 19)
-	public Date getDateCreated() {
-		return this.dateCreated;
-	}
-
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
 	@Column(name = "updated_by")
 	public Integer getUpdatedBy() {
 		return this.updatedBy;
@@ -320,14 +311,35 @@ public class Users implements java.io.Serializable {
 		this.updatedBy = updatedBy;
 	}
 
+
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "date_updated", length = 19)
-	public Date getDateUpdated() {
-		return this.dateUpdated;
+	@Column(name = "created_at", nullable = false, length = 19)
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setDateUpdated(Date dateUpdated) {
-		this.dateUpdated = dateUpdated;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "updated_at", nullable = false, length = 19)
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public String getOfflineId() {
+		return offlineId;
+	}
+
+	public void setOfflineId(String offlineId) {
+		this.offlineId = offlineId;
+	}
+	
+	
 
 }
