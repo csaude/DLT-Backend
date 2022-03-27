@@ -1,5 +1,6 @@
 package dlt.dltbackendmaster.service;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -13,11 +14,11 @@ public interface DAOService {
 
 	<T> List<T> getAllQuery(String s);
 
-	<T> T Save(T klass);
+	<T> Serializable Save(T klass);
 
 	<T> void delete(T klass);
 
-	<T> void update(T klass);
+	<T> T update(T klass);
 
 	<T> int updateQuery(String query, Object... params);
 

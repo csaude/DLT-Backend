@@ -31,7 +31,7 @@ public class ProvinceController {
 	
 	@PostMapping("/provinces")
 	public ResponseEntity<Province> addProvince(@RequestBody Province province) {
-		Province prov = service.Save(province);
+		Province prov = (Province) service.Save(province); //FIXME: revew this cast
 		return ResponseEntity.ok().body(prov);
 	}
 	

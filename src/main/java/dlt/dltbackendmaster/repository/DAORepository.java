@@ -1,5 +1,6 @@
 package dlt.dltbackendmaster.repository;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public interface DAORepository {
 
 	<T> List<T> getAllQuery(String s);
 
-	<T> void update(T klass);
+	<T> T update(T klass);
 
 	<T> boolean exist(T klass);
 
@@ -21,7 +22,7 @@ public interface DAORepository {
 
 	<T> int count(Class<T> klass);
 
-	<T> T Save(T klass);
+	<T> Serializable Save(T klass);
 
 	<T> T GetUniqueEntityByNamedQuery(String query, Object... params);
 

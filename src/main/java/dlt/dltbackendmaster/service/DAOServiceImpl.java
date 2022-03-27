@@ -1,5 +1,6 @@
 package dlt.dltbackendmaster.service;
 
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class DAOServiceImpl implements DAOService{
 	}
 
 	@Transactional
-	public <T> T Save(T klass) {
+	public <T> Serializable Save(T klass) {
 		return repository.Save(klass);
 	}
 
@@ -42,8 +43,8 @@ public class DAOServiceImpl implements DAOService{
 	}
 
 	@Transactional
-	public <T> void update(T klass) {
-		repository.update(klass);
+	public <T> T update(T klass) {
+		return repository.update(klass);
 	}
 
 	@Transactional
