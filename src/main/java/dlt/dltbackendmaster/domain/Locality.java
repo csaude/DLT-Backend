@@ -32,9 +32,10 @@ public class Locality implements java.io.Serializable {
 	private String description;
 	private int status;
 	private int createdBy;
-	private Date dateCreated;
+	private Date createdAt;
 	private Integer updatedBy;
-	private Date dateUpdated;
+	private Date updatedAt;
+	private String offlineId;
 	private Set<Neighborhood> neighborhoods = new HashSet<Neighborhood>(0);
 	private Set<Users> userses = new HashSet<Users>(0);
 
@@ -46,7 +47,7 @@ public class Locality implements java.io.Serializable {
 		this.name = name;
 		this.status = status;
 		this.createdBy = createdBy;
-		this.dateCreated = dateCreated;
+		this.createdAt = dateCreated;
 	}
 
 	public Locality(District district, String name, String description, int status, int createdBy, Date dateCreated,
@@ -56,9 +57,9 @@ public class Locality implements java.io.Serializable {
 		this.description = description;
 		this.status = status;
 		this.createdBy = createdBy;
-		this.dateCreated = dateCreated;
+		this.createdAt = dateCreated;
 		this.updatedBy = updatedBy;
-		this.dateUpdated = dateUpdated;
+		this.updatedAt = dateUpdated;
 		this.neighborhoods = neighborhoods;
 		this.userses = userses;
 	}
@@ -122,16 +123,6 @@ public class Locality implements java.io.Serializable {
 		this.createdBy = createdBy;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "date_created", nullable = false, length = 19)
-	public Date getDateCreated() {
-		return this.dateCreated;
-	}
-
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
 	@Column(name = "updated_by")
 	public Integer getUpdatedBy() {
 		return this.updatedBy;
@@ -142,13 +133,13 @@ public class Locality implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "date_updated", length = 19)
-	public Date getDateUpdated() {
-		return this.dateUpdated;
+	@Column(name = "updated_at", length = 19)
+	public Date getUpdatedAt() {
+		return this.updatedAt;
 	}
 
-	public void setDateUpdated(Date dateUpdated) {
-		this.dateUpdated = dateUpdated;
+	public void setUpdatedAt(Date dateUpdated) {
+		this.updatedAt = dateUpdated;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "locality")
@@ -170,4 +161,23 @@ public class Locality implements java.io.Serializable {
 		this.userses = userses;
 	}
 
+	public String getOfflineId() {
+		return offlineId;
+	}
+
+	public void setOfflineId(String offlineId) {
+		this.offlineId = offlineId;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "created_at", nullable = false, length = 19)
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+	
+	
 }

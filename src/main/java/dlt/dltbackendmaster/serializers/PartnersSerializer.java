@@ -17,6 +17,7 @@ public class PartnersSerializer extends JsonSerializer<Partners>{
 		partner.setName(value.getName());
 		partner.setDescription(value.getDescription());
 		partner.setAbbreviation(value.getAbbreviation());
+		partner.setOfflineId(value.getOfflineId());
 		gen.writeObject(partner);
 		
 	}

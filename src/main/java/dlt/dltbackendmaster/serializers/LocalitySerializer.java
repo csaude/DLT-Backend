@@ -17,10 +17,12 @@ public class LocalitySerializer extends JsonSerializer<Locality>{
 		locality.setName(value.getName());
 		locality.setDescription(value.getDescription());
 		locality.setCreatedBy(value.getCreatedBy());
-		locality.setDateCreated(value.getDateCreated());
-		locality.setDateUpdated(value.getDateUpdated());
+		locality.setCreatedAt(value.getCreatedAt());
+		locality.setUpdatedAt(value.getUpdatedAt());
+		locality.setUpdatedBy(value.getUpdatedBy());
 		locality.setDistrict(value.getDistrict());
 		locality.setStatus(value.getStatus());
+		locality.setOfflineId(value.getOfflineId());
 		gen.writeObject(locality);
 		
 		

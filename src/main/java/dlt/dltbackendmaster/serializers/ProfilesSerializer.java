@@ -16,6 +16,7 @@ public class ProfilesSerializer extends JsonSerializer<Profiles> {
 		profiles.setId(value.getId());
 		profiles.setDescription(value.getDescription());
 		profiles.setName(value.getName());
+		profiles.setOfflineId(value.getOfflineId());
 		gen.writeObject(profiles);
 		
 	}

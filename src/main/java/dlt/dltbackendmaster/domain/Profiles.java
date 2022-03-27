@@ -24,6 +24,7 @@ public class Profiles implements java.io.Serializable {
 	private Integer id;
 	private String name;
 	private String description;
+	private String offlineId;
 	private Set<Users> userses = new HashSet<Users>(0);
 
 	public Profiles() {
@@ -79,4 +80,13 @@ public class Profiles implements java.io.Serializable {
 		this.userses = userses;
 	}
 
+	public String getOfflineId() {
+		return offlineId;
+	}
+
+	public void setOfflineId(String offlineId) {
+		this.offlineId = offlineId;
+	}
+	
+	
 }

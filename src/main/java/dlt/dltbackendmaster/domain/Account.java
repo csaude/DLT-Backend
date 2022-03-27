@@ -52,7 +52,7 @@ public class Account extends Users implements Serializable, UserDetails {
 		super(user.getId(), user.getLocality(), user.getPartners(), user.getProfiles(), user.getUs(), user.getSurname(),
 				user.getName(),user.getPhoneNumber(), user.getEmail(), user.getUsername(), user.getPassword(), user.getEntryPoint(), 
 				user.getStatus(),user.getIsLocked(), user.getIsExpired(), user.getIsCredentialsExpired(), user.getIsEnabled(), 
-				user.getCreatedBy(), user.getDateCreated(), user.getUpdatedBy(), user.getDateUpdated());
+				user.getCreatedBy(), user.getCreatedAt(), user.getUpdatedBy(), user.getUpdatedAt());
 		
 		this.isaccountenabled = user.getIsEnabled() == 0 ? false : true;
 		this.isaccountexpired = user.getIsExpired() == 0 ? false : true;
@@ -95,7 +95,7 @@ public class Account extends Users implements Serializable, UserDetails {
 		return new Users(getId(), getLocality(), getPartners(), getProfiles(), getUs(), 
 				getSurname(), getName(), getPhoneNumber(), getEmail(), getUsername(), getPassword(), 
 				getEntryPoint(), getStatus(), getIsLocked(), getIsExpired(), getIsCredentialsExpired(), 
-				getIsEnabled(), getCreatedBy(), getDateCreated(), getUpdatedBy(), getDateUpdated());
+				getIsEnabled(), getCreatedBy(), getCreatedAt(), getUpdatedBy(), getUpdatedAt());
 	}
 
 

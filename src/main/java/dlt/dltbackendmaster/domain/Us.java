@@ -42,9 +42,10 @@ public class Us implements java.io.Serializable {
 	private int localityId;
 	private int status;
 	private int createdBy;
-	private Date dateCreated;
+	private Date createdAt;
 	private Integer updatedBy;
-	private Date dateUpdated;
+	private Date updatedAt;
+	private String offlineId;
 	private Set<Users> userses = new HashSet<Users>(0);
 
 	public Us() {
@@ -57,7 +58,7 @@ public class Us implements java.io.Serializable {
 		this.localityId = localityId;
 		this.status = status;
 		this.createdBy = createdBy;
-		this.dateCreated = dateCreated;
+		this.createdAt = dateCreated;
 	}
 
 	public Us(UsType usType, String code, String name, String description, Float latitude, Float longitude,
@@ -72,9 +73,9 @@ public class Us implements java.io.Serializable {
 		this.localityId = localityId;
 		this.status = status;
 		this.createdBy = createdBy;
-		this.dateCreated = dateCreated;
+		this.createdAt = dateCreated;
 		this.updatedBy = updatedBy;
-		this.dateUpdated = dateUpdated;
+		this.updatedAt = dateUpdated;
 		this.userses = userses;
 	}
 
@@ -175,13 +176,13 @@ public class Us implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "date_created", nullable = false, length = 19)
-	public Date getDateCreated() {
-		return this.dateCreated;
+	@Column(name = "created_at", nullable = false, length = 19)
+	public Date getCreatedAt() {
+		return this.createdAt;
 	}
 
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
+	public void setCreatedAt(Date dateCreated) {
+		this.createdAt = dateCreated;
 	}
 
 	@Column(name = "updated_by")
@@ -194,13 +195,13 @@ public class Us implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "date_updated", length = 19)
-	public Date getDateUpdated() {
-		return this.dateUpdated;
+	@Column(name = "updated_at", length = 19)
+	public Date getUpdatedAt() {
+		return this.updatedAt;
 	}
 
-	public void setDateUpdated(Date dateUpdated) {
-		this.dateUpdated = dateUpdated;
+	public void setUpdatedAt(Date dateUpdated) {
+		this.updatedAt = dateUpdated;
 	}
 
 	@JsonIgnore
@@ -212,5 +213,15 @@ public class Us implements java.io.Serializable {
 	public void setUserses(Set<Users> userses) {
 		this.userses = userses;
 	}
+
+	public String getOfflineId() {
+		return offlineId;
+	}
+
+	public void setOfflineId(String offlineId) {
+		this.offlineId = offlineId;
+	}
+	
+	
 
 }
