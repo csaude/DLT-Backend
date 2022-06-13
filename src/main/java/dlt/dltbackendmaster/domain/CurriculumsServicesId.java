@@ -1,4 +1,4 @@
-package domains;
+package dlt.dltbackendmaster.domain;
 // Generated Jun 13, 2022, 9:37:47 AM by Hibernate Tools 5.2.12.Final
 
 import javax.persistence.Column;

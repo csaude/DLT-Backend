@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import dlt.dltbackendmaster.domain.Partners;
 
+
 public class PartnersSerializer extends JsonSerializer<Partners>{
 
 	@Override

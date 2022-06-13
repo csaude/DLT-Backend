@@ -69,6 +69,7 @@ public class References implements Serializable
 		this.dateUpdated = dateUpdated;
 	}
 	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 
@@ -109,6 +110,7 @@ public class References implements Serializable
     @Column(name = "reference_note")
 	public String getReferenceNote() {
 		return referenceNote;
+
 	}
 
 	public void setReferenceNote(String referenceNote) {
@@ -118,6 +120,7 @@ public class References implements Serializable
     @Column(name = "description")
 	public String getDescription() {
 		return description;
+
 	}
 
 	public void setDescription(String description) {
@@ -127,6 +130,7 @@ public class References implements Serializable
     @Column(name = "book_number")
 	public String getBookNumber() {
 		return bookNumber;
+
 	}
 
 	public void setBookNumber(String bookNumber) {
@@ -136,6 +140,7 @@ public class References implements Serializable
     @Column(name = "reference_code")
 	public String getReferenceCode() {
 		return referenceCode;
+
 	}
 
 	public void setReferenceCode(String referenceCode) {
@@ -145,6 +150,7 @@ public class References implements Serializable
     @Column(name = "service_type")
 	public String getServiceType() {
 		return serviceType;
+
 	}
 
 	public void setServiceType(String serviceType) {
@@ -154,6 +160,7 @@ public class References implements Serializable
     @Column(name = "remarks")
 	public String getRemarks() {
 		return remarks;
+
 	}
 
 	public void setRemarks(String remarks) {
@@ -172,6 +179,7 @@ public class References implements Serializable
     @Column(name = "status")
 	public Integer getStatus() {
 		return status;
+
 	}
 
 	public void setStatus(Integer status) {
@@ -181,6 +189,7 @@ public class References implements Serializable
     @Column(name = "cancel_reason")
 	public Integer getCancelReason() {
 		return cancelReason;
+
 	}
 
 	public void setCancelReason(Integer cancelReason) {
@@ -190,6 +199,7 @@ public class References implements Serializable
     @Column(name = "other_reason")
 	public String getOtherReason() {
 		return otherReason;
+
 	}
 
 	public void setOtherReason(String otherReason) {
@@ -199,6 +209,7 @@ public class References implements Serializable
     @Column(name = "date_created")
 	public Date getDateCreated() {
 		return dateCreated;
+
 	}
 
 	public void setDateCreated(Date dateCreated) {
@@ -240,5 +251,5 @@ public class References implements Serializable
 	public void setCreatedBy(Integer createdBy) {
 		this.createdBy = createdBy;
 	}
-	
+
 }

@@ -1,7 +1,9 @@
 package dlt.dltbackendmaster.domain;
-// Generated Jan 25, 2022, 4:05:43 PM by Hibernate Tools 5.2.12.Final
+// Generated Jun 13, 2022, 9:37:47 AM by Hibernate Tools 5.2.12.Final
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,12 +12,14 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NamedQueries;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -36,9 +40,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
     @NamedQuery(name = "Users.findAll", query = "SELECT c FROM Users c"),
     @NamedQuery(name = "Users.findByUsername", query = "SELECT c FROM Users c where c.username = :username"),
     @NamedQuery(name = "Users.findByDateCreated", query = "select u from Users u where u.dateUpdated is null and u.dateCreated > :lastpulledat"),
-    //@NamedQuery(name = "Users.findByDateUpdated", query = "select u from Users u where u.dateUpdated > :lastpulledat")})
 	@NamedQuery(name = "Users.findByDateUpdated", query = "select u from Users u where (u.dateUpdated >= :lastpulledat) or (u.dateUpdated >= :lastpulledat and u.dateCreated = u.dateUpdated)")})
-
 public class Users implements java.io.Serializable {
 
 	private Integer id;
@@ -63,13 +65,14 @@ public class Users implements java.io.Serializable {
 	private Integer updatedBy;
 	private Date dateUpdated;
 	private String offlineId;
+	private Set<References> referenceses = new HashSet<References>(0);
 
 	public Users() {
 	}
 
-	public Users(Partners partner, Profiles profiles, String surname, String name, String phoneNumber, String email,
+	public Users(Partners partners, Profiles profiles, String surname, String name, String phoneNumber, String email,
 			String username, String password, int status, int createdBy, Date dateCreated) {
-		this.partners = partner;
+		this.partners = partners;
 		this.profiles = profiles;
 		this.surname = surname;
 		this.name = name;
@@ -82,12 +85,12 @@ public class Users implements java.io.Serializable {
 		this.dateCreated = dateCreated;
 	}
 
-	public Users(Locality locality, Partners partner, Profiles profiles, Us us, String surname, String name,
+	public Users(Locality locality, Partners partners, Profiles profiles, Us us, String surname, String name,
 			String phoneNumber, String email, String username, String password, String entryPoint, int status,
 			Byte isLocked, Byte isExpired, Byte isCredentialsExpired, Byte isEnabled, int createdBy, Date dateCreated,
-			Integer updatedBy, Date dateUpdated) {
+			Integer updatedBy, Date dateUpdated, String offlineId, Set<References> referenceses) {
 		this.locality = locality;
-		this.partners = partner;
+		this.partners = partners;
 		this.profiles = profiles;
 		this.us = us;
 		this.surname = surname;
@@ -106,9 +109,10 @@ public class Users implements java.io.Serializable {
 		this.dateCreated = dateCreated;
 		this.updatedBy = updatedBy;
 		this.dateUpdated = dateUpdated;
+		this.offlineId = offlineId;
+		this.referenceses = referenceses;
 	}
 	
-
 	public Users(Integer id, Locality locality, Partners partner, Profiles profiles, Us us, String surname, String name,
 			String phoneNumber, String email, String username, String password, String entryPoint, int status,
 			Byte isLocked, Byte isExpired, Byte isCredentialsExpired, Byte isEnabled, int createdBy, Date dateCreated,
@@ -136,7 +140,7 @@ public class Users implements java.io.Serializable {
 		this.updatedBy = updatedBy;
 		this.dateUpdated = dateUpdated;
 	}
-
+	
 	public Users(UsersSyncModel model, String timestamp) {
 		Long t = Long.valueOf(timestamp);
 		Date regDate = new Date(t);
@@ -195,8 +199,8 @@ public class Users implements java.io.Serializable {
 		return this.partners;
 	}
 
-	public void setPartners(Partners partner) {
-		this.partners = partner;
+	public void setPartners(Partners partners) {
+		this.partners = partners;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -241,7 +245,7 @@ public class Users implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "phone_number", length = 50)
+	@Column(name = "phone_number", nullable = false, length = 50)
 	public String getPhoneNumber() {
 		return this.phoneNumber;
 	}
@@ -250,7 +254,7 @@ public class Users implements java.io.Serializable {
 		this.phoneNumber = phoneNumber;
 	}
 
-	@Column(name = "email", length = 150)
+	@Column(name = "email", nullable = false, length = 150)
 	public String getEmail() {
 		return this.email;
 	}
@@ -369,16 +373,25 @@ public class Users implements java.io.Serializable {
 		this.dateUpdated = dateUpdated;
 	}
 
-	@Column(name = "offline_id", nullable = true, length = 45)
+	@Column(name = "offline_id", length = 45)
 	public String getOfflineId() {
-		return offlineId;
+		return this.offlineId;
 	}
 
 	public void setOfflineId(String offlineId) {
 		this.offlineId = offlineId;
 	}
-	
-	
+
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "users")
+	public Set<References> getReferenceses() {
+		return this.referenceses;
+	}
+
+	public void setReferenceses(Set<References> referenceses) {
+		this.referenceses = referenceses;
+	}
+
 	public ObjectNode toObjectNode(String lastPulledAt) {
 		ObjectMapper mapper = new ObjectMapper();
 		
@@ -428,6 +441,4 @@ public class Users implements java.io.Serializable {
 		this.profiles.setId(model.getProfile_id());
 		this.us.setId(model.getUs_id());
 	}
-	
-	
 }

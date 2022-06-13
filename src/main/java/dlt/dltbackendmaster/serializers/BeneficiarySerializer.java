@@ -6,29 +6,29 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-import dlt.dltbackendmaster.domain.Beneficiary;
+import dlt.dltbackendmaster.domain.Beneficiaries;
 
-public class BeneficiarySerializer extends JsonSerializer<Beneficiary>
+public class BeneficiarySerializer extends JsonSerializer<Beneficiaries>
 {
     @Override
-    public void serialize(Beneficiary value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        Beneficiary beneficiary = new Beneficiary();
+    public void serialize(Beneficiaries value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+        Beneficiaries beneficiary = new Beneficiaries();
         beneficiary.setId(value.getId());
         beneficiary.setNui(value.getNui());
         beneficiary.setSurname(value.getSurname());
         beneficiary.setName(value.getName());
         beneficiary.setNickName(value.getNickName());
-        beneficiary.setOrganization(value.getOrganization());
+      //  beneficiary.setOrganization(value.getOrganization());
         beneficiary.setGender(value.getGender());
         beneficiary.setDateOfBirth(value.getDateOfBirth());
         beneficiary.setAddress(value.getAddress());
-        beneficiary.setEmail(value.getEmail());
+        beneficiary.setEMail(value.getEMail());
         beneficiary.setEntryPoint(value.getEntryPoint());
         beneficiary.setNeighborhood(value.getNeighborhood());
         beneficiary.setPartnerId(value.getPartnerId());
         beneficiary.setPhoneNumber(value.getPhoneNumber());
         beneficiary.setVia(value.getVia());
-        beneficiary.setUsId(value.getUsId());
+       // beneficiary.setUsId(value.getUsId());
         beneficiary.setStatus(value.getStatus());
         beneficiary.setVbltLivesWith(value.getVbltLivesWith());
         beneficiary.setVbltIsOrphan(value.getVbltIsOrphan());
@@ -51,7 +51,7 @@ public class BeneficiarySerializer extends JsonSerializer<Beneficiary>
         beneficiary.setVbltSexualExploitation(value.getVbltSexualExploitation());
         beneficiary.setVbltSexploitationTime(value.getVbltSexploitationTime());
         beneficiary.setVbltVbgVictim(value.getVbltVbgVictim());
-        beneficiary.setVbltVgbType(value.getVbltVgbType());
+        beneficiary.setVbltVbgType(value.getVbltVbgType());
         beneficiary.setVbltVbgTime(value.getVbltVbgTime());
         beneficiary.setVbltStiHistory(value.getVbltStiHistory());
         beneficiary.setVbltSexWorker(value.getVbltSexWorker());

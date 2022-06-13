@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dlt.dltbackendmaster.domain.BeneficiaryIntervention;
-import dlt.dltbackendmaster.domain.SubService;
+import dlt.dltbackendmaster.domain.BeneficiariesInterventions;
+import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.service.DAOService;
 
 @RestController
@@ -27,10 +27,10 @@ public class BeneficiaryInterventionController
     }
 
     @GetMapping(produces = "application/json")
-    public ResponseEntity<List<BeneficiaryIntervention>> getAll() {
+    public ResponseEntity<List<BeneficiariesInterventions>> getAll() {
 
         try {
-            List<BeneficiaryIntervention> interventions = service.getAll(BeneficiaryIntervention.class);
+            List<BeneficiariesInterventions> interventions = service.getAll(BeneficiariesInterventions.class);
             return new ResponseEntity<>(interventions, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -38,35 +38,42 @@ public class BeneficiaryInterventionController
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<BeneficiaryIntervention> save(@RequestBody BeneficiaryIntervention intervention) {
+    public ResponseEntity<BeneficiariesInterventions> save(@RequestBody BeneficiariesInterventions intervention) {
 
-        if (intervention == null || intervention.getBeneficiary() == null || intervention.getSubService() == null
-            || intervention.getUs_id() == null) {
+        if (intervention == null || intervention.getBeneficiaries() == null || intervention.getSubServices() == null
+            || intervention.getUs() == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
         try {
-            intervention.setDateCreated(new Date());
+            /*intervention.setDateCreated(new Date());
             BeneficiaryIntervention createdIntervention = (BeneficiaryIntervention) service.Save(intervention);
             SubService subService = service.find(SubService.class, intervention.getSubService().getId());
-            createdIntervention.setSubService(subService);
-            return new ResponseEntity<>(createdIntervention, HttpStatus.OK);
+            createdIntervention.setSubService(subService);*/
+            return new ResponseEntity<>(/*createdIntervention*/null, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<BeneficiaryIntervention> update(@RequestBody BeneficiaryIntervention intervention) {
+    public ResponseEntity<BeneficiariesInterventions> update(@RequestBody BeneficiariesInterventions intervention) {
 
-        if (intervention == null || intervention.getBeneficiary() == null || intervention.getSubService() == null
-            || intervention.getUs_id() == null) {
+        if (intervention == null || intervention.getBeneficiaries() == null || intervention.getSubServices() == null
+            || intervention.getUs() == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
         try {
+        	if(service.exist(intervention)) {
+        		System.out.println("Entity exists");
+        	} else {
+        		System.out.println("Entity doenst exists");
+        	}
+        	
+        	
             intervention.setDateUpdated(new Date());
-            BeneficiaryIntervention updatedIntervention = service.update(intervention);
+            BeneficiariesInterventions updatedIntervention = service.update(intervention);
             return new ResponseEntity<>(updatedIntervention, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

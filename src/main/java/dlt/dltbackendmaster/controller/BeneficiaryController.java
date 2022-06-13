@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dlt.dltbackendmaster.domain.Beneficiary;
+import dlt.dltbackendmaster.domain.Beneficiaries;
 import dlt.dltbackendmaster.domain.Neighborhood;
 import dlt.dltbackendmaster.domain.Partners;
 import dlt.dltbackendmaster.domain.Users;
@@ -31,26 +31,28 @@ public class BeneficiaryController
     }
 
     @GetMapping(produces = "application/json")
-    public ResponseEntity<List<Beneficiary>> getAll() {
+    public ResponseEntity<List<Beneficiaries>> getAll() {
 
         try {
-            List<Beneficiary> beneficiaries = service.getAll(Beneficiary.class);
-            return new ResponseEntity<>(beneficiaries, HttpStatus.OK);
+            List<Beneficiaries> beneficiaries = service.getAll(Beneficiaries.class);
+            return new ResponseEntity<List<Beneficiaries>>(beneficiaries, HttpStatus.OK);
         } catch (Exception e) {
-        	e.printStackTrace();
+        	//e.printStackTrace();
+        	
+        	System.out.println(e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping(path = "/{id}", produces = "application/json")
-    public ResponseEntity<Beneficiary> get(@PathVariable Integer id) {
+    public ResponseEntity<Beneficiaries> get(@PathVariable Integer id) {
 
         if (id == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
         try {
-            Beneficiary beneficiary = service.find(Beneficiary.class, id);
+        	Beneficiaries beneficiary = service.find(Beneficiaries.class, id);
             return new ResponseEntity<>(beneficiary, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -58,7 +60,7 @@ public class BeneficiaryController
     }
     
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<Beneficiary> save(@RequestBody BeneficiarySyncModel beneficiaryParam) {
+    public ResponseEntity<Beneficiaries> save(@RequestBody BeneficiarySyncModel beneficiaryParam) {
     	//System.out.println(beneficiary);
     	
     	/*Random rnd = new Random();

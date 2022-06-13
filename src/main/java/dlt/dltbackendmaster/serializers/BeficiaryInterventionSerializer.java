@@ -6,24 +6,24 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-import dlt.dltbackendmaster.domain.BeneficiaryIntervention;
+import dlt.dltbackendmaster.domain.BeneficiariesInterventions;
 
-public class BeficiaryInterventionSerializer extends JsonSerializer<BeneficiaryIntervention>
+public class BeficiaryInterventionSerializer extends JsonSerializer<BeneficiariesInterventions>
 {
 
     @Override
-    public void serialize(BeneficiaryIntervention value, JsonGenerator gen, SerializerProvider serializers)
+    public void serialize(BeneficiariesInterventions value, JsonGenerator gen, SerializerProvider serializers)
                     throws IOException {
-        BeneficiaryIntervention intervention = new BeneficiaryIntervention();
-        intervention.setBeneficiary(value.getBeneficiary());
-        intervention.setSubService(value.getSubService());
-        intervention.setDate(value.getDate());
+    	BeneficiariesInterventions intervention = new BeneficiariesInterventions();
+        intervention.setBeneficiaries(value.getBeneficiaries());
+        intervention.setSubServices(value.getSubServices());
+        //intervention.setDate(value.getId().getDate());
         intervention.setEntryPoint(value.getEntryPoint());
         intervention.setResult(value.getResult());
         intervention.setProvider(value.getProvider());
         intervention.setActivistId(value.getActivistId());
         intervention.setRemarks(value.getRemarks());
-        intervention.setUs_id(value.getUs_id());
+    //    intervention.setUs_id(String.valueOf(value.getUs().getId()));
         intervention.setStatus(value.getStatus());
         intervention.setCreatedBy(value.getCreatedBy());
         intervention.setDateCreated(value.getDateCreated());

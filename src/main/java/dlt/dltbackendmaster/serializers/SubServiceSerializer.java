@@ -6,19 +6,19 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-import dlt.dltbackendmaster.domain.SubService;
+import dlt.dltbackendmaster.domain.SubServices;
 
-public class SubServiceSerializer extends JsonSerializer<SubService>
+public class SubServiceSerializer extends JsonSerializer<SubServices>
 {
     @Override
-    public void serialize(SubService value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        SubService subService = new SubService();
+    public void serialize(SubServices value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+        SubServices subService = new SubServices();
         subService.setId(value.getId());
-        subService.setService(value.getService());
+        subService.setServices(value.getServices());
         subService.setName(value.getName());
         subService.setRemarks(value.getRemarks());
-        subService.setIsHidden(value.getIsHidden());
-        subService.setIsManandatory(value.getIsManandatory());
+        subService.setHidden(value.getHidden());
+        subService.setMandatory(value.getMandatory());
         subService.setSortOrder(value.getSortOrder());
         subService.setStatus(value.getStatus());
         subService.setCreatedBy(value.getCreatedBy());

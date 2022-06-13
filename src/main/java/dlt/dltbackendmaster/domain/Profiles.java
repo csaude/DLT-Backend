@@ -1,5 +1,5 @@
 package dlt.dltbackendmaster.domain;
-// Generated Jan 25, 2022, 4:05:43 PM by Hibernate Tools 5.2.12.Final
+// Generated Jun 13, 2022, 9:37:47 AM by Hibernate Tools 5.2.12.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -10,8 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NamedQueries;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -35,10 +35,10 @@ public class Profiles implements java.io.Serializable {
 	private Integer id;
 	private String name;
 	private String description;
-	private int createdBy;
 	private Date dateCreated;
-	private Integer updatedBy;
+	private Integer createdBy;
 	private Date dateUpdated;
+	private Integer updatedBy;
 	private Set<Users> userses = new HashSet<Users>(0);
 
 	public Profiles() {
@@ -47,15 +47,20 @@ public class Profiles implements java.io.Serializable {
 	public Profiles(String name) {
 		this.name = name;
 	}
+
+	public Profiles(String name, String description, Date dateCreated, Integer createdBy, Date dateUpdated,
+			Integer updatedBy, Set<Users> userses) {
+		this.name = name;
+		this.description = description;
+		this.dateCreated = dateCreated;
+		this.createdBy = createdBy;
+		this.dateUpdated = dateUpdated;
+		this.updatedBy = updatedBy;
+		this.userses = userses;
+	}
 	
 	public Profiles(Integer id) {
 		this.id = id;
-	}
-
-	public Profiles(String name, String description, Set<Users> userses) {
-		this.name = name;
-		this.description = description;
-		this.userses = userses;
 	}
 
 	@Id
@@ -87,47 +92,47 @@ public class Profiles implements java.io.Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	@Column(name = "created_by", nullable = false)
-	public int getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(int createdBy) {
-		this.createdBy = createdBy;
-	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "date_created", nullable = false, length = 19)
+	@Column(name = "date_created", length = 19)
 	public Date getDateCreated() {
-		return dateCreated;
+		return this.dateCreated;
 	}
 
 	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 
-	@Column(name = "updated_by")
-	public Integer getUpdatedBy() {
-		return updatedBy;
+	@Column(name = "created_by")
+	public Integer getCreatedBy() {
+		return this.createdBy;
 	}
 
-	public void setUpdatedBy(Integer updatedBy) {
-		this.updatedBy = updatedBy;
+	public void setCreatedBy(Integer createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "date_updated", length = 19)
 	public Date getDateUpdated() {
-		return dateUpdated;
+		return this.dateUpdated;
 	}
 
 	public void setDateUpdated(Date dateUpdated) {
 		this.dateUpdated = dateUpdated;
 	}
 
+	@Column(name = "updated_by")
+	public Integer getUpdatedBy() {
+		return this.updatedBy;
+	}
+
+	public void setUpdatedBy(Integer updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "profiles")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "profiles")
 	public Set<Users> getUserses() {
 		return this.userses;
 	}
@@ -135,7 +140,7 @@ public class Profiles implements java.io.Serializable {
 	public void setUserses(Set<Users> userses) {
 		this.userses = userses;
 	}
-	
+
 	public ObjectNode toObjectNode() {
 		ObjectMapper mapper = new ObjectMapper();
 		
@@ -146,5 +151,4 @@ public class Profiles implements java.io.Serializable {
 		profile.put("online_id", id); // flag to control if entity is synchronized with the backend
 		return profile;
 	} 
-
 }
