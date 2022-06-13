@@ -12,14 +12,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import dlt.dltbackendmaster.domain.Beneficiary;
-import dlt.dltbackendmaster.domain.BeneficiaryIntervention;
+import dlt.dltbackendmaster.domain.Beneficiaries;
+import dlt.dltbackendmaster.domain.BeneficiariesInterventions;
 import dlt.dltbackendmaster.domain.Locality;
 import dlt.dltbackendmaster.domain.Neighborhood;
 import dlt.dltbackendmaster.domain.Partners;
 import dlt.dltbackendmaster.domain.Profiles;
-import dlt.dltbackendmaster.domain.Service;
-import dlt.dltbackendmaster.domain.SubService;
+import dlt.dltbackendmaster.domain.Services;
+import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.domain.Us;
 import dlt.dltbackendmaster.domain.Users;
 import dlt.dltbackendmaster.domain.watermelondb.BeneficiaryInterventionSyncModel;
@@ -65,11 +65,11 @@ public class SyncSerializer
                                           SyncObject<Profiles> profiles, 
                                           SyncObject<Partners> partners, 
                                           SyncObject<Us> us, 
-                                          SyncObject<Beneficiary> beneficiaries, 
-                                          SyncObject<BeneficiaryIntervention> beneficiariesInterventions, 
+                                          SyncObject<Beneficiaries> beneficiaries, 
+                                          SyncObject<BeneficiariesInterventions> beneficiariesInterventions, 
                                           SyncObject<Neighborhood> neighborhoods, 
-                                          SyncObject<Service> services, 
-                                          SyncObject<SubService> subServices, 
+                                          SyncObject<Services> services, 
+                                          SyncObject<SubServices> subServices, 
                                           String lastPulledAt)
                     throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -155,7 +155,7 @@ public class SyncSerializer
                                                   .map((Partners element) -> element.toObjectNode())
                                                   .collect(Collectors.toList());
         ArrayNode arrayCreated = mapper.createArrayNode();
-        arrayCreated.addAll(createdlist);
+        arrayCreated.addAll(createdlist); 
         // updated
         List<Partners> updatedObjs = mapper.convertValue(partners.getUpdated(), new TypeReference<List<Partners>>() {});
         List<ObjectNode> updatedlist = updatedObjs.stream()
@@ -225,20 +225,20 @@ public class SyncSerializer
         return userNode;
     }
 
-    private static ObjectNode createBeneficiarySyncObject(SyncObject<Beneficiary> beneficiaries)
+    private static ObjectNode createBeneficiarySyncObject(SyncObject<Beneficiaries> beneficiaries)
                     throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        List<Beneficiary> createdObjs = mapper.convertValue(beneficiaries.getCreated(),
-                                                            new TypeReference<List<Beneficiary>>() {});
+        List<Beneficiaries> createdObjs = mapper.convertValue(beneficiaries.getCreated(),
+                                                            new TypeReference<List<Beneficiaries>>() {});
         List<ObjectNode> createdList = createdObjs.stream()
-                                                  .map((Beneficiary element) -> element.toObjectNode())
+                                                  .map((Beneficiaries element) -> element.toObjectNode())
                                                   .collect(Collectors.toList());
         ArrayNode arrayCreated = mapper.createArrayNode();
         arrayCreated.addAll(createdList);
-        List<Beneficiary> updatedObjs = mapper.convertValue(beneficiaries.getUpdated(),
-                                                            new TypeReference<List<Beneficiary>>() {});
+        List<Beneficiaries> updatedObjs = mapper.convertValue(beneficiaries.getUpdated(),
+                                                            new TypeReference<List<Beneficiaries>>() {});
         List<ObjectNode> updatedList = updatedObjs.stream()
-                                                  .map((Beneficiary element) -> element.toObjectNode())
+                                                  .map((Beneficiaries element) -> element.toObjectNode())
                                                   .collect(Collectors.toList());
         ArrayNode arrayUpdated = mapper.createArrayNode();
         arrayUpdated.addAll(updatedList);
@@ -252,16 +252,16 @@ public class SyncSerializer
         return beneficiaryNode;
     }
 
-    private static ObjectNode createBeneficiaryInterventionSyncObject(SyncObject<BeneficiaryIntervention> beneficiariesInterventions, String lastPulledAt)
+    private static ObjectNode createBeneficiaryInterventionSyncObject(SyncObject<BeneficiariesInterventions> beneficiariesInterventions, String lastPulledAt)
                     throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         
         // FIXME: This method is setting beneficiary to null... do we really need to use it???
         //        List<BeneficiaryIntervention> createdObjs = mapper.convertValue(beneficiariesInterventions.getCreated(),
         //                                                                        new TypeReference<List<BeneficiaryIntervention>>() {});
-        List<BeneficiaryIntervention> createdObjs = beneficiariesInterventions.getCreated();
+        List<BeneficiariesInterventions> createdObjs = beneficiariesInterventions.getCreated();
         List<ObjectNode> createdList = createdObjs.stream()
-                                                  .map((BeneficiaryIntervention element) -> element.toObjectNode(lastPulledAt))
+                                                  .map((BeneficiariesInterventions element) -> element.toObjectNode(lastPulledAt))
                                                   .collect(Collectors.toList());
         ArrayNode arrayCreated = mapper.createArrayNode();
         arrayCreated.addAll(createdList);
@@ -269,9 +269,9 @@ public class SyncSerializer
         // FIXME: This method is setting beneficiary to null... do we really need to use it???
         //        List<BeneficiaryIntervention> updatedObjs = mapper.convertValue(beneficiariesInterventions.getUpdated(),
         //                                                                        new TypeReference<List<BeneficiaryIntervention>>() {});
-        List<BeneficiaryIntervention> updatedObjs= beneficiariesInterventions.getUpdated();
+        List<BeneficiariesInterventions> updatedObjs= beneficiariesInterventions.getUpdated();
         List<ObjectNode> updatedList = updatedObjs.stream()
-                                                  .map((BeneficiaryIntervention element) -> element.toObjectNode(lastPulledAt))
+                                                  .map((BeneficiariesInterventions element) -> element.toObjectNode(lastPulledAt))
                                                   .collect(Collectors.toList());
         ArrayNode arrayUpdated = mapper.createArrayNode();
         arrayUpdated.addAll(updatedList);
@@ -326,6 +326,8 @@ public class SyncSerializer
         List<ObjectNode> createdList = createdObjs.stream()
                                                   .map((Neighborhood element) -> element.toObjectNode())
                                                   .collect(Collectors.toList());
+        
+        
         ArrayNode arrayCreated = mapper.createArrayNode();
         arrayCreated.addAll(createdList);
         List<Neighborhood> updatedObjs = mapper.convertValue(neighborhood.getUpdated(),
@@ -345,17 +347,17 @@ public class SyncSerializer
         return neighborhoodNode;
     }
 
-    private static ObjectNode createServiceSyncObject(SyncObject<Service> service) throws JsonProcessingException {
+    private static ObjectNode createServiceSyncObject(SyncObject<Services> service) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        List<Service> createdObjs = mapper.convertValue(service.getCreated(), new TypeReference<List<Service>>() {});
+        List<Services> createdObjs = mapper.convertValue(service.getCreated(), new TypeReference<List<Services>>() {});
         List<ObjectNode> createdList = createdObjs.stream()
-                                                  .map((Service element) -> element.toObjectNode())
+                                                  .map((Services element) -> element.toObjectNode())
                                                   .collect(Collectors.toList());
         ArrayNode arrayCreated = mapper.createArrayNode();
         arrayCreated.addAll(createdList);
-        List<Service> updatedObjs = mapper.convertValue(service.getUpdated(), new TypeReference<List<Service>>() {});
+        List<Services> updatedObjs = mapper.convertValue(service.getUpdated(), new TypeReference<List<Services>>() {});
         List<ObjectNode> updatedList = updatedObjs.stream()
-                                                  .map((Service element) -> element.toObjectNode())
+                                                  .map((Services element) -> element.toObjectNode())
                                                   .collect(Collectors.toList());
         ArrayNode arrayUpdated = mapper.createArrayNode();
         arrayUpdated.addAll(updatedList);
@@ -368,20 +370,20 @@ public class SyncSerializer
         return serviceNode;
     }
 
-    private static ObjectNode createSubServiceSyncObject(SyncObject<SubService> subService)
+    private static ObjectNode createSubServiceSyncObject(SyncObject<SubServices> subService)
                     throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        List<SubService> createdObjs = mapper.convertValue(subService.getCreated(),
-                                                           new TypeReference<List<SubService>>() {});
+        List<SubServices> createdObjs = mapper.convertValue(subService.getCreated(),
+                                                           new TypeReference<List<SubServices>>() {});
         List<ObjectNode> createdList = createdObjs.stream()
-                                                  .map((SubService element) -> element.toObjectNode())
+                                                  .map((SubServices element) -> element.toObjectNode())
                                                   .collect(Collectors.toList());
         ArrayNode arrayCreated = mapper.createArrayNode();
         arrayCreated.addAll(createdList);
-        List<SubService> updatedObjs = mapper.convertValue(subService.getUpdated(),
-                                                           new TypeReference<List<SubService>>() {});
+        List<SubServices> updatedObjs = mapper.convertValue(subService.getUpdated(),
+                                                           new TypeReference<List<SubServices>>() {});
         List<ObjectNode> updatedList = updatedObjs.stream()
-                                                  .map((SubService element) -> element.toObjectNode())
+                                                  .map((SubServices element) -> element.toObjectNode())
                                                   .collect(Collectors.toList());
         ArrayNode arrayUpdated = mapper.createArrayNode();
         arrayUpdated.addAll(updatedList);

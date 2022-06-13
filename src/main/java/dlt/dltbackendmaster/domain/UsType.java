@@ -1,5 +1,5 @@
 package dlt.dltbackendmaster.domain;
-// Generated Jan 25, 2022, 4:05:43 PM by Hibernate Tools 5.2.12.Final
+// Generated Jun 13, 2022, 9:37:47 AM by Hibernate Tools 5.2.12.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -119,6 +119,7 @@ public class UsType implements java.io.Serializable {
 		this.status = status;
 	}
 
+	@JsonIgnore
 	@Column(name = "created_by", nullable = false)
 	public int getCreatedBy() {
 		return this.createdBy;
@@ -128,6 +129,7 @@ public class UsType implements java.io.Serializable {
 		this.createdBy = createdBy;
 	}
 
+	@JsonIgnore
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "date_created", nullable = false, length = 19)
 	public Date getDateCreated() {
@@ -138,6 +140,7 @@ public class UsType implements java.io.Serializable {
 		this.dateCreated = dateCreated;
 	}
 
+	@JsonIgnore
 	@Column(name = "updated_by")
 	public Integer getUpdatedBy() {
 		return this.updatedBy;
@@ -147,6 +150,7 @@ public class UsType implements java.io.Serializable {
 		this.updatedBy = updatedBy;
 	}
 
+	@JsonIgnore
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "date_updated", length = 19)
 	public Date getDateUpdated() {
@@ -158,7 +162,7 @@ public class UsType implements java.io.Serializable {
 	}
 
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usType")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "usType")
 	public Set<Us> getUses() {
 		return this.uses;
 	}

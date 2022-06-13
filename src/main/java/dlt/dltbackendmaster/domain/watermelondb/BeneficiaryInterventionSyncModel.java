@@ -9,7 +9,7 @@ public class BeneficiaryInterventionSyncModel
     private String date;
     private Integer us_id;
     private Integer activist_id;
-    private Integer entry_point;
+    private String entry_point;
     private String provider;
     private String remarks;
     private Integer status;
@@ -75,11 +75,11 @@ public class BeneficiaryInterventionSyncModel
         this.activist_id = activist_id;
     }
 
-    public Integer getEntry_point() {
+    public String getEntry_point() {
         return entry_point;
     }
 
-    public void setEntry_point(Integer entry_point) {
+    public void setEntry_point(String entry_point) {
         this.entry_point = entry_point;
     }
 

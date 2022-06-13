@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import dlt.dltbackendmaster.domain.Neighborhood;
 
+
 public class NeighborhoodSerializer extends JsonSerializer<Neighborhood>
 {
     @Override

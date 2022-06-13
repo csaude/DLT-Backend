@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dlt.dltbackendmaster.domain.SubService;
+import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.service.DAOService;
 
 @RestController
@@ -24,10 +24,10 @@ public class SubServiceController
     }
 
     @GetMapping(produces = "application/json")
-    public ResponseEntity<List<SubService>> getAll() {
+    public ResponseEntity<List<SubServices>> getAll() {
 
         try {
-            List<SubService> subServices = service.getAll(SubService.class);
+            List<SubServices> subServices = service.getAll(SubServices.class);
             return new ResponseEntity<>(subServices, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -36,14 +36,14 @@ public class SubServiceController
     }
 
     @GetMapping(path = "/{serviceId}", produces = "application/json")
-    public ResponseEntity<List<SubService>> get(@PathVariable Integer serviceId) {
+    public ResponseEntity<List<SubServices>> get(@PathVariable Integer serviceId) {
 
         if (serviceId == null) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
         try {
-            List<SubService> subServices = service.GetAllEntityByNamedQuery("SubService.findByService", serviceId);
+            List<SubServices> subServices = service.GetAllEntityByNamedQuery("SubService.findByService", serviceId);
             return new ResponseEntity<>(subServices, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

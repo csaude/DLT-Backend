@@ -1,21 +1,19 @@
 package dlt.dltbackendmaster.domain;
-// Generated Jan 25, 2022, 4:05:43 PM by Hibernate Tools 5.2.12.Final
-
-import static javax.persistence.GenerationType.IDENTITY;
+// Generated Jun 13, 2022, 9:37:47 AM by Hibernate Tools 5.2.12.Final
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NamedQueries;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -53,15 +51,13 @@ public class Us implements java.io.Serializable {
 	private Date dateCreated;
 	private Integer updatedBy;
 	private Date dateUpdated;
+	private Set<BeneficiariesInterventions> beneficiariesInterventionses = new HashSet<BeneficiariesInterventions>(0);
 	private Set<Users> userses = new HashSet<Users>(0);
+	private Set<Beneficiaries> beneficiarieses = new HashSet<Beneficiaries>(0);
 
 	public Us() {
 	}
 
-	public Us(Integer id) {
-		this.id = id;
-	}
-	
 	public Us(UsType usType, String code, String name, int localityId, int status, int createdBy, Date dateCreated) {
 		this.usType = usType;
 		this.code = code;
@@ -74,7 +70,8 @@ public class Us implements java.io.Serializable {
 
 	public Us(UsType usType, String code, String name, String description, Float latitude, Float longitude,
 			int localityId, int status, int createdBy, Date dateCreated, Integer updatedBy, Date dateUpdated,
-			Set<Users> userses) {
+			Set<BeneficiariesInterventions> beneficiariesInterventionses, Set<Users> userses,
+			Set<Beneficiaries> beneficiarieses) {
 		this.usType = usType;
 		this.code = code;
 		this.name = name;
@@ -87,7 +84,13 @@ public class Us implements java.io.Serializable {
 		this.dateCreated = dateCreated;
 		this.updatedBy = updatedBy;
 		this.dateUpdated = dateUpdated;
+		this.beneficiariesInterventionses = beneficiariesInterventionses;
 		this.userses = userses;
+		this.beneficiarieses = beneficiarieses;
+	}
+	
+	public Us(Integer id) {
+		this.id = id;
 	}
 
 	@Id
@@ -217,12 +220,32 @@ public class Us implements java.io.Serializable {
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "us")
+	public Set<BeneficiariesInterventions> getBeneficiariesInterventionses() {
+		return this.beneficiariesInterventionses;
+	}
+
+	public void setBeneficiariesInterventionses(Set<BeneficiariesInterventions> beneficiariesInterventionses) {
+		this.beneficiariesInterventionses = beneficiariesInterventionses;
+	}
+	
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "us")
 	public Set<Users> getUserses() {
 		return this.userses;
 	}
 
 	public void setUserses(Set<Users> userses) {
 		this.userses = userses;
+	}
+
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "us")
+	public Set<Beneficiaries> getBeneficiarieses() {
+		return this.beneficiarieses;
+	}
+
+	public void setBeneficiarieses(Set<Beneficiaries> beneficiarieses) {
+		this.beneficiarieses = beneficiarieses;
 	}
 	
 	public ObjectNode toObjectNode() {

@@ -1,5 +1,5 @@
 package dlt.dltbackendmaster.domain;
-// Generated Jan 25, 2022, 4:05:43 PM by Hibernate Tools 5.2.12.Final
+// Generated Jun 13, 2022, 9:37:47 AM by Hibernate Tools 5.2.12.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -12,8 +12,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -28,10 +26,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  */
 @Entity
 @Table(name = "locality", catalog = "dreams_db")
-@NamedQueries({
-    @NamedQuery(name = "Locality.findAll", query = "SELECT c FROM Locality c"),
-    @NamedQuery(name = "Locality.findByDateCreated", query = "SELECT c FROM Locality c WHERE c.dateCreated = :lastpulledat"),
-    @NamedQuery(name = "Locality.findByDateUpdated", query = "SELECT c FROM Locality c WHERE c.dateUpdated = :lastpulledat")})
 public class Locality implements java.io.Serializable {
 
 	private Integer id;
@@ -86,7 +80,6 @@ public class Locality implements java.io.Serializable {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "district_id", nullable = false)
@@ -162,7 +155,7 @@ public class Locality implements java.io.Serializable {
 	public void setDateUpdated(Date dateUpdated) {
 		this.dateUpdated = dateUpdated;
 	}
-	
+
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "locality")
 	public Set<Neighborhood> getNeighborhoods() {
@@ -182,7 +175,7 @@ public class Locality implements java.io.Serializable {
 	public void setUserses(Set<Users> userses) {
 		this.userses = userses;
 	}
-	
+
 	public ObjectNode toObjectNode() {
 		ObjectMapper mapper = new ObjectMapper();
 		
@@ -194,5 +187,4 @@ public class Locality implements java.io.Serializable {
 	    locality.put("online_id", id); // flag to control if entity is synchronized with the backend
 		return locality;
 	} 
-
 }

@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -51,15 +53,15 @@ public abstract class BasicLifeCycle
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
+		return this.id;
+	}
+    
+    public void setId(Integer id) {
+		this.id = id;
+	}
 
     @Column(name = "name", nullable = false)
     public String getName() {
@@ -70,7 +72,7 @@ public abstract class BasicLifeCycle
         this.name = name;
     }
 
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     public Integer getStatus() {
         return status;
     }
@@ -79,10 +81,7 @@ public abstract class BasicLifeCycle
         this.status = status;
     }
     
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "created_by")
-    @JsonProperty("createdBy")
-    @JsonSerialize(using = UsersSerializer.class)
+    @Column(name = "created_by", nullable = false)
     public Users getCreatedBy() {
         return createdBy;
     }
@@ -91,7 +90,8 @@ public abstract class BasicLifeCycle
         this.createdBy = createdBy;
     }
 
-    @Column(name = "date_created", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "date_created", nullable = false, length = 19)
     public Date getDateCreated() {
         return dateCreated;
     }
@@ -100,10 +100,7 @@ public abstract class BasicLifeCycle
         this.dateCreated = dateCreated;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "updated_by")
-    @JsonProperty("updatedBy")
-    @JsonSerialize(using = UsersSerializer.class)
+    @Column(name = "updated_by")
     public Users getUpdatedBy() {
         return updatedBy;
     }
@@ -112,7 +109,8 @@ public abstract class BasicLifeCycle
         this.updatedBy = updatedBy;
     }
 
-    @Column(name = "date_updated")
+    @Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "date_updated", length = 19)
     public Date getDateUpdated() {
         return dateUpdated;
     }
