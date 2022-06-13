@@ -295,7 +295,7 @@ public class Beneficiaries implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "neighbourhood_id", nullable = false)
-	@JsonProperty("neighbourhood")
+	@JsonProperty("neighborhood")
     @JsonSerialize(using = NeighborhoodSerializer.class)
 	public Neighborhood getNeighborhood() {
 		return this.neighborhood;
