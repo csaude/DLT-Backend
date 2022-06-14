@@ -12,6 +12,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.NamedQueries;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -26,6 +28,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  */
 @Entity
 @Table(name = "locality", catalog = "dreams_db")
+@NamedQueries({
+    @NamedQuery(name = "Locality.findAll", query = "SELECT c FROM Locality c"),
+    @NamedQuery(name = "Locality.findByDateCreated", query = "SELECT c FROM Locality c WHERE c.dateCreated = :lastpulledat"),
+    @NamedQuery(name = "Locality.findByDateUpdated", query = "SELECT c FROM Locality c WHERE c.dateUpdated = :lastpulledat")})
 public class Locality implements java.io.Serializable {
 
 	private Integer id;

@@ -178,7 +178,7 @@ public class SyncController {
 			//String object = SyncSerializer.createUsersSyncObject(usersCreated, usersUpdated, new ArrayList<Integer>());
 
 			String object = SyncSerializer.createSyncObject(usersSO, localitySO, profilesSO, partnersSO, usSO, beneficiarySO,  beneficiaryInterventionSO, neighborhoodSO, serviceSO, subServiceSO, lastPulledAt);
-			System.out.println("PULLING " + object);
+			//System.out.println("PULLING " + object);
 
 			return new ResponseEntity<>(object, HttpStatus.OK);
 		} catch (Exception e) {
@@ -195,6 +195,7 @@ public class SyncController {
 								@RequestParam(name = "username") String username) throws ParseException, JsonMappingException, JsonProcessingException {
 		
 		String lastPulledAt = SyncSerializer.readLastPulledAt(changes);
+		System.out.println("PUSHING " + changes);
 		
 		Users user = (Users) service.GetAllEntityByNamedQuery("Users.findByUsername", username).get(0);
 		
@@ -202,12 +203,11 @@ public class SyncController {
 		SyncObject<UsersSyncModel> users;
 		SyncObject<BeneficiarySyncModel> beneficiaries;
 		SyncObject<BeneficiaryInterventionSyncModel> interventions;
-		//SyncObject<BeneficiaryVulnerabilitySyncModel> vulnerabilities;
+
 		try {
 			users = SyncSerializer.readUsersSyncObject(changes);
 			beneficiaries = SyncSerializer.readBeneficiariesSyncObject(changes);
 			interventions = SyncSerializer.readInterventionsSyncObject(changes);
-			//vulnerabilities = SyncSerializer.readVulnerabilitiesSyncObject(changes);
 			
 			// created entities
 			if(users != null && users.getCreated().size() > 0) {
