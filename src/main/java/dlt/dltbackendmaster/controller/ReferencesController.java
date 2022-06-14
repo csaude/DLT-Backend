@@ -26,11 +26,11 @@ public class ReferencesController
 
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<References>> getall() {
-
         try {
             List<References> references = service.getAll(References.class);
             return new ResponseEntity<>(references, HttpStatus.OK);
         } catch (Exception e) {
+        	e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
