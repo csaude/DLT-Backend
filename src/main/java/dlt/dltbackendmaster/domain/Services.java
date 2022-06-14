@@ -26,12 +26,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  */
 @Entity
 @Table(name = "services", catalog = "dreams_db")
-@NamedQueries({ @NamedQuery(name = "Services.findAll", query = "SELECT c FROM Services c"),
-    @NamedQuery(name = "Services.findByDateCreated",
+@NamedQueries({ @NamedQuery(name = "Service.findAll", query = "SELECT c FROM Services c"),
+    @NamedQuery(name = "Service.findByDateCreated",
                 query = "SELECT c FROM Services c WHERE c.dateCreated = :lastpulledat"),
-    @NamedQuery(name = "Services.findByDateUpdated",
+    @NamedQuery(name = "Service.findByDateUpdated",
                 query = "SELECT c FROM Services c WHERE c.dateUpdated = :lastpulledat"),
-    @NamedQuery(name = "Services.findByServiceType",
+    @NamedQuery(name = "Service.findByServiceType",
                 query = "SELECT c FROM Services c WHERE c.serviceType = :serviceType") })
 public class Services implements java.io.Serializable {
 

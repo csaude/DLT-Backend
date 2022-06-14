@@ -40,10 +40,10 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 @Entity
 @Table(name = "beneficiaries", catalog = "dreams_db", uniqueConstraints = @UniqueConstraint(columnNames = "nui"))
 @NamedQueries({ 
-	@NamedQuery(name = "Beneficiaries.findAll", query = "SELECT b FROM Beneficiaries b"),
-    @NamedQuery(name = "Beneficiaries.findByDateCreated",
+	@NamedQuery(name = "Beneficiary.findAll", query = "SELECT b FROM Beneficiaries b"),
+    @NamedQuery(name = "Beneficiary.findByDateCreated",
                 query = "select b from Beneficiaries b where b.dateUpdated is null and b.dateCreated > :lastpulledat"),
-    @NamedQuery(name = "Beneficiaries.findByDateUpdated",
+    @NamedQuery(name = "Beneficiary.findByDateUpdated",
                 query = "select b from Beneficiaries b where (b.dateUpdated >= :lastpulledat) or (b.dateUpdated >= :lastpulledat and b.dateCreated = b.dateUpdated)") })
 public class Beneficiaries implements java.io.Serializable {
 
@@ -190,6 +190,7 @@ public class Beneficiaries implements java.io.Serializable {
         this.nui = model.getNui();
         this.surname = model.getSurname();
         this.nickName = model.getNick_name();
+        this.name = model.getName();
         this.partners = new Partners(model.getOrganization_id());
         this.dateOfBirth = model.getDate_of_birth();
         this.gender = model.getGender();
@@ -356,7 +357,7 @@ public class Beneficiaries implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "nick_name", nullable = false, length = 50)
+	@Column(name = "nick_name", length = 50)
 	public String getNickName() {
 		return this.nickName;
 	}
@@ -795,7 +796,6 @@ public class Beneficiaries implements java.io.Serializable {
             beneficiary.put("entry_point", entryPoint);
             beneficiary.put("neighborhood_id", neighborhood.getId());
             beneficiary.put("us_id", us.getId());
-            beneficiary.put("online_id", id.toString()); // flag to control if entity is synchronized with the backend
             beneficiary.put("vblt_lives_with", vbltLivesWith);
             beneficiary.put("vblt_is_orphan", vbltIsOrphan);
             beneficiary.put("vblt_is_student", vbltIsStudent);
@@ -822,8 +822,9 @@ public class Beneficiaries implements java.io.Serializable {
             beneficiary.put("vblt_sti_history", vbltStiHistory);
             beneficiary.put("vblt_sex_worker", vbltSexWorker);
             beneficiary.put("vblt_house_sustainer", vbltHouseSustainer);
+            beneficiary.put("online_id", id); // flag to control if entity is synchronized with the backend
         } else { // ensure online_id is updated first
-            beneficiary.put("online_id", id.toString());
+            beneficiary.put("online_id", id);
         }
         return beneficiary;
     }

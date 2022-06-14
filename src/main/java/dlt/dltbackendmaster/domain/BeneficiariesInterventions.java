@@ -36,12 +36,12 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 @Entity
 @Table(name = "beneficiaries_interventions", catalog = "dreams_db")
 @NamedQueries({ 
-	@NamedQuery(name = "BeneficiariesInterventions.findAll", query = "SELECT b FROM BeneficiariesInterventions b"),
-	@NamedQuery(name = "BeneficiariesInterventions.findByBeneficiaryAndSubService", 
+	@NamedQuery(name = "BeneficiaryIntervention.findAll", query = "SELECT b FROM BeneficiariesInterventions b"),
+	@NamedQuery(name = "BeneficiaryIntervention.findByBeneficiaryAndSubService", 
 		query = "SELECT b FROM BeneficiariesInterventions b where b.beneficiaries.id = :beneficiary_id and b.subServices.id = :sub_service_id"),
-	@NamedQuery(name = "BeneficiariesInterventions.findByDateCreated", 
+	@NamedQuery(name = "BeneficiaryIntervention.findByDateCreated", 
 		query = "select b from BeneficiariesInterventions b where b.dateUpdated is null and b.dateCreated > :lastpulledat"),
-	@NamedQuery(name = "BeneficiariesInterventions.findByDateUpdated",
+	@NamedQuery(name = "BeneficiaryIntervention.findByDateUpdated",
 		query = "select b from BeneficiariesInterventions b where (b.dateUpdated >= :lastpulledat) or (b.dateUpdated >= :lastpulledat and b.dateCreated = b.dateUpdated)") })
 public class BeneficiariesInterventions implements java.io.Serializable {
 
