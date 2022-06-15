@@ -17,8 +17,10 @@ public class ServiceSerializer extends JsonSerializer<Services>
         service.setName(value.getName());
         service.setDescription(value.getDescription());
         service.setHidden(value.getHidden());
-        service.setCoreService(service.getCoreService());
-        service.setStatus(service.getStatus());
+        service.setCoreService(value.getCoreService());
+        service.setServiceType(value.getServiceType());
+        service.setAgeBands(value.getAgeBands());
+        service.setStatus(value.getStatus());
         service.setCreatedBy(value.getCreatedBy());
         service.setDateCreated(value.getDateCreated());
         service.setUpdatedBy(value.getUpdatedBy());
