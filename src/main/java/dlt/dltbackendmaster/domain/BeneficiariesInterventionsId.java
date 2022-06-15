@@ -1,7 +1,7 @@
 package dlt.dltbackendmaster.domain;
 // Generated Jun 13, 2022, 9:37:47 AM by Hibernate Tools 5.2.12.Final
 
-import java.util.Date;
+import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
@@ -13,12 +13,12 @@ public class BeneficiariesInterventionsId implements java.io.Serializable {
 
 	private int beneficiaryId;
 	private int subServiceId;
-	private Date date;
+	private LocalDate date;
 
 	public BeneficiariesInterventionsId() {
 	}
 
-	public BeneficiariesInterventionsId(int beneficiaryId, int subServiceId, Date date) {
+	public BeneficiariesInterventionsId(int beneficiaryId, int subServiceId, LocalDate date) {
 		this.beneficiaryId = beneficiaryId;
 		this.subServiceId = subServiceId;
 		this.date = date;
@@ -43,11 +43,11 @@ public class BeneficiariesInterventionsId implements java.io.Serializable {
 	}
 
 	@Column(name = "date", nullable = false, length = 10)
-	public Date getDate() {
+	public LocalDate getDate() {
 		return this.date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 

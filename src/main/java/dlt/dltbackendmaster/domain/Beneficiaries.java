@@ -748,7 +748,7 @@ public class Beneficiaries implements java.io.Serializable {
 		this.vulnerabilityHistories = vulnerabilityHistories;
 	}
 
-	@JsonIgnore
+	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "beneficiaries")
 	public Set<BeneficiariesInterventions> getBeneficiariesInterventionses() {
 		return this.beneficiariesInterventionses;
