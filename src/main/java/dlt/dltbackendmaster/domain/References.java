@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import dlt.dltbackendmaster.serializers.BeneficiarySerializer;
-import dlt.dltbackendmaster.serializers.NeighborhoodSerializer;
 import dlt.dltbackendmaster.serializers.UsersSerializer;
 
 /**
