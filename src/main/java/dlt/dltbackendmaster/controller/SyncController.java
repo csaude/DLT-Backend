@@ -1,6 +1,7 @@
 package dlt.dltbackendmaster.controller;
 
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,17 +25,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dlt.dltbackendmaster.domain.Beneficiaries;
 import dlt.dltbackendmaster.domain.BeneficiariesInterventions;
+import dlt.dltbackendmaster.domain.BeneficiariesInterventionsId;
 import dlt.dltbackendmaster.domain.Locality;
 import dlt.dltbackendmaster.domain.Neighborhood;
 import dlt.dltbackendmaster.domain.Partners;
 import dlt.dltbackendmaster.domain.Profiles;
+import dlt.dltbackendmaster.domain.References;
 import dlt.dltbackendmaster.domain.Services;
 import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.domain.Us;
 import dlt.dltbackendmaster.domain.Users;
 import dlt.dltbackendmaster.domain.watermelondb.BeneficiaryInterventionSyncModel;
 import dlt.dltbackendmaster.domain.watermelondb.BeneficiarySyncModel;
-import dlt.dltbackendmaster.domain.watermelondb.BeneficiaryVulnerabilitySyncModel;
 import dlt.dltbackendmaster.domain.watermelondb.SyncObject;
 import dlt.dltbackendmaster.domain.watermelondb.UsersSyncModel;
 import dlt.dltbackendmaster.serializers.SyncSerializer;
@@ -83,6 +85,9 @@ public class SyncController {
         
         List<SubServices> subServicesCreated;
         List<SubServices> subServicesUpdated;
+        
+        List<References> referencesCreated;
+        List<References> referencesUpdated;
 		
 		if(lastPulledAt == null || lastPulledAt.equals("null") ) {
 
@@ -118,6 +123,9 @@ public class SyncController {
             
             subServicesCreated = service.GetAllEntityByNamedQuery("SubService.findAll");
             subServicesUpdated = new ArrayList<SubServices>();
+            
+            referencesCreated = service.GetAllEntityByNamedQuery("References.findAll");
+            referencesUpdated = new ArrayList<References>();
 			
 		}else {
 			Long t = Long.valueOf(lastPulledAt);
@@ -161,6 +169,9 @@ public class SyncController {
             
             subServicesCreated = service.GetAllEntityByNamedQuery("SubService.findByDateCreated", validatedDate); 
             subServicesUpdated = service.GetAllEntityByNamedQuery("SubService.findByDateUpdated", validatedDate);
+            
+            referencesCreated = service.GetAllEntityByNamedQuery("References.findByDateCreated", validatedDate);
+            referencesUpdated = service.GetAllEntityByNamedQuery("References.findByDateUpdated", validatedDate);
 		}
 		
 		try {
@@ -174,10 +185,11 @@ public class SyncController {
             SyncObject<Neighborhood> neighborhoodSO = new SyncObject<Neighborhood>(neighborhoodsCreated, neighborhoodUpdated, listDeleted);
             SyncObject<Services> serviceSO = new SyncObject<Services>(servicesCreated, servicesUpdated, listDeleted);
             SyncObject<SubServices> subServiceSO = new SyncObject<SubServices>(subServicesCreated, subServicesUpdated, listDeleted);
+            SyncObject<References> referencesSO = new SyncObject<References>(referencesCreated, referencesUpdated, listDeleted);
 
 			//String object = SyncSerializer.createUsersSyncObject(usersCreated, usersUpdated, new ArrayList<Integer>());
 
-			String object = SyncSerializer.createSyncObject(usersSO, localitySO, profilesSO, partnersSO, usSO, beneficiarySO,  beneficiaryInterventionSO, neighborhoodSO, serviceSO, subServiceSO, lastPulledAt);
+			String object = SyncSerializer.createSyncObject(usersSO, localitySO, profilesSO, partnersSO, usSO, beneficiarySO,  beneficiaryInterventionSO, neighborhoodSO, serviceSO, subServiceSO, referencesSO, lastPulledAt);
 			//System.out.println("PULLING " + object);
 
 			return new ResponseEntity<>(object, HttpStatus.OK);
@@ -195,7 +207,7 @@ public class SyncController {
 								@RequestParam(name = "username") String username) throws ParseException, JsonMappingException, JsonProcessingException {
 		
 		String lastPulledAt = SyncSerializer.readLastPulledAt(changes);
-		System.out.println("PUSHING " + changes);
+		//System.out.println("PUSHING " + changes);
 		
 		Users user = (Users) service.GetAllEntityByNamedQuery("Users.findByUsername", username).get(0);
 		
@@ -242,7 +254,7 @@ public class SyncController {
                     	BeneficiariesInterventions intervention = new BeneficiariesInterventions(created, lastPulledAt);
                         intervention.setCreatedBy(user.getId());
                         service.Save(intervention);
-                    }
+                    } 
                 }
             }
 
@@ -273,13 +285,11 @@ public class SyncController {
                     
                     if(updated.getOnline_id() == null) {
                     	Beneficiaries beneficiary = new Beneficiaries(updated, lastPulledAt);
-                        //beneficiary.getCreatedBy().setId(user.getId());
                         beneficiary.setCreatedBy(user.getId());
                         service.Save(beneficiary);
                         
                     } else {
                     	Beneficiaries beneficiary = service.find(Beneficiaries.class, updated.getOnline_id());
-                        //beneficiary.getUpdatedBy().setId(user.getId());
                         beneficiary.setUpdatedBy(user.getId());
                         beneficiary.update(updated, lastPulledAt);
                         service.update(beneficiary);
@@ -297,10 +307,14 @@ public class SyncController {
                         service.Save(intervention);
                         
                     } else {
-                        //BeneficiaryIntervention intervention = service.find(BeneficiaryIntervention.class, updated.getOnline_id());
-                        //intervention.setUpdatedBy(user.getId());
-                       // intervention.update(updated, lastPulledAt);
-                        //service.update(intervention);
+                    	String[] keys = updated.getOnline_id().split(",");
+                    	BeneficiariesInterventionsId bId = new BeneficiariesInterventionsId(Integer.valueOf(keys[0]), Integer.valueOf(keys[1]), LocalDate.parse(keys[2]));
+                        BeneficiariesInterventions intervention = service.find(BeneficiariesInterventions.class, bId);
+                        if(intervention != null) {
+                        	intervention.setUpdatedBy(String.valueOf(user.getId()));
+                        	intervention.update(updated, lastPulledAt);
+                        	service.update(intervention);
+                        }
                     } 
                 }
             }

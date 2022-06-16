@@ -22,16 +22,20 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
 import dlt.dltbackendmaster.domain.watermelondb.BeneficiaryInterventionSyncModel;
 import dlt.dltbackendmaster.serializers.BeneficiarySerializer;
-import dlt.dltbackendmaster.serializers.LocalitySerializer;
 import dlt.dltbackendmaster.serializers.UsSerializer;
 
 /**
@@ -69,7 +73,11 @@ public class BeneficiariesInterventions implements java.io.Serializable {
 	private LocalDate date;
 
 	public BeneficiariesInterventions() {
-		id = new BeneficiariesInterventionsId();
+
+		this.id = new BeneficiariesInterventionsId();
+		this.beneficiaries = new Beneficiaries();
+		this.subServices = new SubServices();
+		this.us = new Us();
 	}
 
 	public BeneficiariesInterventions(BeneficiariesInterventionsId id, Beneficiaries beneficiaries,
@@ -119,7 +127,6 @@ public class BeneficiariesInterventions implements java.io.Serializable {
         this.provider = model.getProvider();
         this.remarks = model.getRemarks();
         this.status = model.getStatus();
-        //this.offlineId = model.getBeneficiary_id() + "" + model.getSub_service_id();
         this.offlineId = model.getId();
         this.dateCreated = regDate;
         this.dateUpdated = regDate;
@@ -220,6 +227,8 @@ public class BeneficiariesInterventions implements java.io.Serializable {
 		this.remarks = remarks;
 	}
 
+	@JsonDeserialize(using = LocalDateDeserializer.class)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd ")
 	@Transient
 	public LocalDate getDate() {
 		return date;
@@ -286,9 +295,11 @@ public class BeneficiariesInterventions implements java.io.Serializable {
 	}
 	
 	public ObjectNode toObjectNode(String lastPulledAt) {
-        ObjectMapper mapper = new ObjectMapper();
+       ObjectMapper mapper = new ObjectMapper()
+        							.registerModule(new JavaTimeModule())
+        							.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        
         ObjectNode beneficiaryIntervention = mapper.createObjectNode();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         if (offlineId != null) {
             beneficiaryIntervention.put("id", offlineId);
@@ -300,7 +311,7 @@ public class BeneficiariesInterventions implements java.io.Serializable {
             beneficiaryIntervention.put("beneficiary_id", beneficiaries.getId());
             beneficiaryIntervention.put("sub_service_id", subServices.getId());
             beneficiaryIntervention.put("result", result);
-            beneficiaryIntervention.put("date", dateFormat.format(id.getDate()));
+            beneficiaryIntervention.put("date", id.getDate().toString());
             beneficiaryIntervention.put("us_id", us.getId());
             beneficiaryIntervention.put("result", result);
             beneficiaryIntervention.put("activist_id", activistId);

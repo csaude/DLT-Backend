@@ -25,8 +25,11 @@ import javax.persistence.UniqueConstraint;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import dlt.dltbackendmaster.domain.watermelondb.BeneficiarySyncModel;
 import dlt.dltbackendmaster.serializers.LocalitySerializer;
@@ -769,7 +772,9 @@ public class Beneficiaries implements java.io.Serializable {
 	}
 
 	public ObjectNode toObjectNode() {
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule())
+        										.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        
         ObjectNode beneficiary = mapper.createObjectNode();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 

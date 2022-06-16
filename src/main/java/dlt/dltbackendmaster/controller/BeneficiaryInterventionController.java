@@ -71,25 +71,63 @@ public class BeneficiaryInterventionController
         }
 
         try {
-        	
+
         	BeneficiariesInterventions currentIntervention = service.find(BeneficiariesInterventions.class, intervention.getId());
-        	
         	if(currentIntervention == null) {
-        		return new ResponseEntity("The Intervention was not Found!", HttpStatus.NOT_FOUND);
+        		return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         	} 
         	
-        	currentIntervention.getId().setBeneficiaryId(intervention.getBeneficiaries().getId());
-        	currentIntervention.getId().setSubServiceId(intervention.getSubServices().getId());
-        	currentIntervention.getId().setDate(intervention.getDate());
+        	// if key was updated, entry should be disabled and a new one added
+        	if(intervention.getId().getBeneficiaryId() != intervention.getBeneficiaries().getId() || 
+        			intervention.getId().getSubServiceId() != intervention.getSubServices().getId() ||
+        			!intervention.getId().getDate().equals(intervention.getDate())) {
+        		
+        		currentIntervention.setStatus(0);
+        		currentIntervention.setDateUpdated(new Date());
+        		service.delete(currentIntervention); // Must remove to allow new additions with this key afterwards
+        		
+        		BeneficiariesInterventions newInterv = new BeneficiariesInterventions();
+        		newInterv.getId().setBeneficiaryId(intervention.getBeneficiaries().getId());
+        		newInterv.getId().setSubServiceId(intervention.getSubServices().getId());
+        		newInterv.getId().setDate(intervention.getDate());
+        		newInterv.setSubServices(intervention.getSubServices());
+        		newInterv.setBeneficiaries(intervention.getBeneficiaries());
+        		newInterv.setRemarks(intervention.getRemarks());
+        		newInterv.setEntryPoint(intervention.getEntryPoint());
+        		newInterv.setResult(intervention.getResult());
+        		newInterv.setUs(intervention.getUs());
+        		newInterv.setProvider(intervention.getProvider());
+        		newInterv.setStatus(intervention.getStatus());
+        		newInterv.setActivistId(intervention.getActivistId());
+        		newInterv.setCreatedBy(currentIntervention.getCreatedBy());
+        		newInterv.setDateCreated(currentIntervention.getDateCreated());
+        		newInterv.setDateUpdated(new Date());
+        		newInterv.setUpdatedBy(intervention.getUpdatedBy());
+        		
+        		service.Save(newInterv);
+        		
+        		SubServices subService = service.find(SubServices.class, newInterv.getId().getSubServiceId());
+        		newInterv.setSubServices(subService);
+        		
+        		return new ResponseEntity<>(newInterv, HttpStatus.OK);
+        	}
+        	
+        	// Edit fields
+        	
         	currentIntervention.setRemarks(intervention.getRemarks());
+        	currentIntervention.setUs(intervention.getUs());
         	currentIntervention.setEntryPoint(intervention.getEntryPoint());
         	currentIntervention.setResult(intervention.getResult());
         	currentIntervention.setProvider(intervention.getProvider());
         	currentIntervention.setStatus(intervention.getStatus());
+        	currentIntervention.setActivistId(intervention.getActivistId());
         	currentIntervention.setDateUpdated(new Date());
+        	currentIntervention.setUpdatedBy(intervention.getUpdatedBy());
+
         	
             BeneficiariesInterventions updatedIntervention = service.update(currentIntervention);
             return new ResponseEntity<>(updatedIntervention, HttpStatus.OK);
+            
         } catch (Exception e) {
         	e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

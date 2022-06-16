@@ -1,17 +1,21 @@
 package dlt.dltbackendmaster.domain;
 // Generated Jun 13, 2022, 4:04:49 PM by Hibernate Tools 5.2.12.Final
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -19,7 +23,9 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import dlt.dltbackendmaster.serializers.BeneficiarySerializer;
 import dlt.dltbackendmaster.serializers.UsersSerializer;
@@ -29,9 +35,15 @@ import dlt.dltbackendmaster.serializers.UsersSerializer;
  */
 @Entity
 @Table(name = "references", catalog = "dreams_db")
+@NamedQueries({
+    @NamedQuery(name = "References.findAll", query = "SELECT r FROM References r"),
+    @NamedQuery(name = "References.findByDateCreated", query = "SELECT r FROM References r WHERE r.dateCreated = :lastpulledat"),
+    @NamedQuery(name = "References.findByDateUpdated", query = "SELECT r FROM References r WHERE r.dateUpdated = :lastpulledat")})
 public class References implements java.io.Serializable {
 
-	private Integer id;
+    private static final long serialVersionUID = -6756894395137677466L;
+
+    private Integer id;
 	private Beneficiaries beneficiaries;
 	private Users users;
 	private String referenceNote;
@@ -270,5 +282,28 @@ public class References implements java.io.Serializable {
 	public void setReferencesServiceses(Set<ReferencesServices> referencesServiceses) {
 		this.referencesServiceses = referencesServiceses;
 	}
+
+    public ObjectNode toObjectNode() {
+        ObjectMapper mapper =  new ObjectMapper();
+        
+        ObjectNode reference = mapper.createObjectNode();
+        reference.put("id", id);
+        reference.put("beneficiary_id", beneficiaries.getId());
+        reference.put("notify_to", users.getId());
+        reference.put("reference_note", referenceNote);
+        reference.put("description", description);
+        reference.put("refer_to", referTo);
+        reference.put("book_number", bookNumber);
+        reference.put("reference_code", referenceCode);
+        reference.put("service_type", serviceType);
+        reference.put("remarks", remarks);
+        reference.put("status_ref", statusRef);
+        reference.put("status", status);
+        reference.put("cancel_reason", cancelReason);
+        reference.put("other_reason", otherReason);
+        reference.put("online_id", id);
+        
+        return reference;
+    }
 
 }
