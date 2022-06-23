@@ -12,6 +12,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -24,8 +26,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name = "district", catalog = "dreams_db")
+@NamedQueries({
+    @NamedQuery(name = "District.findByProvinces", query = "SELECT c FROM District c WHERE c.province.id in (:provinces)")})
 public class District implements java.io.Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private Integer id;
 	private Province province;
 	private String code;

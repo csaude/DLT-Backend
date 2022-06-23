@@ -21,7 +21,9 @@ public class UsersSerializer extends JsonSerializer<Users> {
 		user.setSurname(value.getSurname());
 		user.setEntryPoint(value.getEntryPoint());
 		user.setStatus(value.getStatus());
-		user.setLocality(value.getLocality());
+		user.setProvinces(value.getProvinces());
+		user.setDistricts(value.getDistricts());
+		user.setLocalities(value.getLocalities());
 		user.setPartners(value.getPartners());
 		user.setProfiles(value.getProfiles());
 		user.setUs(value.getUs());

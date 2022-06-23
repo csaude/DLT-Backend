@@ -114,11 +114,9 @@ public class DAORepositoryImpl implements DAORepository {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public <T> T GetUniqueEntityByNamedQuery(String query, Object... params) {
 		Query q = getCurrentSession().getNamedQuery(query);
-        int i = 0;
-
-        for (Object o : params) {
-            q.setParameter(i, o);
-            i++;//new
+        
+        for (Parameter param : q.getParameters()) {
+            q.setParameter(param, params[0]);
         }
 
         List<T> results = q.list();
@@ -134,16 +132,9 @@ public class DAORepositoryImpl implements DAORepository {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public <T> List<T> GetAllEntityByNamedQuery(String query, Object... params) {
 		Query q = getCurrentSession().getNamedQuery(query);
-        int i = 0;
-
-        /*for (Object o : params) {
-            q.setParameter(i, o);
-            i++;//new
-        }*/
         
         for (Parameter param : q.getParameters()) {
             q.setParameter(param, params[0]);
-            i++;
         }
 
         List<T> results = q.getResultList();
