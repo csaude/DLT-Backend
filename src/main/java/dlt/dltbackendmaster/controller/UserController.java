@@ -130,7 +130,7 @@ public class UserController
             user.setRecoverPasswordToken(token);
             Users updatedUser = service.update(user);
             // Generate reset confirmation Link
-            String confirmUpdatePasswordLink = Utility.getSiteURL(request) + "/api/users/confirm-update?token=" + token;
+            String confirmUpdatePasswordLink = Utility.getSiteURL(request) + "/confirm-update?token=" + token;
             // Send E-mail
             String email = user.getEmail() != null ? user.getEmail() : user.getUsers().getEmail();
             emailSender.sendEmail(user.getName() + " " + user.getSurname(),
@@ -138,27 +138,6 @@ public class UserController
                                   email,
                                   confirmUpdatePasswordLink,
                                   false);
-            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PutMapping(path = "/confirm-update", produces = "application/json")
-    public ResponseEntity<Users> confirmPasswordUpdate(HttpServletRequest request, @Param(value = "token") String token) {
-
-        Users user = service.GetUniqueEntityByNamedQuery("Users.findByResetPasswordToken", token);
-
-        if (token == null || user == null) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            user.setPassword(user.getRecoverPassword());
-            user.setIsEnabled(Byte.valueOf("1"));
-            user.setRecoverPassword(null);
-            user.setRecoverPasswordToken(null);
-            Users updatedUser = service.update(user);
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
