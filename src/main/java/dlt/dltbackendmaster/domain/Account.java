@@ -33,27 +33,31 @@ public class Account extends Users implements Serializable, UserDetails {
 
 	public Account(int id, Locality locality, Partners partner, Profiles profiles, Us us, String surname, String name,
 			String phoneNumber, String email, String username, String password, String entryPoint, int status,
+			int newPassword,
 			Byte isLocked, Byte isExpired, Byte isCredentialsExpired, Byte isEnabled, int createdBy, Date dateCreated,
 			Integer updatedBy, Date dateUpdated) {
-		
+
 		super(id, partner, profiles, us, surname, name,
-				phoneNumber, email, username, password, entryPoint, status,
+				phoneNumber, email, username, password, newPassword, entryPoint, status,
 				isLocked, isExpired, isCredentialsExpired, isEnabled, createdBy, dateCreated,
 				updatedBy, dateUpdated);
-		
+
 		this.isaccountenabled = isEnabled == 0 ? false : true;
 		this.isaccountexpired = isExpired == 0 ? false : true;
 		this.isaccountlocked = isLocked == 0 ? false : true;
 		this.iscredentialsexpired = isCredentialsExpired == 0 ? false : true;
-		
+
 	}
-	
+
 	public Account(Users user) {
 		super(user.getId(), user.getPartners(), user.getProfiles(), user.getUs(), user.getSurname(),
-				user.getName(),user.getPhoneNumber(), user.getEmail(), user.getUsername(), user.getPassword(), user.getEntryPoint(), 
-				user.getStatus(),user.getIsLocked(), user.getIsExpired(), user.getIsCredentialsExpired(), user.getIsEnabled(), 
+				user.getName(), user.getPhoneNumber(), user.getEmail(), user.getUsername(), user.getPassword(),
+				user.getNewPassword(), user.getEntryPoint(),
+				user.getStatus(), user.getIsLocked(), user.getIsExpired(), user.getIsCredentialsExpired(),
+				user.getIsEnabled(),
 				user.getCreatedBy(), user.getDateCreated(), user.getUpdatedBy(), user.getDateUpdated());
-		
+
+		this.setNewPassword(user.getNewPassword());
 		this.isaccountenabled = user.getIsEnabled() == 0 ? false : true;
 		this.isaccountexpired = user.getIsExpired() == 0 ? false : true;
 		this.isaccountlocked = user.getIsLocked() == 0 ? false : true;
@@ -80,7 +84,6 @@ public class Account extends Users implements Serializable, UserDetails {
 		return isaccountenabled;
 	}
 
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		GrantedAuthority authority = () -> getProfiles().getName();
@@ -89,14 +92,12 @@ public class Account extends Users implements Serializable, UserDetails {
 		return authorities;
 	}
 
-	
 	public Users toUser() {
-	
-		return new Users(getId(), getPartners(), getProfiles(), getUs(), 
-				getSurname(), getName(), getPhoneNumber(), getEmail(), getUsername(), getPassword(), 
-				getEntryPoint(), getStatus(), getIsLocked(), getIsExpired(), getIsCredentialsExpired(), 
+
+		return new Users(getId(), getPartners(), getProfiles(), getUs(),
+				getSurname(), getName(), getPhoneNumber(), getEmail(), getUsername(), getPassword(), getNewPassword(),
+				getEntryPoint(), getStatus(), getIsLocked(), getIsExpired(), getIsCredentialsExpired(),
 				getIsEnabled(), getCreatedBy(), getDateCreated(), getUpdatedBy(), getDateUpdated());
 	}
-
 
 }
