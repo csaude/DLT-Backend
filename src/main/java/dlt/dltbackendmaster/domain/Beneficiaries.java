@@ -849,6 +849,7 @@ public class Beneficiaries implements java.io.Serializable
             beneficiary.put("nationality", nationality);
             beneficiary.put("entry_point", entryPoint);
             beneficiary.put("neighborhood_id", neighborhood.getId());
+            beneficiary.put("locality_id", neighborhood.getLocality().getId());
             beneficiary.put("locality_name", neighborhood.getLocality().getName());
             beneficiary.put("us_id", us.getId());
             if(vbltLivesWith != null) beneficiary.put("vblt_lives_with", vbltLivesWith);

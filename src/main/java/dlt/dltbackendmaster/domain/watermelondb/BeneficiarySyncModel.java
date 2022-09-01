@@ -19,6 +19,7 @@ public class BeneficiarySyncModel extends BasicLifeCycleSyncModel
     private Integer partner_id;
     private String entry_point;
     private Integer neighbourhood_id;
+    private Integer locality_id;
     private String locality_name;
     private Integer us_id;
     private String vblt_lives_with;
@@ -167,8 +168,15 @@ public class BeneficiarySyncModel extends BasicLifeCycleSyncModel
         this.neighbourhood_id = neighborhood_id;
     }
 
-    
-    public String getLocality_name() {
+    public Integer getLocality_id() {
+		return locality_id;
+	}
+
+	public void setLocality_id(Integer locality_id) {
+		this.locality_id = locality_id;
+	}
+
+	public String getLocality_name() {
 		return locality_name;
 	}
 

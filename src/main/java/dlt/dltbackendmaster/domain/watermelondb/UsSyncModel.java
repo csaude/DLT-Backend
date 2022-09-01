@@ -11,6 +11,7 @@ public class UsSyncModel {
 	private String name;
 	private String description;
 	private int locality_id;
+	private int entry_point;
 	private int status;
 	private Integer online_id;
 	
@@ -80,6 +81,14 @@ public class UsSyncModel {
 		this.online_id = online_id;
 	}
 	
+	public int getEntry_point() {
+		return entry_point;
+	}
+
+	public void setEntry_point(int entry_point) {
+		this.entry_point = entry_point;
+	}
+
 	public ObjectNode toObjectNode() {
 		ObjectMapper mapper = new ObjectMapper();
 		
