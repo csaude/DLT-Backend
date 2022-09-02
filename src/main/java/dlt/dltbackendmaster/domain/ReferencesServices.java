@@ -225,9 +225,10 @@ public class ReferencesServices implements java.io.Serializable {
 			referenceService.put("description", description);
 			referenceService.put("status", status);
 			referenceService.put("date_created", dateFormat.format(dateCreated));
-			referenceService.put("online_id", id.toString()); // flag to control if entity is synchronized with
-																// the backend
+			referenceService.put("online_id", id.toString()); // flag to control if entity is synchronized with the backend
+			referenceService.put("is_awaiting_sync", 0); // flag to control if reference is synced in mobile
 		} else { // ensure online_id is updated first
+			referenceService.put("is_awaiting_sync", 0); // flag to control if reference is synced in mobile
 			referenceService.put("reference_id", String.valueOf(id.getReferenceId()));
 			referenceService.put("online_id", id.toString());
 		}

@@ -10,6 +10,7 @@ public class ReferenceServicesSyncModel {
     private Integer status;
     private String _status;
     private String _changed;
+    private Integer is_awaiting_sync;
     private String online_id;
     
 	public ReferenceServicesSyncModel() {
@@ -77,6 +78,14 @@ public class ReferenceServicesSyncModel {
 
 	public void set_changed(String _changed) {
 		this._changed = _changed;
+	}
+
+	public Integer getIs_awaiting_sync() {
+		return is_awaiting_sync;
+	}
+
+	public void setIs_awaiting_sync(Integer is_awaiting_sync) {
+		this.is_awaiting_sync = is_awaiting_sync;
 	}
 
 	public String getOnline_id() {

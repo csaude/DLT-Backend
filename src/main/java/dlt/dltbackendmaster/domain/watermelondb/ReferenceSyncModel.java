@@ -21,7 +21,8 @@ public class ReferenceSyncModel{
     private Integer status;
     private String _status;
     private String _changed;
-    private String online_id;
+    private Integer is_awaiting_sync;
+    private Integer online_id;
 	
 	public ReferenceSyncModel() {}
 	
@@ -136,6 +137,14 @@ public class ReferenceSyncModel{
 		this._status = _status;
 	}
 
+	public Integer getIs_awaiting_sync() {
+		return is_awaiting_sync;
+	}
+
+	public void setIs_awaiting_sync(Integer is_awaiting_sync) {
+		this.is_awaiting_sync = is_awaiting_sync;
+	}
+
 	public String get_changed() {
 		return _changed;
 	}
@@ -144,11 +153,11 @@ public class ReferenceSyncModel{
 		this._changed = _changed;
 	}
 
-	public String getOnline_id() {
+	public Integer getOnline_id() {
 		return online_id;
 	}
 
-	public void setOnline_id(String online_id) {
+	public void setOnline_id(Integer online_id) {
 		this.online_id = online_id;
 	}
 	

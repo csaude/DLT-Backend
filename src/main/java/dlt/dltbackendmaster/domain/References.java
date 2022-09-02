@@ -356,9 +356,10 @@ public class References implements java.io.Serializable {
             reference.put("other_reason", otherReason);
             reference.put("online_id", id);
             reference.put("user_created", userCreated);
-            //reference.put("created_by", createdBy);
+            reference.put("is_awaiting_sync", 0); // flag to control if reference is synced in mobile
             reference.put("date_created", dateFormat.format(dateCreated));
         } else { // ensure online_id is updated first
+        	reference.put("is_awaiting_sync", 0); // flag to control if reference is synced in mobile
         	reference.put("beneficiary_id", beneficiaries.getId());
         	reference.put("online_id", id);
         }
