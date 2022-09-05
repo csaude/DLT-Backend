@@ -2,14 +2,25 @@ package dlt.dltbackendmaster.service;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import dlt.dltbackendmaster.domain.Beneficiaries;
+import dlt.dltbackendmaster.domain.BeneficiariesInterventions;
+import dlt.dltbackendmaster.domain.References;
+import dlt.dltbackendmaster.domain.ReferencesServices;
+import dlt.dltbackendmaster.domain.ReferencesServicesObject;
+import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.repository.DAORepository;
+import dlt.dltbackendmaster.security.utils.ServiceCompletionRules;
 
 /**
  * This class implements the Service interface
@@ -114,6 +125,53 @@ public class DAOServiceImpl implements DAOService{
 	public <T> int UpdateEntitiesByNamedQuery(String query, Object... params) {
 		// TODO Auto-generated method stub
 		return repository.UpdateEntitiesByNamedQuery(query, params);
+	}
+
+	@Override
+	public <T> ReferencesServicesObject registerServiceCompletionStatus(BeneficiariesInterventions intervention) {
+		
+        
+        SubServices subService = find(SubServices.class, intervention.getId().getSubServiceId());
+        intervention.setSubServices(subService);
+        
+        // Actualizar o status dos serviços solicitados
+        Beneficiaries beneficiary = find(Beneficiaries.class, intervention.getBeneficiaries().getId());
+        Integer serviceId = subService.getServices().getId();
+        List<ReferencesServices> referencesServices = GetAllEntityByNamedQuery("ReferencesServices.findByBeneficiaryAndService",
+                                                                                       beneficiary.getId(),
+                                                                                       serviceId);
+        
+        List<References> updatedReferences = new ArrayList<>();
+        
+        for (ReferencesServices referenceServices : referencesServices) {
+
+            Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(beneficiary,
+                                                                                              serviceId);
+
+            if (referenceServiceStatus.intValue() != (referenceServices.getStatus())) {
+                referenceServices.setStatus(referenceServiceStatus);
+                referenceServices.setDateUpdated(new Date());
+                referenceServices.setUpdatedBy(subService.getCreatedBy());
+                referenceServices = update(referenceServices);
+
+                // Actualizar o status da referências
+                References reference = referenceServices.getReferences();
+                Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference);
+
+                if (referenceStatus.intValue() != reference.getStatus()) {
+                    reference.setStatus(referenceStatus);
+                    reference.setDateUpdated(new Date());
+                    reference.setUpdatedBy(subService.getCreatedBy());
+                    reference = update(reference);
+                }
+                updatedReferences.add(reference);
+            }
+        }
+        ReferencesServicesObject referenceServiceObject = new ReferencesServicesObject(intervention,
+                updatedReferences);
+		
+		return referenceServiceObject;
+		
 	}
 
 }

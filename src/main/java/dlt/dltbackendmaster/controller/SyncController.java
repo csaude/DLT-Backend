@@ -356,6 +356,9 @@ public class SyncController {
 						BeneficiariesInterventions intervention = new BeneficiariesInterventions(created, lastPulledAt);
 						intervention.setCreatedBy(user.getId());
 						service.Save(intervention);
+						
+						service.registerServiceCompletionStatus(intervention);
+						
 					}
 				}
 			}

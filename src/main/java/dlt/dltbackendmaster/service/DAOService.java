@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import dlt.dltbackendmaster.controller.BeneficiaryInterventionController;
+import dlt.dltbackendmaster.domain.BeneficiariesInterventions;
+import dlt.dltbackendmaster.domain.ReferencesServicesObject;
+
 /**
  * This interface holds the service implementations called by the API controller 
  * @author derciobucuane
@@ -41,4 +45,6 @@ public interface DAOService {
 	<T> List<T> findByJPQuery(String hql, Map<String, Object> namedParams);
 
 	<T> List<T> findByJPQueryFilter(String hql, Map<String, Object> namedParams, int f, int m);
+	
+	<T> ReferencesServicesObject registerServiceCompletionStatus(BeneficiariesInterventions intervention);
 }
