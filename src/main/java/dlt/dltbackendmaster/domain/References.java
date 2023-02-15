@@ -83,7 +83,35 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "and (r.dateUpdated >= :lastpulledat) "
 																+ "or (r.dateUpdated >= :lastpulledat "
 																+ "and r.dateCreated = r.dateUpdated)"
-		/* "SELECT r FROM References r WHERE r.dateUpdated = :lastpulledat" */) })
+		/* "SELECT r FROM References r WHERE r.dateUpdated = :lastpulledat" */),
+	    @NamedQuery(name = "References.findBySyncLocalities", query = "SELECT r FROM  References r "
+	    															+ "left join fetch r.referredBy rb "
+	    															+ "left join fetch r.users u "
+	    															+ "left join fetch r.us us "
+												    				+ "left join fetch r.beneficiaries b "
+													                + "where b.neighborhood.locality.id in (:localities) "
+													                + "and r.status = 0 "
+													                + "and r.users.id = : userId "
+													                ),
+		@NamedQuery(name = "References.findBySyncDistricts", query = "SELECT r FROM  References r "
+																	+ "left join fetch r.referredBy rb "
+																	+ "left join fetch r.users u "
+																	+ "left join fetch r.us us "
+																	+ "left join fetch r.beneficiaries b "
+													                + "where b.neighborhood.locality.district.id in (:districts) "
+													                + "and r.status = 0 "
+													                + "and r.users.id = : userId "
+													                ),
+		@NamedQuery(name = "References.findBySyncProvinces", query = "SELECT r FROM  References r "
+																	+ "left join fetch r.referredBy rb "
+																	+ "left join fetch r.users u "
+																	+ "left join fetch r.us us "
+																	+ "left join fetch r.beneficiaries b "
+													                + "where b.neighborhood.locality.district.province.id in (:provinces) "
+													                + "and r.status = 0 "
+													                + "and r.users.id = : userId "
+													                ),
+})
 public class References implements java.io.Serializable {
 
 	private static final long serialVersionUID = -6756894395137677466L;

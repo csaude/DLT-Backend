@@ -52,7 +52,29 @@ import dlt.dltbackendmaster.serializers.ServiceSerializer;
     @NamedQuery(name = "ReferencesServices.findByReferenceAndService", query = "SELECT b FROM ReferencesServices b where b.references.id = :reference_id and b.services.id = :service_id"),
     @NamedQuery(name = "ReferencesServices.findByBeneficiaryAndService", query = "SELECT r FROM ReferencesServices r where r.references.beneficiaries.id = :beneficiary_id and r.services.id = :service_id"),
     @NamedQuery(name = "ReferencesServices.findByDateCreated", query = "select b from ReferencesServices b where b.dateUpdated is null and b.dateCreated > :lastpulledat"),
-    @NamedQuery(name = "ReferencesServices.findByDateUpdated", query = "select b from ReferencesServices b where (b.dateUpdated >= :lastpulledat) or (b.dateUpdated >= :lastpulledat and b.dateCreated = b.dateUpdated)") })
+    @NamedQuery(name = "ReferencesServices.findByDateUpdated", query = "select b from ReferencesServices b where (b.dateUpdated >= :lastpulledat) or (b.dateUpdated >= :lastpulledat and b.dateCreated = b.dateUpdated)"),
+    @NamedQuery(name = "ReferencesServices.findBySyncLocalities", query = "SELECT rs FROM  ReferencesServices rs "
+													    		+ "left join fetch rs.references r "
+													            + "left join fetch r.beneficiaries b " 
+													            + "where b.neighborhood.locality.id in (:localities) "
+													            + "and r.status = 0 "
+													            + "and r.users.id = : userId "
+    															),
+	@NamedQuery(name = "ReferencesServices.findBySyncDistricts", query = "SELECT rs FROM  ReferencesServices rs "
+																+ "left join fetch rs.references r "
+													            + "left join fetch r.beneficiaries b " 
+													            + "where b.neighborhood.locality.id in (:localities) "
+													            + "and r.status = 0 "
+													            + "and r.users.id = : userId "
+																),
+	@NamedQuery(name = "ReferencesServices.findBySyncProvinces", query = "SELECT rs FROM  ReferencesServices rs "
+																+ "left join fetch rs.references r "
+													            + "left join fetch r.beneficiaries b " 
+													            + "where b.neighborhood.locality.id in (:localities) "
+													            + "and r.status = 0 "
+													            + "and r.users.id = : userId "
+																),
+})
 public class ReferencesServices implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

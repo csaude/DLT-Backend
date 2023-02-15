@@ -246,14 +246,31 @@ public class SyncController
 
 			subServicesCreated = service.GetAllEntityByNamedQuery("SubService.findAll");
 			subServicesUpdated = new ArrayList<SubServices>();
-			// References
-			referencesCreated = service.GetAllEntityByNamedQuery("References.findAllByNotifyTo", user.getId());
+			
+			if (level.equals("CENTRAL")) {
+				// References
+				referencesCreated = service.GetAllEntityByNamedQuery("References.findAll");
+				// ReferencesServices
+				referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findAll");
+            } else if (level.equals("PROVINCIAL")) {
+            	// References
+                referencesCreated = service.GetAllEntityByNamedQuery("References.findBySyncProvinces", Arrays.asList(params), user.getId());
+                // ReferencesServices
+    			referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findBySyncProvinces", Arrays.asList(params), user.getId());
+            } else if (level.equals("DISTRITAL")) {
+            	// References
+                referencesCreated = service.GetAllEntityByNamedQuery("References.findBySyncDistricts", Arrays.asList(params), user.getId());
+                // ReferencesServices
+    			referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findBySyncDistricts", Arrays.asList(params), user.getId());
+            } else {
+            	// References
+                referencesCreated = service.GetAllEntityByNamedQuery("References.findBySyncLocalities", Arrays.asList(params), user.getId());
+                // ReferencesServices
+    			referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findBySyncLocalities", Arrays.asList(params), user.getId());
+            }
+						
 			referencesUpdated = new ArrayList<References>();
-
-			// ReferencesServices
-			referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findByNotifyTo",
-					user.getId());
-
+			
 			referenceServicesUpdated = new ArrayList<ReferencesServices>();
 
 		} else {

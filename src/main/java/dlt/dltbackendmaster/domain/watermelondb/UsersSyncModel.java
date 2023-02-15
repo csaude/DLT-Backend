@@ -17,6 +17,7 @@ public class UsersSyncModel {
 	private Integer profile_id;
 	private String us_ids;
 	private Integer online_id;
+	private String organization_name;
 	
 	public UsersSyncModel() {}
 	
@@ -134,6 +135,14 @@ public class UsersSyncModel {
 				+ "us_id: " + us_ids + "\n"
 				+ "online_id: " + online_id + "\n";
 		return object;
+	}
+
+	public String getOrganization_name() {
+		return organization_name;
+	}
+
+	public void setOrganization_name(String organization_name) {
+		this.organization_name = organization_name;
 	}
 	
 }
