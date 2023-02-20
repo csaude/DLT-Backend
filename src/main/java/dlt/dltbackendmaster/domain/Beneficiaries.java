@@ -99,7 +99,34 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.us "
                             									+ " where (b.dateUpdated >= :lastpulledat) "
                             									+ " or (b.dateUpdated >= :lastpulledat "
-                            									+ " and b.dateCreated = b.dateUpdated)") })
+                            									+ " and b.dateCreated = b.dateUpdated)"),                
+                @NamedQuery(name = "Beneficiary.findCountByLocalities", query = "SELECT count(b.id) as total FROM Beneficiaries b "
+										                		+ " left join  b.neighborhood nb "
+										                		+ " left join  b.partners "
+																+ " left join  b.locality "
+																+ " left join  b.us "
+																+ " where nb.locality.id in (:localities) "
+																+ ""),
+                @NamedQuery(name = "Beneficiary.findCountByDistricts", query = "SELECT count(b.id) as total FROM Beneficiaries b "
+										                		+ " left join  b.neighborhood nb "
+										                		+ " left join  b.partners "
+																+ " left join  b.locality "
+																+ " left join  b.us "
+																+ " where nb.locality.district.id in (:districts)"),
+				@NamedQuery(name = "Beneficiary.findCountByProvinces", query = "SELECT count(b.id) as total FROM Beneficiaries b "
+										                		+ " left join  b.neighborhood nb "
+										                		+ " left join  b.partners "
+																+ " left join  b.locality "
+																+ " left join  b.us "
+																+ " where nb.locality.district.province.id in (:provinces) "
+																+ ""),
+				@NamedQuery(name = "Beneficiary.findCountAll", query = "SELECT count(b.id) as total FROM Beneficiaries b "
+																+ " left join  b.neighborhood nb "
+																+ " left join  b.partners "
+																+ " left join  b.locality "
+																+ " left join  b.us "
+																+ ""),
+})
 public class Beneficiaries implements java.io.Serializable
 {
     private static final long serialVersionUID = -8649443166960196872L;

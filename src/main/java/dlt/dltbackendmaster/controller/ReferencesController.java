@@ -170,4 +170,29 @@ public class ReferencesController {
 		}
 
 	}
+	
+	@GetMapping(path = "/byUser/{userId}/count", produces = "application/json")
+	public ResponseEntity<Long> getCountByUserPermission(@PathVariable Integer userId) {
+
+		if (userId == null) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
+
+		try {
+			Users user = service.find(Users.class, userId);
+
+			Long referencesTotal;
+			if (Arrays.asList(MANAGER, MENTOR, NURSE, COUNSELOR).contains(user.getProfiles().getId())) {
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByUserPermission", userId);
+			} else {
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountAll");
+			}
+
+			return new ResponseEntity<>(referencesTotal, HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }

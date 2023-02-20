@@ -111,6 +111,21 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 													                + "and r.status = 0 "
 													                + "and r.users.id = : userId "
 													                ),
+		@NamedQuery(name = "References.findCountAll", query = "SELECT count(r.id) FROM References r "
+																	+ "left join r.beneficiaries "
+																	+ "left join r.referredBy "
+																	+ "left join r.us "
+																	+ "left join r.users "
+																	+ "where r.status <> 3"),
+		@NamedQuery(name = "References.findCountByUserPermission", query = "SELECT count(r.id) FROM References r "
+																	+ "left join r.beneficiaries "
+																	+ "left join r.referredBy "
+																	+ "left join r.us "
+																	+ "left join r.users "
+																	+ "where r.status <> 3 "
+																	+ "and (r.userCreated = cast(:userId as string) "
+																	+ "or r.users.id = : userId "
+																	+ "or r.referredBy.id = : userId)"),
 })
 public class References implements java.io.Serializable {
 

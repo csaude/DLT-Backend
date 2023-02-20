@@ -245,13 +245,25 @@ public class BeneficiaryController
 		}
 	}
 	
-	@GetMapping(path = "/total", produces = "application/json")
-    public ResponseEntity<Integer>  getTotalBeneficiaries() {
-		 try {
-			    int totalBeneficiaries = service.count(Beneficiaries.class);
-	            return new ResponseEntity<>(totalBeneficiaries, HttpStatus.OK);
-	      } catch (Exception e) {
-	            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-	      }
-    }
+	@GetMapping(path = "/count", produces = "application/json")
+	public ResponseEntity<Long> countByBeneficiary(@RequestParam(name = "level") String level, @RequestParam(name = "params",
+            required = false) @Nullable Integer[] params) {
+		try {
+			Long beneficiariesTotal;
+			
+			if (level.equals("CENTRAL")) {
+				beneficiariesTotal = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountAll");
+            } else if (level.equals("PROVINCIAL")) {
+            	beneficiariesTotal = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByProvinces", Arrays.asList(params));
+            } else if (level.equals("DISTRITAL")) {
+            	beneficiariesTotal = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByDistricts", Arrays.asList(params));
+            } else {
+            	beneficiariesTotal = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByLocalities", Arrays.asList(params));
+            }
+		
+			return new ResponseEntity<>(beneficiariesTotal, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
