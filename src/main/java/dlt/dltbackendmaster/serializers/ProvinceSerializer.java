@@ -18,10 +18,10 @@ public class ProvinceSerializer extends JsonSerializer<Province>
         province.setId(value.getId());
         province.setCode(value.getCode());
         province.setName(value.getName());
-        province.setCreatedBy(value.getCreatedBy());
-        province.setCreateDate(value.getCreateDate());
-        province.setUpdatedBy(value.getUpdatedBy());
-        province.setUpdateDate(value.getUpdateDate());
+//        province.setCreatedBy(value.getCreatedBy());
+//        province.setCreateDate(value.getCreateDate());
+//        province.setUpdatedBy(value.getUpdatedBy());
+//        province.setUpdateDate(value.getUpdateDate());
         gen.writeObject(province);
     }
 
