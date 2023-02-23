@@ -111,6 +111,22 @@ public class DAORepositoryImpl implements DAORepository {
 		return results;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, Object... params) {
+		Query q = getCurrentSession().getNamedQuery(query);
+		int i = 0;
+		for (Parameter param : q.getParameters()) {
+			q.setParameter(param, params[i++]);
+		}
+
+		List<T> results = q
+				.setFirstResult(pageIndex*pageSize)
+				.setMaxResults(pageSize)
+				.getResultList();
+
+		return results;
+	}
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public <T> List<T> GetAllEntityByNamedNativeQuery(String query, Object... params) {
         Query q = getCurrentSession().getNamedNativeQuery(query);

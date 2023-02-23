@@ -41,14 +41,16 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "left join fetch r.referredBy "
 																+ "left join fetch r.us "
 																+ "left join fetch r.users "
-																+ "where r.status <> 3"),
+																+ "where r.status <> 3 "
+																+ "order by r.id desc "),
 		@NamedQuery(name = "References.findAllByUser", query = "SELECT r FROM References r "
 																+ "left join fetch r.beneficiaries "
 																+ "left join fetch r.referredBy "
 																+ "left join fetch r.us "
 																+ "left join fetch r.users "
 																+ "where r.status <> 3 "
-																+ "and r.userCreated like :userCreated"),
+																+ "and r.userCreated like :userCreated "
+																+ "order by r.id desc "),
 		@NamedQuery(name = "References.findAllByUserPermission", query = "SELECT r FROM References r "
 																+ "left join fetch r.beneficiaries "
 																+ "left join fetch r.referredBy "
@@ -57,14 +59,16 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "where r.status <> 3 "
 																+ "and (r.userCreated = cast(:userId as string) "
 																+ "or r.users.id = : userId "
-																+ "or r.referredBy.id = : userId)"),
+																+ "or r.referredBy.id = : userId) "
+																+ "order by r.id desc "),
 		@NamedQuery(name = "References.findAllByNotifyTo", query = "SELECT r FROM References r "
 																+ "left join fetch r.beneficiaries "
 																+ "left join fetch r.referredBy "
 																+ "left join fetch r.us "
 																+ "left join fetch r.users "
 																+ "where r.status = 0 "
-																+ "and r.users.id = : userId "),
+																+ "and r.users.id = : userId "
+																+ "order by r.id desc"),
 		@NamedQuery(name = "References.findByDateCreated", query = "SELECT r from References r "
 																+ "left join fetch r.beneficiaries "
 																+ "left join fetch r.referredBy "
@@ -72,7 +76,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "left join fetch r.users "
 																+ "where r.status <> 3 "
 																+ "and r.dateUpdated is null "
-																+ "and r.dateCreated > :lastpulledat"
+																+ "and r.dateCreated > :lastpulledat "
+																+ "order by r.id desc "
 		/* "SELECT r FROM References r WHERE r.dateCreated = :lastpulledat" */),
 		@NamedQuery(name = "References.findByDateUpdated", query = "SELECT r from References r "
 																+ "left join fetch r.beneficiaries "
@@ -82,7 +87,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "where r.status <> 3 "
 																+ "and (r.dateUpdated >= :lastpulledat) "
 																+ "or (r.dateUpdated >= :lastpulledat "
-																+ "and r.dateCreated = r.dateUpdated)"
+																+ "and r.dateCreated = r.dateUpdated) "
+																+ "order by r.id desc "
 		/* "SELECT r FROM References r WHERE r.dateUpdated = :lastpulledat" */),
 	    @NamedQuery(name = "References.findBySyncLocalities", query = "SELECT r FROM  References r "
 	    															+ "left join fetch r.referredBy rb "
@@ -92,6 +98,7 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 													                + "where b.neighborhood.locality.id in (:localities) "
 													                + "and r.status = 0 "
 													                + "and r.users.id = : userId "
+													                + "order by r.id desc"
 													                ),
 		@NamedQuery(name = "References.findBySyncDistricts", query = "SELECT r FROM  References r "
 																	+ "left join fetch r.referredBy rb "
@@ -101,6 +108,7 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 													                + "where b.neighborhood.locality.district.id in (:districts) "
 													                + "and r.status = 0 "
 													                + "and r.users.id = : userId "
+													                + "order by r.id desc"
 													                ),
 		@NamedQuery(name = "References.findBySyncProvinces", query = "SELECT r FROM  References r "
 																	+ "left join fetch r.referredBy rb "
@@ -110,13 +118,15 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 													                + "where b.neighborhood.locality.district.province.id in (:provinces) "
 													                + "and r.status = 0 "
 													                + "and r.users.id = : userId "
+													                + "order by r.id desc"
 													                ),
 		@NamedQuery(name = "References.findCountAll", query = "SELECT count(r.id) FROM References r "
 																	+ "left join r.beneficiaries "
 																	+ "left join r.referredBy "
 																	+ "left join r.us "
 																	+ "left join r.users "
-																	+ "where r.status <> 3"),
+																	+ "where r.status <> 3 "
+																	+ "order by r.id desc"),
 		@NamedQuery(name = "References.findCountByUserPermission", query = "SELECT count(r.id) FROM References r "
 																	+ "left join r.beneficiaries "
 																	+ "left join r.referredBy "
@@ -125,7 +135,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																	+ "where r.status <> 3 "
 																	+ "and (r.userCreated = cast(:userId as string) "
 																	+ "or r.users.id = : userId "
-																	+ "or r.referredBy.id = : userId)"),
+																	+ "or r.referredBy.id = : userId) "
+																	+ "order by r.id desc "),
 })
 public class References implements java.io.Serializable {
 

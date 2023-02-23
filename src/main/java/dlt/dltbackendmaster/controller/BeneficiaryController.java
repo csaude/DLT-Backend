@@ -36,20 +36,25 @@ public class BeneficiaryController
     }
 
     @GetMapping(produces = "application/json")
-    public ResponseEntity<List<Beneficiaries>> get(@RequestParam(name = "profile") Integer profile, @RequestParam(name = "level") String level, @RequestParam(name = "params",
-                                                                                                                                                              required = false) @Nullable Integer[] params) {
+    public ResponseEntity<List<Beneficiaries>> get(
+    		@RequestParam(name = "profile") Integer profile, 
+    		@RequestParam(name = "level") String level, 
+    		@RequestParam(name = "params",required = false) @Nullable Integer[] params,
+    		@RequestParam(name = "pageIndex") int pageIndex,
+    		@RequestParam(name = "pageSize") int pageSize
+    		) {
 
         try {
             List<Beneficiaries> beneficiaries = null;
 
             if (level.equals("CENTRAL")) {
-                beneficiaries = service.GetAllEntityByNamedQuery("Beneficiary.findAll");
+                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findAll", pageIndex, pageSize);
             } else if (level.equals("PROVINCIAL")) {
-                beneficiaries = service.GetAllEntityByNamedQuery("Beneficiary.findByProvinces", Arrays.asList(params));
+                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByProvinces", pageIndex, pageSize, Arrays.asList(params));
             } else if (level.equals("DISTRITAL")) {
-                beneficiaries = service.GetAllEntityByNamedQuery("Beneficiary.findByDistricts", Arrays.asList(params));
+                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByDistricts", pageIndex, pageSize, Arrays.asList(params));
             } else {
-                beneficiaries = service.GetAllEntityByNamedQuery("Beneficiary.findByLocalities", Arrays.asList(params));
+                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByLocalities", pageIndex, pageSize, Arrays.asList(params));
             }
 
             return new ResponseEntity<List<Beneficiaries>>(beneficiaries, HttpStatus.OK);

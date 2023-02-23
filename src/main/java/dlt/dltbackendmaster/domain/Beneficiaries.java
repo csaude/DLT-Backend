@@ -50,6 +50,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.partners "
 																+ " left join fetch b.locality "
 																+ " left join fetch b.us "
+																+ " order by b.id desc"
 																+ ""),
                 @NamedQuery(name = "Beneficiary.findByNui", query = "SELECT b FROM Beneficiaries b "
 										                		+ " left join fetch b.neighborhood "
@@ -71,19 +72,26 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.locality "
 																+ " left join fetch b.us "
                 												+ " where nb.locality.id in (:localities) "
+                												+ " and b.status = 1 "
+                												+ " order by b.id desc "
                 												+ ""),
                 @NamedQuery(name = "Beneficiary.findByDistricts", query = "SELECT b FROM Beneficiaries b "
 										                		+ " left join fetch b.neighborhood nb "
 																+ " left join fetch b.partners "
 																+ " left join fetch b.locality "
 																+ " left join fetch b.us "
-                												+ " where nb.locality.district.id in (:districts)"),
+                												+ " where nb.locality.district.id in (:districts) "
+                												+ " and b.status = 1 "
+                												+ " order by b.id desc "
+                                                                + ""),
                 @NamedQuery(name = "Beneficiary.findByProvinces", query = "SELECT b FROM Beneficiaries b "
 										                		+ " left join fetch b.neighborhood nb "
 																+ " left join fetch b.partners "
 																+ " left join fetch b.locality "
 																+ " left join fetch b.us "
                 												+ " where nb.locality.district.province.id in (:provinces) "
+                												+ " and b.status = 1 "
+                												+ " order by b.id desc "
                 												+ ""),
                 @NamedQuery(name = "Beneficiary.findByDateCreated",query = "select b from Beneficiaries b "
 										                		+ " left join fetch b.neighborhood nb "
@@ -106,25 +114,30 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join  b.locality "
 																+ " left join  b.us "
 																+ " where nb.locality.id in (:localities) "
+																+ " and b.status = 1 "
 																+ ""),
                 @NamedQuery(name = "Beneficiary.findCountByDistricts", query = "SELECT count(b.id) as total FROM Beneficiaries b "
 										                		+ " left join  b.neighborhood nb "
 										                		+ " left join  b.partners "
 																+ " left join  b.locality "
 																+ " left join  b.us "
-																+ " where nb.locality.district.id in (:districts)"),
+																+ " where nb.locality.district.id in (:districts)"
+																+ " and b.status = 1 "
+																+ ""),
 				@NamedQuery(name = "Beneficiary.findCountByProvinces", query = "SELECT count(b.id) as total FROM Beneficiaries b "
 										                		+ " left join  b.neighborhood nb "
 										                		+ " left join  b.partners "
 																+ " left join  b.locality "
 																+ " left join  b.us "
 																+ " where nb.locality.district.province.id in (:provinces) "
+																+ " and b.status = 1 "
 																+ ""),
 				@NamedQuery(name = "Beneficiary.findCountAll", query = "SELECT count(b.id) as total FROM Beneficiaries b "
 																+ " left join  b.neighborhood nb "
 																+ " left join  b.partners "
 																+ " left join  b.locality "
 																+ " left join  b.us "
+																+ " where b.status = 1 "
 																+ ""),
 })
 public class Beneficiaries implements java.io.Serializable

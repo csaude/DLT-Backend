@@ -1,5 +1,10 @@
 package dlt.dltbackendmaster.controller;
 
+import static dlt.dltbackendmaster.util.ProfilesConstants.COUNSELOR;
+import static dlt.dltbackendmaster.util.ProfilesConstants.MANAGER;
+import static dlt.dltbackendmaster.util.ProfilesConstants.MENTOR;
+import static dlt.dltbackendmaster.util.ProfilesConstants.NURSE;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dlt.dltbackendmaster.domain.References;
@@ -22,7 +28,6 @@ import dlt.dltbackendmaster.domain.ReferencesServices;
 import dlt.dltbackendmaster.domain.ReferencesServicesId;
 import dlt.dltbackendmaster.domain.Users;
 import dlt.dltbackendmaster.service.DAOService;
-import static dlt.dltbackendmaster.util.ProfilesConstants.*;
 
 @RestController
 @RequestMapping("/api/references")
@@ -61,7 +66,10 @@ public class ReferencesController {
 	}
 
 	@GetMapping(path = "/byUser/{userId}", produces = "application/json")
-	public ResponseEntity<List<References>> getAllByUser(@PathVariable Integer userId) {
+	public ResponseEntity<List<References>> getAllByUser(@PathVariable Integer userId,
+			@RequestParam(name = "pageIndex") int pageIndex,
+    		@RequestParam(name = "pageSize") int pageSize
+			) {
 
 		if (userId == null) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -73,9 +81,9 @@ public class ReferencesController {
 			List<References> references = null;
 
 			if (Arrays.asList(MANAGER, MENTOR, NURSE, COUNSELOR).contains(user.getProfiles().getId())) {
-				references = service.GetAllEntityByNamedQuery("References.findAllByUserPermission", userId);
+				references = service.GetAllPagedEntityByNamedQuery("References.findAllByUserPermission", pageIndex, pageSize, userId);
 			} else {
-				references = service.GetAllEntityByNamedQuery("References.findAll");
+				references = service.GetAllPagedEntityByNamedQuery("References.findAll", pageIndex, pageSize);
 			}
 
 			return new ResponseEntity<>(references, HttpStatus.OK);

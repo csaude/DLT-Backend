@@ -82,6 +82,11 @@ public class DAOServiceImpl implements DAOService{
 	}
 	
 	@Transactional
+	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, Object... params) {
+		return repository.GetAllPagedEntityByNamedQuery(query,pageIndex,pageSize, params);
+	}
+	
+	@Transactional
     public <T> List<T> GetAllEntityByNamedNativeQuery(String query, Object... params) {
         return repository.GetAllEntityByNamedNativeQuery(query, params);
     }
