@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import dlt.dltbackendmaster.domain.Users;
 import dlt.dltbackendmaster.security.EmailSender;
-import dlt.dltbackendmaster.security.utils.Utility;
 import dlt.dltbackendmaster.service.DAOService;
+import dlt.dltbackendmaster.util.Utility;
 import net.bytebuddy.utility.RandomString;
 
 @Controller

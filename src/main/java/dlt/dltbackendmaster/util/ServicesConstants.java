@@ -1,4 +1,4 @@
-package dlt.dltbackendmaster.security.utils;
+package dlt.dltbackendmaster.util;
 
 import java.util.Arrays;
 import java.util.List;
@@ -255,6 +255,41 @@ public class ServicesConstants
 
     // LITERACIA FINANCEIRA
     public static final Integer LITERACIA_FINANCEIRA = 215;
+    
+    
+    // LITERACIA FINANCEIRA - AFLATOUN
+    public static final Integer CONCEITO_POUPANCA = 217;
+    
+    public static final Integer POUPANCA_DINHEIRO = 218;
+    
+    public static final Integer GESTAO_RECURSOS = 219;
+    
+    public static final Integer CONSEQUENCIAS_FINANCEIRAS = 220;
+    
+    public static final Integer NECESSIDADES_DESEJOS = 221;
+    
+    public static final Integer DINHEIRO_COMO_RECURSO = 222;
+    
+    public static final Integer ESCOLHAS_FINANCEIRAS = 223;
+    
+    // LITERACIA FINANCEIRA - AFLATEEN
+    public static final Integer ORCAMENTOS_DINHEIRO_PODER = 224;
+    
+    public static final Integer APRENDENDO_ECONOMIZAR = 225;
+    
+    public static final Integer APRENDENDO_GASTAR = 226;
+    
+    public static final Integer CRIANDO_ORCAMENTO = 227;
+    
+    public static final Integer OPCOES_POUPANCA = 228;
+    
+    public static final Integer POUPADORES_INTELIGENTES = 229;
+    
+    public static final Integer DINHEIRO_EMPRESTADO = 230;
+    
+    public static final Integer FLUXOS_DINHEIRO = 231;
+    
+    public static final Integer IMAGINANDO_MEU_FUTURO = 232;
 
     // ESTADOS DE SERVICOS
     public static final Integer PENDING = 0;
@@ -456,4 +491,22 @@ public class ServicesConstants
                                                                                         GRUPOS_APOIO,
                                                                                         PROTECAO_CRIANCA,
                                                                                         FORTALECIMENTO_ECONOMICO);
+
+    public static final List<Integer> LITERACIA_FINANCEIRA_AFLATOUN = Arrays.asList(CONCEITO_POUPANCA,
+                                                                                        POUPANCA_DINHEIRO,
+                                                                                        GESTAO_RECURSOS,
+                                                                                        CONSEQUENCIAS_FINANCEIRAS,
+                                                                                        NECESSIDADES_DESEJOS,
+                                                                                        DINHEIRO_COMO_RECURSO,
+                                                                                        ESCOLHAS_FINANCEIRAS);
+
+    public static final List<Integer> LITERACIA_FINANCEIRA_AFLATEEN = Arrays.asList(ORCAMENTOS_DINHEIRO_PODER,
+                                                                                        APRENDENDO_ECONOMIZAR,
+                                                                                        APRENDENDO_GASTAR,
+                                                                                        CRIANDO_ORCAMENTO,
+                                                                                        OPCOES_POUPANCA,
+                                                                                        POUPADORES_INTELIGENTES,
+                                                                                        DINHEIRO_EMPRESTADO,
+                                                                                        FLUXOS_DINHEIRO,
+                                                                                        IMAGINANDO_MEU_FUTURO);
 }

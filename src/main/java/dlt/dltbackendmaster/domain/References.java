@@ -459,7 +459,7 @@ public class References implements java.io.Serializable {
 				|| lastPulledAt.equals("null")) {
             reference.put("beneficiary_offline_id", beneficiaries.getOfflineId());
 			reference.put("referred_by", referredBy.getId());
-			reference.put("notify_to", users.getId());
+			reference.put("notify_to", users == null? null : users.getId());
 			reference.put("reference_note", referenceNote);
 			reference.put("description", description);
 			reference.put("refer_to", referTo);
@@ -468,7 +468,7 @@ public class References implements java.io.Serializable {
 			reference.put("service_type", serviceType);
 			reference.put("remarks", remarks);
 			reference.put("status", status);
-			reference.put("us_id", us.getId());
+			reference.put("us_id", us == null? null : us.getId());
 			reference.put("cancel_reason", cancelReason);
 			reference.put("other_reason", otherReason);
 			reference.put("online_id", id);

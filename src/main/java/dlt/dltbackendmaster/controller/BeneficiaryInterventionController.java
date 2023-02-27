@@ -22,9 +22,9 @@ import dlt.dltbackendmaster.domain.ReferencesServicesObject;
 import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.domain.CountIntervention;
 import dlt.dltbackendmaster.domain.Us;
-import dlt.dltbackendmaster.security.utils.ServiceCompletionRules;
 import dlt.dltbackendmaster.service.BeneficiariyInterventionService;
 import dlt.dltbackendmaster.service.DAOService;
+import dlt.dltbackendmaster.util.ServiceCompletionRules;
 
 @RestController
 @RequestMapping("/api/beneficiary-intervention")

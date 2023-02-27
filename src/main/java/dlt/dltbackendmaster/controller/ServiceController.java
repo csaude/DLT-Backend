@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import dlt.dltbackendmaster.domain.Beneficiaries;
 import dlt.dltbackendmaster.domain.ServiceType;
 import dlt.dltbackendmaster.domain.Services;
-import dlt.dltbackendmaster.security.utils.Utility;
 import dlt.dltbackendmaster.service.DAOService;
+import dlt.dltbackendmaster.util.Utility;
 
 @RestController
 @RequestMapping("/api/services")

@@ -562,7 +562,7 @@ public class Users implements java.io.Serializable
             user.put("partner_id", partners == null? null : partners.getId());
             user.put("profile_id", profiles.getId());
             user.put("online_id", id); // flag to control if entity is synchronized with the backend
-            user.put("organization_name" , partners.getName());
+            user.put("organization_name" , partners == null? null : partners.getName());
 
         } else { // ensure online_id is updated first
             user.put("online_id", id);

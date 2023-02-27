@@ -18,7 +18,7 @@ import dlt.dltbackendmaster.domain.ReferencesServices;
 import dlt.dltbackendmaster.domain.ReferencesServicesObject;
 import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.repository.DAORepository;
-import dlt.dltbackendmaster.security.utils.ServiceCompletionRules;
+import dlt.dltbackendmaster.util.ServiceCompletionRules;
 
 /**
  * This class implements the Service interface

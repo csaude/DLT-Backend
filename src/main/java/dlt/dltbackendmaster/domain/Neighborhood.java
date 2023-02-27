@@ -221,7 +221,7 @@ public class Neighborhood implements java.io.Serializable
         ObjectNode neighborhood = mapper.createObjectNode();
         neighborhood.put("id", id);
         neighborhood.put("locality_id", locality == null? null : locality.getId());
-        neighborhood.put("us_id", us.getId());
+        neighborhood.put("us_id", us == null? null : us.getId());
         neighborhood.put("name", name);
         neighborhood.put("description", description);
         neighborhood.put("status", status);
