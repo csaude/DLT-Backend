@@ -193,35 +193,12 @@ public class SyncController
 			usUpdated = new ArrayList<Us>();
 
 			// Beneficiary
-			if (level.equals("CENTRAL")) {
-				beneficiariesCreated = service.GetAllEntityByNamedQuery("Beneficiary.findAll");
-			} else if (level.equals("PROVINCIAL")) {
-				beneficiariesCreated = service.GetAllEntityByNamedQuery("Beneficiary.findByProvinces",
-						Arrays.asList(params));
-			} else if (level.equals("DISTRITAL")) {
-				beneficiariesCreated = service.GetAllEntityByNamedQuery("Beneficiary.findByDistricts",
-						Arrays.asList(params));
-			} else {
-				beneficiariesCreated = service.GetAllEntityByNamedQuery("Beneficiary.findByLocalities",
-						Arrays.asList(params));
-			}
-
+			beneficiariesCreated = service.GetAllEntityByNamedQuery("Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedBy",user.getId());
 			beneficiariesUpdated = new ArrayList<Beneficiaries>();
-/**
-			if (level.equals("CENTRAL")) {
-				beneficiariesInterventionsCreated = service.GetAllEntityByNamedQuery("BeneficiaryIntervention.findAll");
-			} else if (level.equals("PROVINCIAL")) {
-				beneficiariesInterventionsCreated = service
-						.GetAllEntityByNamedQuery("BeneficiaryIntervention.findByProvinces", Arrays.asList(params));
-			} else if (level.equals("DISTRITAL")) {
-				beneficiariesInterventionsCreated = service
-						.GetAllEntityByNamedQuery("BeneficiaryIntervention.findByDistricts", Arrays.asList(params));
-			} else {
-				beneficiariesInterventionsCreated = service
-						.GetAllEntityByNamedQuery("BeneficiaryIntervention.findByLocalities", Arrays.asList(params));
-			}
-*/
-			beneficiariesInterventionsCreated = new ArrayList<BeneficiariesInterventions>();
+
+			// Interventions
+			beneficiariesInterventionsCreated = service
+						.GetAllEntityByNamedQuery("BeneficiaryIntervention.findByReferenceNotifyToOrBeneficiaryCreatedBy", user.getId());
 			beneficiariesInterventionsUpdated = new ArrayList<BeneficiariesInterventions>();
 
 			
@@ -247,32 +224,13 @@ public class SyncController
 			subServicesCreated = service.GetAllEntityByNamedQuery("SubService.findAll");
 			subServicesUpdated = new ArrayList<SubServices>();
 			
-			if (level.equals("CENTRAL")) {
-				// References
-				referencesCreated = service.GetAllEntityByNamedQuery("References.findAll");
-				// ReferencesServices
-				referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findAll");
-            } else if (level.equals("PROVINCIAL")) {
-            	// References
-                referencesCreated = service.GetAllEntityByNamedQuery("References.findBySyncProvinces", Arrays.asList(params), user.getId());
-                // ReferencesServices
-    			referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findBySyncProvinces", Arrays.asList(params), user.getId());
-            } else if (level.equals("DISTRITAL")) {
-            	// References
-                referencesCreated = service.GetAllEntityByNamedQuery("References.findBySyncDistricts", Arrays.asList(params), user.getId());
-                // ReferencesServices
-    			referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findBySyncDistricts", Arrays.asList(params), user.getId());
-            } else {
-            	// References
-                referencesCreated = service.GetAllEntityByNamedQuery("References.findBySyncLocalities", Arrays.asList(params), user.getId());
-                // ReferencesServices
-    			referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findBySyncLocalities", Arrays.asList(params), user.getId());
-            }
-						
+			// References
+			referencesCreated = service.GetAllEntityByNamedQuery("References.findByReferenceNotifyToOrBeneficiaryCreatedBy",user.getId());
 			referencesUpdated = new ArrayList<References>();
 			
+			// ReferencesServices
+			referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findByReferenceNotifyToOrBeneficiaryCreatedBy",user.getId());
 			referenceServicesUpdated = new ArrayList<ReferencesServices>();
-
 		} else {
 			Long t = Long.valueOf(lastPulledAt);
 			// validatedDate = new Date(t);

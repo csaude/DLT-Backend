@@ -525,7 +525,7 @@ public class Users implements java.io.Serializable
     }
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "notifyTo")
     public Set<References> getReferenceses() {
         return this.referenceses;
     }

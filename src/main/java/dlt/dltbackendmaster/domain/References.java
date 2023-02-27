@@ -40,14 +40,14 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "left join fetch r.beneficiaries "
 																+ "left join fetch r.referredBy "
 																+ "left join fetch r.us "
-																+ "left join fetch r.users "
+																+ "left join fetch r.notifyTo "
 																+ "where r.status <> 3 "
 																+ "order by r.id desc "),
 		@NamedQuery(name = "References.findAllByUser", query = "SELECT r FROM References r "
 																+ "left join fetch r.beneficiaries "
 																+ "left join fetch r.referredBy "
 																+ "left join fetch r.us "
-																+ "left join fetch r.users "
+																+ "left join fetch r.notifyTo "
 																+ "where r.status <> 3 "
 																+ "and r.userCreated like :userCreated "
 																+ "order by r.id desc "),
@@ -55,25 +55,25 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "left join fetch r.beneficiaries "
 																+ "left join fetch r.referredBy "
 																+ "left join fetch r.us "
-																+ "left join fetch r.users "
+																+ "left join fetch r.notifyTo "
 																+ "where r.status <> 3 "
 																+ "and (r.userCreated = cast(:userId as string) "
-																+ "or r.users.id = : userId "
+																+ "or r.notifyTo.id = : userId "
 																+ "or r.referredBy.id = : userId) "
 																+ "order by r.id desc "),
 		@NamedQuery(name = "References.findAllByNotifyTo", query = "SELECT r FROM References r "
 																+ "left join fetch r.beneficiaries "
 																+ "left join fetch r.referredBy "
 																+ "left join fetch r.us "
-																+ "left join fetch r.users "
+																+ "left join fetch r.notifyTo "
 																+ "where r.status = 0 "
-																+ "and r.users.id = : userId "
+																+ "and r.notifyTo.id = : userId "
 																+ "order by r.id desc"),
 		@NamedQuery(name = "References.findByDateCreated", query = "SELECT r from References r "
 																+ "left join fetch r.beneficiaries "
 																+ "left join fetch r.referredBy "
 																+ "left join fetch r.us "
-																+ "left join fetch r.users "
+																+ "left join fetch r.notifyTo "
 																+ "where r.status <> 3 "
 																+ "and r.dateUpdated is null "
 																+ "and r.dateCreated > :lastpulledat "
@@ -83,7 +83,7 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "left join fetch r.beneficiaries "
 																+ "left join fetch r.referredBy "
 																+ "left join fetch r.us "
-																+ "left join fetch r.users "
+																+ "left join fetch r.notifyTo "
 																+ "where r.status <> 3 "
 																+ "and (r.dateUpdated >= :lastpulledat) "
 																+ "or (r.dateUpdated >= :lastpulledat "
@@ -92,51 +92,60 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 		/* "SELECT r FROM References r WHERE r.dateUpdated = :lastpulledat" */),
 	    @NamedQuery(name = "References.findBySyncLocalities", query = "SELECT r FROM  References r "
 	    															+ "left join fetch r.referredBy rb "
-	    															+ "left join fetch r.users u "
+	    															+ "left join fetch r.notifyTo u "
 	    															+ "left join fetch r.us us "
 												    				+ "left join fetch r.beneficiaries b "
 													                + "where b.neighborhood.locality.id in (:localities) "
 													                + "and r.status = 0 "
-													                + "and r.users.id = : userId "
+													                + "and r.notifyTo.id = : userId "
 													                + "order by r.id desc"
 													                ),
 		@NamedQuery(name = "References.findBySyncDistricts", query = "SELECT r FROM  References r "
 																	+ "left join fetch r.referredBy rb "
-																	+ "left join fetch r.users u "
+																	+ "left join fetch r.notifyTo u "
 																	+ "left join fetch r.us us "
 																	+ "left join fetch r.beneficiaries b "
 													                + "where b.neighborhood.locality.district.id in (:districts) "
 													                + "and r.status = 0 "
-													                + "and r.users.id = : userId "
+													                + "and r.notifyTo.id = : userId "
 													                + "order by r.id desc"
 													                ),
 		@NamedQuery(name = "References.findBySyncProvinces", query = "SELECT r FROM  References r "
 																	+ "left join fetch r.referredBy rb "
-																	+ "left join fetch r.users u "
+																	+ "left join fetch r.notifyTo u "
 																	+ "left join fetch r.us us "
 																	+ "left join fetch r.beneficiaries b "
 													                + "where b.neighborhood.locality.district.province.id in (:provinces) "
 													                + "and r.status = 0 "
-													                + "and r.users.id = : userId "
+													                + "and r.notifyTo.id = : userId "
 													                + "order by r.id desc"
 													                ),
 		@NamedQuery(name = "References.findCountAll", query = "SELECT count(r.id) FROM References r "
 																	+ "left join r.beneficiaries "
 																	+ "left join r.referredBy "
 																	+ "left join r.us "
-																	+ "left join r.users "
+																	+ "left join r.notifyTo "
 																	+ "where r.status <> 3 "
 																	+ "order by r.id desc"),
 		@NamedQuery(name = "References.findCountByUserPermission", query = "SELECT count(r.id) FROM References r "
 																	+ "left join r.beneficiaries "
 																	+ "left join r.referredBy "
 																	+ "left join r.us "
-																	+ "left join r.users "
+																	+ "left join r.notifyTo "
 																	+ "where r.status <> 3 "
 																	+ "and (r.userCreated = cast(:userId as string) "
-																	+ "or r.users.id = : userId "
+																	+ "or r.notifyTo.id = : userId "
 																	+ "or r.referredBy.id = : userId) "
 																	+ "order by r.id desc "),
+		@NamedQuery(name = "References.findByReferenceNotifyToOrBeneficiaryCreatedBy", 
+																	query = "SELECT distinct r FROM  References r "		
+																	+ "left join fetch r.beneficiaries "
+																	+ "left join fetch r.referredBy "
+																	+ "left join fetch r.us "
+																	+ "left join fetch r.notifyTo "
+														            + " where r.status = 0 "
+														            + " and (r.notifyTo.id = :userId or r.beneficiaries.createdBy like :userId) "
+														            ),
 })
 public class References implements java.io.Serializable {
 
@@ -145,7 +154,7 @@ public class References implements java.io.Serializable {
 	private Integer id;
 	private Beneficiaries beneficiaries;
 	private Users referredBy;
-	private Users users;
+	private Users notifyTo;
 	private String referenceNote;
 	private String description;
 	private String referTo;
@@ -170,24 +179,24 @@ public class References implements java.io.Serializable {
 	public References() {
 	}
 
-	public References(Beneficiaries beneficiaries, Users referredBy, Users users, String referTo, Us us,
+	public References(Beneficiaries beneficiaries, Users referredBy, Users notifyTo, String referTo, Us us,
 			String userCreated, Date dateCreated) {
 		this.beneficiaries = beneficiaries;
 		this.referredBy = referredBy;
-		this.users = users;
+		this.notifyTo = notifyTo;
 		this.referTo = referTo;
 		this.us = us;
 		this.userCreated = userCreated;
 		this.dateCreated = dateCreated;
 	}
 
-	public References(Beneficiaries beneficiaries, Users referredBy, Users users, String referenceNote,
+	public References(Beneficiaries beneficiaries, Users referredBy, Users notifyTo, String referenceNote,
 			String description, String referTo, String bookNumber, String referenceCode, String serviceType,
 			String remarks, Integer status, Us us, Integer cancelReason, String otherReason, String userCreated,
 			Date dateCreated, Integer updatedBy, Date dateUpdated, Set<ReferencesServices> referencesServiceses) {
 		this.beneficiaries = beneficiaries;
 		this.referredBy = referredBy;
-		this.users = users;
+		this.notifyTo = notifyTo;
 		this.referenceNote = referenceNote;
 		this.description = description;
 		this.referTo = referTo;
@@ -219,8 +228,8 @@ public class References implements java.io.Serializable {
 		this.serviceType = model.getService_type();
 		this.remarks = model.getRemarks();
 		this.referTo = model.getRefer_to();
-		this.users = new Users();
-		this.users.setId(model.getNotify_to());
+		this.notifyTo = new Users();
+		this.notifyTo.setId(model.getNotify_to());
 		this.referredBy = new Users();
 		this.referredBy.setId(model.getReferred_by());
 		this.status = model.getStatus();
@@ -264,16 +273,6 @@ public class References implements java.io.Serializable {
 
 	public void setReferredBy(Users referredBy) {
 		this.referredBy = referredBy;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "notify_to", nullable = false)
-	public Users getUsers() {
-		return this.users;
-	}
-
-	public void setUsers(Users users) {
-		this.users = users;
 	}
 
 	@Column(name = "reference_note", length = 50)
@@ -459,7 +458,7 @@ public class References implements java.io.Serializable {
 				|| lastPulledAt.equals("null")) {
             reference.put("beneficiary_offline_id", beneficiaries.getOfflineId());
 			reference.put("referred_by", referredBy.getId());
-			reference.put("notify_to", users == null? null : users.getId());
+			reference.put("notify_to", notifyTo == null? null : notifyTo.getId());
 			reference.put("reference_note", referenceNote);
 			reference.put("description", description);
 			reference.put("refer_to", referTo);
@@ -499,7 +498,7 @@ public class References implements java.io.Serializable {
 		this.serviceType = model.getService_type();
 		this.remarks = model.getRemarks();
 		this.referTo = model.getRefer_to();
-		this.users.setId(model.getNotify_to());
+		this.notifyTo.setId(model.getNotify_to());
 		this.referredBy.setId(model.getReferred_by());
 		this.status = model.getStatus();
 		this.us.setId(model.getUs_id());
@@ -517,6 +516,16 @@ public class References implements java.io.Serializable {
 
 	public void setBeneficiary_nui(String beneficiary_nui) {
 		this.beneficiary_nui = beneficiary_nui;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "notify_to", nullable = false)
+	public Users getNotifyTo() {
+		return notifyTo;
+	}
+
+	public void setNotifyTo(Users notifyTo) {
+		this.notifyTo = notifyTo;
 	}
 
 }

@@ -41,12 +41,12 @@ import dlt.dltbackendmaster.serializers.ServiceSerializer;
 @NamedNativeQueries({
 	@NamedNativeQuery(name = "ReferencesServices.removeByReferenceId", query = "DELETE FROM references_services WHERE reference_id = :referenceId") })
 @NamedQueries({ 
-    @NamedQuery(name = "ReferencesServices.findByNotifyTo", query = "SELECT rs FROM  ReferencesServices rs "
+    @NamedQuery(name = "ReferencesServices.findByReferenceNotifyToOrBeneficiaryCreatedBy", query = "SELECT rs FROM  ReferencesServices rs "
 												            + "left join fetch rs.references r "
 												            + "left join fetch r.beneficiaries b " 
 												            + "left join fetch b.locality l "
 												            + "where r.status = 0 "
-												            + "and r.users.id = : userId "), 
+												            + "and (r.notifyTo.id = :userId or b.createdBy like :userId) "), 
     @NamedQuery(name = "ReferencesServices.findAll", query = "SELECT b FROM ReferencesServices b"),
     @NamedQuery(name = "ReferencesServices.findByReference", query = "SELECT r FROM ReferencesServices r where r.references.id = :reference_id"),
     @NamedQuery(name = "ReferencesServices.findByReferenceAndService", query = "SELECT b FROM ReferencesServices b where b.references.id = :reference_id and b.services.id = :service_id"),
@@ -58,21 +58,21 @@ import dlt.dltbackendmaster.serializers.ServiceSerializer;
 													            + "left join fetch r.beneficiaries b " 
 													            + "where b.neighborhood.locality.id in (:localities) "
 													            + "and r.status = 0 "
-													            + "and r.users.id = : userId "
+													            + "and r.notifyTo.id = : userId "
     															),
 	@NamedQuery(name = "ReferencesServices.findBySyncDistricts", query = "SELECT rs FROM  ReferencesServices rs "
 																+ "left join fetch rs.references r "
 													            + "left join fetch r.beneficiaries b " 
 													            + "where b.neighborhood.locality.id in (:localities) "
 													            + "and r.status = 0 "
-													            + "and r.users.id = : userId "
+													            + "and r.notifyTo.id = : userId "
 																),
 	@NamedQuery(name = "ReferencesServices.findBySyncProvinces", query = "SELECT rs FROM  ReferencesServices rs "
 																+ "left join fetch rs.references r "
 													            + "left join fetch r.beneficiaries b " 
 													            + "where b.neighborhood.locality.id in (:localities) "
 													            + "and r.status = 0 "
-													            + "and r.users.id = : userId "
+													            + "and r.notifyTo.id = : userId "
 																),
 })
 public class ReferencesServices implements java.io.Serializable {
