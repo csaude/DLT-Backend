@@ -3,6 +3,7 @@ package dlt.dltbackendmaster.util;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dlt.dltbackendmaster.domain.AgywPrev;
 import dlt.dltbackendmaster.domain.Beneficiaries;
 import dlt.dltbackendmaster.domain.BeneficiariesInterventions;
 import dlt.dltbackendmaster.domain.SubServices;
@@ -38,9 +39,16 @@ public class PackageCompletionRules {
 			}
 
 		} else { // 15-24 Years
-			//TODO: Rules for 15+ age band
+			return ServiceCompletionRules.startedGuiaFacilitacao(subServices)
+					|| ServiceCompletionRules.startedSAAJEducationSessions(subServices)
+					|| ServiceCompletionRules.startedPostViolenceCare_US(subServices)
+					|| ServiceCompletionRules.startedPostViolenceCare_CM(subServices)
+					|| ServiceCompletionRules.startedFinancialLiteracyAflateen(subServices);
 
 		}
+	}
+
+	public static boolean startedService(AgywPrev agywPrev) {
 		return false;
 	}
 
