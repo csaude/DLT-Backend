@@ -15,8 +15,8 @@ public class ResultObject {
 	private Integer total;
 
 	public ResultObject() {
-		totals = new TotalsAgeBands().getAgeBands();
-		beneficiaries = new BeneficiariesAgeBands().getAgeBands();
+		totals = new TotalsEnrollmentTimes().getTime();
+		beneficiaries = new BeneficiariesEnrollmentTimes().getTime();
 		total = 0;
 	}
 

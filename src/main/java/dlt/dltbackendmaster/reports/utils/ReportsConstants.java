@@ -30,9 +30,9 @@ public class ReportsConstants {
 
 	public static final int HAD_SOCIAL_ECONOMIC_APPROACHES = 6;
 
-	public static final String[] AGE_BANDS = { "9-14", "15-19", "20-24", "25-29" };
+	public static final String[] AGE_BANDS = { "9-14", "15-19", "20-24", "25-29", "Subtotal" };
 
-	public static final String[] ENROLLMENT_TIMES = { "0-6", "7-12", "13-24", "25+", "Subtotal" };
+	public static final String[] ENROLLMENT_TIMES = { "0-6", "7-12", "13-24", "25+" };
 
 	public static final String[] DISAGGREGATIONS = { "completed-primary-package", "completed-primary-service",
 			"completed-violence-service", "started-service", "completed-secondary-service", "had-school-allowance",

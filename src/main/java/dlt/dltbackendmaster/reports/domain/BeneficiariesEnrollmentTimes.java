@@ -1,6 +1,5 @@
 package dlt.dltbackendmaster.reports.domain;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,15 +14,15 @@ import dlt.dltbackendmaster.reports.utils.ReportsConstants;
  */
 public class BeneficiariesEnrollmentTimes {
 
-	private Map<String, List<Integer>> time = new HashMap<>();
+	private Map<String, Map<String, List<Integer>>> time = new HashMap<>();
 
 	public BeneficiariesEnrollmentTimes() {
-		for (int i = 0; i < ReportsConstants.ENROLLMENT_TIMES.length - 1; i++) {
-			time.put(ReportsConstants.ENROLLMENT_TIMES[i], new ArrayList<>());
+		for (int i = 0; i < ReportsConstants.ENROLLMENT_TIMES.length; i++) {
+			time.put(ReportsConstants.ENROLLMENT_TIMES[i], new BeneficiariesAgeBands().getAgeBands());
 		}
 	}
 
-	public Map<String, List<Integer>> getTime() {
+	public Map<String, Map<String, List<Integer>>> getTime() {
 		return time;
 	}
 

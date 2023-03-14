@@ -286,27 +286,27 @@ public class AgywPrevReport {
 		ResultObject resultObject = new ResultObject();
 
 		int total = 0;
-		for (int i = 0; i < AGE_BANDS.length; i++) {
+		for (int i = 0; i < ENROLLMENT_TIMES.length; i++) {
 			int subTotal = 0;
-			for (int j = 0; j < ENROLLMENT_TIMES.length - 1; j++) {
+			for (int j = 0; j < AGE_BANDS.length - 1; j++) {
 				List<Integer> completedOnlyPrimaryPackage = new ArrayList<>();
-				List<Integer> completedPrimaryPackage = reportObject.getReportObject().get(district).get(AGE_BANDS[i])
-						.get(ENROLLMENT_TIMES[j]).get(DISAGGREGATIONS[COMPLETED_PRIMARY_PACKAGE]);
-				List<Integer> completedSecondaryService = reportObject.getReportObject().get(district).get(AGE_BANDS[i])
-						.get(ENROLLMENT_TIMES[j]).get(DISAGGREGATIONS[COMPLETED_SECONDARY_SERVICE]);
+				List<Integer> completedPrimaryPackage = reportObject.getReportObject().get(district).get(AGE_BANDS[j])
+						.get(ENROLLMENT_TIMES[i]).get(DISAGGREGATIONS[COMPLETED_PRIMARY_PACKAGE]);
+				List<Integer> completedSecondaryService = reportObject.getReportObject().get(district).get(AGE_BANDS[j])
+						.get(ENROLLMENT_TIMES[i]).get(DISAGGREGATIONS[COMPLETED_SECONDARY_SERVICE]);
 
 				for (Integer beneficiaryId : completedPrimaryPackage) {
 					if (!completedSecondaryService.contains(beneficiaryId)) {
 						completedOnlyPrimaryPackage.add(beneficiaryId);
 					}
 				}
-				resultObject.getBeneficiaries().get(AGE_BANDS[i]).get(ENROLLMENT_TIMES[j])
+				resultObject.getBeneficiaries().get(ENROLLMENT_TIMES[i]).get(AGE_BANDS[j])
 						.addAll(completedOnlyPrimaryPackage);
 				int count = completedOnlyPrimaryPackage.size();
 				subTotal += count;
-				resultObject.getTotals().get(AGE_BANDS[i]).put(ENROLLMENT_TIMES[j], count);
+				resultObject.getTotals().get(ENROLLMENT_TIMES[i]).put(AGE_BANDS[j], count);
 			}
-			resultObject.getTotals().get(AGE_BANDS[i]).put(ENROLLMENT_TIMES[4], subTotal);
+			resultObject.getTotals().get(ENROLLMENT_TIMES[i]).put(AGE_BANDS[4], subTotal);
 			total += subTotal;
 		}
 		resultObject.setTotal(total);
@@ -318,27 +318,27 @@ public class AgywPrevReport {
 		ResultObject resultObject = new ResultObject();
 
 		int total = 0;
-		for (int i = 0; i < AGE_BANDS.length; i++) {
+		for (int i = 0; i < ENROLLMENT_TIMES.length; i++) {
 			int subTotal = 0;
-			for (int j = 0; j < ENROLLMENT_TIMES.length - 1; j++) {
+			for (int j = 0; j < AGE_BANDS.length - 1; j++) {
 				List<Integer> completedPrimaryPackageAndSecondaryService = new ArrayList<>();
-				List<Integer> completedPrimaryPackage = reportObject.getReportObject().get(district).get(AGE_BANDS[i])
-						.get(ENROLLMENT_TIMES[j]).get(DISAGGREGATIONS[COMPLETED_PRIMARY_PACKAGE]);
-				List<Integer> completedSecondaryService = reportObject.getReportObject().get(district).get(AGE_BANDS[i])
-						.get(ENROLLMENT_TIMES[j]).get(DISAGGREGATIONS[COMPLETED_SECONDARY_SERVICE]);
+				List<Integer> completedPrimaryPackage = reportObject.getReportObject().get(district).get(AGE_BANDS[j])
+						.get(ENROLLMENT_TIMES[i]).get(DISAGGREGATIONS[COMPLETED_PRIMARY_PACKAGE]);
+				List<Integer> completedSecondaryService = reportObject.getReportObject().get(district).get(AGE_BANDS[j])
+						.get(ENROLLMENT_TIMES[i]).get(DISAGGREGATIONS[COMPLETED_SECONDARY_SERVICE]);
 
 				for (Integer beneficiaryId : completedPrimaryPackage) {
 					if (completedSecondaryService.contains(beneficiaryId)) {
 						completedPrimaryPackageAndSecondaryService.add(beneficiaryId);
 					}
 				}
-				resultObject.getBeneficiaries().get(AGE_BANDS[i]).get(ENROLLMENT_TIMES[j])
+				resultObject.getBeneficiaries().get(ENROLLMENT_TIMES[i]).get(AGE_BANDS[j])
 						.addAll(completedPrimaryPackageAndSecondaryService);
 				int count = completedPrimaryPackageAndSecondaryService.size();
 				subTotal += count;
-				resultObject.getTotals().get(AGE_BANDS[i]).put(ENROLLMENT_TIMES[j], count);
+				resultObject.getTotals().get(ENROLLMENT_TIMES[i]).put(AGE_BANDS[j], count);
 			}
-			resultObject.getTotals().get(AGE_BANDS[i]).put(ENROLLMENT_TIMES[4], subTotal);
+			resultObject.getTotals().get(ENROLLMENT_TIMES[i]).put(AGE_BANDS[4], subTotal);
 			total += subTotal;
 		}
 		resultObject.setTotal(total);
@@ -350,17 +350,17 @@ public class AgywPrevReport {
 		ResultObject resultObject = new ResultObject();
 
 		int total = 0;
-		for (int i = 0; i < AGE_BANDS.length; i++) {
+		for (int i = 0; i < ENROLLMENT_TIMES.length; i++) {
 			int subTotal = 0;
-			for (int j = 0; j < ENROLLMENT_TIMES.length - 1; j++) {
+			for (int j = 0; j < AGE_BANDS.length - 1; j++) {
 				List<Integer> completedOnlyServiceNotPrimaryPackage = new ArrayList<>();
 				List<Integer> completedService = new ArrayList<>();
-				List<Integer> completedPrimaryPackage = reportObject.getReportObject().get(district).get(AGE_BANDS[i])
-						.get(ENROLLMENT_TIMES[j]).get(DISAGGREGATIONS[COMPLETED_PRIMARY_PACKAGE]);
-				List<Integer> completedPrimaryService = reportObject.getReportObject().get(district).get(AGE_BANDS[i])
-						.get(ENROLLMENT_TIMES[j]).get(DISAGGREGATIONS[COMPLETED_PRIMARY_SERVICE]);
-				List<Integer> completedSecondaryService = reportObject.getReportObject().get(district).get(AGE_BANDS[i])
-						.get(ENROLLMENT_TIMES[j]).get(DISAGGREGATIONS[COMPLETED_SECONDARY_SERVICE]);
+				List<Integer> completedPrimaryPackage = reportObject.getReportObject().get(district).get(AGE_BANDS[j])
+						.get(ENROLLMENT_TIMES[i]).get(DISAGGREGATIONS[COMPLETED_PRIMARY_PACKAGE]);
+				List<Integer> completedPrimaryService = reportObject.getReportObject().get(district).get(AGE_BANDS[j])
+						.get(ENROLLMENT_TIMES[i]).get(DISAGGREGATIONS[COMPLETED_PRIMARY_SERVICE]);
+				List<Integer> completedSecondaryService = reportObject.getReportObject().get(district).get(AGE_BANDS[j])
+						.get(ENROLLMENT_TIMES[i]).get(DISAGGREGATIONS[COMPLETED_SECONDARY_SERVICE]);
 
 				completedService.addAll(completedPrimaryService);
 
@@ -375,13 +375,13 @@ public class AgywPrevReport {
 						completedOnlyServiceNotPrimaryPackage.add(beneficiaryId);
 					}
 				}
-				resultObject.getBeneficiaries().get(AGE_BANDS[i]).get(ENROLLMENT_TIMES[j])
+				resultObject.getBeneficiaries().get(ENROLLMENT_TIMES[i]).get(AGE_BANDS[j])
 						.addAll(completedOnlyServiceNotPrimaryPackage);
 				int count = completedOnlyServiceNotPrimaryPackage.size();
 				subTotal += count;
-				resultObject.getTotals().get(AGE_BANDS[i]).put(ENROLLMENT_TIMES[j], count);
+				resultObject.getTotals().get(ENROLLMENT_TIMES[i]).put(AGE_BANDS[j], count);
 			}
-			resultObject.getTotals().get(AGE_BANDS[i]).put(ENROLLMENT_TIMES[4], subTotal);
+			resultObject.getTotals().get(ENROLLMENT_TIMES[i]).put(AGE_BANDS[4], subTotal);
 			total += subTotal;
 		}
 		resultObject.setTotal(total);
@@ -392,16 +392,16 @@ public class AgywPrevReport {
 		ResultObject resultObject = new ResultObject();
 
 		int total = 0;
-		for (int i = 0; i < AGE_BANDS.length; i++) {
+		for (int i = 0; i < ENROLLMENT_TIMES.length; i++) {
 			int subTotal = 0;
-			for (int j = 0; j < ENROLLMENT_TIMES.length - 1; j++) {
+			for (int j = 0; j < AGE_BANDS.length - 1; j++) {
 				List<Integer> startedServiceDidNotComplete = new ArrayList<>();
-				List<Integer> startedService = reportObject.getReportObject().get(district).get(AGE_BANDS[i])
-						.get(ENROLLMENT_TIMES[j]).get(DISAGGREGATIONS[STARTED_SERVICE]);
-				List<Integer> completedPrimaryService = reportObject.getReportObject().get(district).get(AGE_BANDS[i])
-						.get(ENROLLMENT_TIMES[j]).get(DISAGGREGATIONS[COMPLETED_PRIMARY_SERVICE]);
-				List<Integer> completedSecondaryService = reportObject.getReportObject().get(district).get(AGE_BANDS[i])
-						.get(ENROLLMENT_TIMES[j]).get(DISAGGREGATIONS[COMPLETED_SECONDARY_SERVICE]);
+				List<Integer> startedService = reportObject.getReportObject().get(district).get(AGE_BANDS[j])
+						.get(ENROLLMENT_TIMES[i]).get(DISAGGREGATIONS[STARTED_SERVICE]);
+				List<Integer> completedPrimaryService = reportObject.getReportObject().get(district).get(AGE_BANDS[j])
+						.get(ENROLLMENT_TIMES[i]).get(DISAGGREGATIONS[COMPLETED_PRIMARY_SERVICE]);
+				List<Integer> completedSecondaryService = reportObject.getReportObject().get(district).get(AGE_BANDS[j])
+						.get(ENROLLMENT_TIMES[i]).get(DISAGGREGATIONS[COMPLETED_SECONDARY_SERVICE]);
 
 				for (Integer beneficiaryId : startedService) {
 					if (!(completedPrimaryService.contains(beneficiaryId)
@@ -409,13 +409,13 @@ public class AgywPrevReport {
 						startedServiceDidNotComplete.add(beneficiaryId);
 					}
 				}
-				resultObject.getBeneficiaries().get(AGE_BANDS[i]).get(ENROLLMENT_TIMES[j])
+				resultObject.getBeneficiaries().get(ENROLLMENT_TIMES[i]).get(AGE_BANDS[j])
 						.addAll(startedServiceDidNotComplete);
 				int count = startedServiceDidNotComplete.size();
 				subTotal += count;
-				resultObject.getTotals().get(AGE_BANDS[i]).put(ENROLLMENT_TIMES[j], count);
+				resultObject.getTotals().get(ENROLLMENT_TIMES[i]).put(AGE_BANDS[j], count);
 			}
-			resultObject.getTotals().get(AGE_BANDS[i]).put(ENROLLMENT_TIMES[4], subTotal);
+			resultObject.getTotals().get(ENROLLMENT_TIMES[i]).put(AGE_BANDS[4], subTotal);
 			total += subTotal;
 		}
 		resultObject.setTotal(total);
@@ -426,15 +426,15 @@ public class AgywPrevReport {
 		ResultObject resultObject = new ResultObject();
 
 		int total = 0;
-		for (int i = 0; i < AGE_BANDS.length; i++) {
-			for (int j = 0; j < ENROLLMENT_TIMES.length - 1; j++) {
-				List<Integer> completedViolenceService = reportObject.getReportObject().get(district).get(AGE_BANDS[i])
+		for (int i = 0; i < ENROLLMENT_TIMES.length; i++) {
+			for (int j = 0; j < AGE_BANDS.length - 1; j++) {
+				List<Integer> completedViolenceService = reportObject.getReportObject().get(district).get(AGE_BANDS[j])
 						.get(ENROLLMENT_TIMES[j]).get(DISAGGREGATIONS[COMPLETED_VIOLENCE_SERVICE]);
 
-				resultObject.getBeneficiaries().get(AGE_BANDS[i]).get(ENROLLMENT_TIMES[j])
+				resultObject.getBeneficiaries().get(ENROLLMENT_TIMES[i]).get(AGE_BANDS[j])
 						.addAll(completedViolenceService);
 				int count = completedViolenceService.size();
-				resultObject.getTotals().get(AGE_BANDS[i]).put(ENROLLMENT_TIMES[j], count);
+				resultObject.getTotals().get(ENROLLMENT_TIMES[i]).put(AGE_BANDS[j], count);
 				total += count;
 			}
 		}
@@ -445,13 +445,13 @@ public class AgywPrevReport {
 	private ResultObject computeDiggregationHasSchoolAllowance(ReportObject reportObject, Integer district) {
 		ResultObject resultObject = new ResultObject();
 
-		for (int i = 0; i < AGE_BANDS.length; i++) {
-			for (int j = 0; j < ENROLLMENT_TIMES.length - 1; j++) {
-				List<Integer> hadSchoolAllowancw = reportObject.getReportObject().get(district).get(AGE_BANDS[i])
-						.get(ENROLLMENT_TIMES[j]).get(DISAGGREGATIONS[HAD_SCHOLL_ALLOWANCE]);
+		for (int i = 0; i < ENROLLMENT_TIMES.length; i++) {
+			for (int j = 0; j < AGE_BANDS.length - 1; j++) {
+				List<Integer> hadSchoolAllowancw = reportObject.getReportObject().get(district).get(AGE_BANDS[j])
+						.get(ENROLLMENT_TIMES[i]).get(DISAGGREGATIONS[HAD_SCHOLL_ALLOWANCE]);
 
-				resultObject.getBeneficiaries().get(AGE_BANDS[i]).get(ENROLLMENT_TIMES[j]).addAll(hadSchoolAllowancw);
-				resultObject.getTotals().get(AGE_BANDS[i]).put(ENROLLMENT_TIMES[j], hadSchoolAllowancw.size());
+				resultObject.getBeneficiaries().get(ENROLLMENT_TIMES[i]).get(AGE_BANDS[j]).addAll(hadSchoolAllowancw);
+				resultObject.getTotals().get(ENROLLMENT_TIMES[i]).put(AGE_BANDS[j], hadSchoolAllowancw.size());
 			}
 		}
 		return resultObject;
@@ -462,16 +462,16 @@ public class AgywPrevReport {
 		ResultObject resultObject = new ResultObject();
 
 		int total = 0;
-		for (int i = 0; i < AGE_BANDS.length; i++) {
-			for (int j = 0; j < ENROLLMENT_TIMES.length - 1; j++) {
+		for (int i = 0; i < ENROLLMENT_TIMES.length; i++) {
+			for (int j = 0; j < AGE_BANDS.length - 1; j++) {
 				List<Integer> hadSocialEconomicApproaches = reportObject.getReportObject().get(district)
-						.get(AGE_BANDS[i]).get(ENROLLMENT_TIMES[j])
+						.get(AGE_BANDS[j]).get(ENROLLMENT_TIMES[i])
 						.get(DISAGGREGATIONS[HAD_SOCIAL_ECONOMIC_APPROACHES]);
 
-				resultObject.getBeneficiaries().get(AGE_BANDS[i]).get(ENROLLMENT_TIMES[j])
+				resultObject.getBeneficiaries().get(ENROLLMENT_TIMES[i]).get(AGE_BANDS[j])
 						.addAll(hadSocialEconomicApproaches);
 				int count = hadSocialEconomicApproaches.size();
-				resultObject.getTotals().get(AGE_BANDS[i]).put(ENROLLMENT_TIMES[j], count);
+				resultObject.getTotals().get(ENROLLMENT_TIMES[i]).put(AGE_BANDS[j], count);
 				total += count;
 			}
 		}

@@ -17,7 +17,7 @@ public class AgeBands {
 	private Map<String, Map<String, Map<String, List<Integer>>>> ageBands = new HashMap<>();
 
 	public AgeBands() {
-		for (int i = 0; i < ReportsConstants.AGE_BANDS.length; i++) {
+		for (int i = 0; i < ReportsConstants.AGE_BANDS.length - 1; i++) {
 			ageBands.put(ReportsConstants.AGE_BANDS[i], new EnrollmentTimes().getTime());
 		}
 	}

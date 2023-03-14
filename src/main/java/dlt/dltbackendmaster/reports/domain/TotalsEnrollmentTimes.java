@@ -13,15 +13,15 @@ import dlt.dltbackendmaster.reports.utils.ReportsConstants;
  */
 public class TotalsEnrollmentTimes {
 
-	private Map<String, Integer> time = new HashMap<>();
+	private Map<String, Map<String, Integer>> time = new HashMap<>();
 
 	public TotalsEnrollmentTimes() {
 		for (int i = 0; i < ReportsConstants.ENROLLMENT_TIMES.length; i++) {
-			time.put(ReportsConstants.ENROLLMENT_TIMES[i], 0);
+			time.put(ReportsConstants.ENROLLMENT_TIMES[i], new TotalsAgeBands().getAgeBands());
 		}
 	}
 
-	public Map<String, Integer> getTime() {
+	public Map<String, Map<String, Integer>> getTime() {
 		return time;
 	}
 

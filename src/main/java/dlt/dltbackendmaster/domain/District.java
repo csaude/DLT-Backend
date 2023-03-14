@@ -67,6 +67,10 @@ public class District implements java.io.Serializable
 
     public District() {}
 
+    public District(Integer id) {
+		this.id = id;
+	}
+
     public District(Province province, String code, String name, int status, int createdBy, Date dateCreated) {
         this.province = province;
         this.code = code;
@@ -90,7 +94,7 @@ public class District implements java.io.Serializable
         this.localities = localities;
     }
 
-    @Id
+	@Id
     @GeneratedValue(strategy = IDENTITY)
 
     @Column(name = "id", unique = true, nullable = false)

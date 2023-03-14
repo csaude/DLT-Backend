@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import dlt.dltbackendmaster.domain.watermelondb.BeneficiarySyncModel;
+import dlt.dltbackendmaster.serializers.DistrictSerializer;
 import dlt.dltbackendmaster.serializers.LocalitySerializer;
 import dlt.dltbackendmaster.serializers.NeighborhoodSerializer;
 import dlt.dltbackendmaster.serializers.PartnersSerializer;
@@ -50,6 +51,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.partners "
 																+ " left join fetch b.locality "
 																+ " left join fetch b.us "
+																+ " where b.status = 1 "
 																+ " order by b.id desc"
 																+ ""),
                 @NamedQuery(name = "Beneficiary.findByNui", query = "SELECT b FROM Beneficiaries b "
@@ -159,6 +161,7 @@ public class Beneficiaries implements java.io.Serializable
     private Neighborhood neighborhood;
     private Partners partners;
     private Locality locality;
+    private District district;
     private Us us;
     private String nui;
     private String surname;
@@ -232,7 +235,7 @@ public class Beneficiaries implements java.io.Serializable
         this.dateCreated = dateCreated;
     }
 
-    public Beneficiaries(Neighborhood neighborhood, Partners partners, Locality locality, Us us, String nui, String surname, String name,
+    public Beneficiaries(Neighborhood neighborhood, Partners partners, Locality locality, District district_id, Us us, String nui, String surname, String name,
                          String nickName, Date dateOfBirth, char gender, String address,
                          String phoneNumber, String EMail, Date enrollmentDate, Integer via, Integer nationality,
                          Integer partnerId, String entryPoint, String vbltLivesWith, Byte vbltIsOrphan,
@@ -249,6 +252,7 @@ public class Beneficiaries implements java.io.Serializable
         this.neighborhood = neighborhood;
         this.partners = partners;
         this.locality = locality;
+        this.district = district_id;
         this.us = us;
         this.nui = nui;
         this.surname = surname;
@@ -310,6 +314,7 @@ public class Beneficiaries implements java.io.Serializable
         this.name = model.getName();
         this.partners = new Partners(model.getOrganization_id());
         this.locality = new Locality(model.getLocality_id());
+        this.district = new District(model.getDistrict_id());
         this.dateOfBirth = model.getDate_of_birth();
         this.gender = model.getGender();
         this.address = model.getAddress();
@@ -350,7 +355,7 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltSexWorker = (byte) model.getVblt_sex_worker();
         this.vbltHouseSustainer = (byte) model.getVblt_house_sustainer();
         this.dateCreated = regDate;
-        this.dateUpdated = regDate;
+        this.status = Integer.valueOf(model.getStatus());
     }
 
     public Beneficiaries(BeneficiarySyncModel model) {
@@ -360,6 +365,7 @@ public class Beneficiaries implements java.io.Serializable
         this.name = model.getName();
         this.partners = new Partners(model.getOrganization_id());
         this.locality = new Locality(model.getLocality_id());
+        this.district = new District(model.getDistrict_id());
         this.dateOfBirth = model.getDate_of_birth();
         this.gender = model.getGender();
         this.address = model.getAddress();
@@ -397,6 +403,7 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltStiHistory = (byte) model.getVblt_sti_history();
         this.vbltSexWorker = (byte) model.getVblt_sex_worker();
         this.vbltHouseSustainer = (byte) model.getVblt_house_sustainer();
+        this.status = Integer.valueOf(model.getStatus());
     }
 
     public Beneficiaries(Integer id) {
@@ -447,7 +454,19 @@ public class Beneficiaries implements java.io.Serializable
         this.locality = locality;
     }
 
+    
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "district_id")
+	@JsonSerialize(using = DistrictSerializer.class)
+    public District getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(District district) {
+		this.district = district;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "us_id", nullable = false)
 	@JsonSerialize(using = UsSerializer.class)
     public Us getUs() {
@@ -951,28 +970,21 @@ public class Beneficiaries implements java.io.Serializable
 				beneficiary.put("neighborhood_id", "");
 				beneficiary.put("locality_id", "");
 				beneficiary.put("locality_name", "");
-				beneficiary.put("district_id", "");
-				beneficiary.put("district_code", "");
-				beneficiary.put("province_id", "");
 			} else {
 				beneficiary.put("neighborhood_id", neighborhood.getId());
 				Locality locality = neighborhood.getLocality();
 				if (locality == null) {
 					beneficiary.put("locality_id", "");
 					beneficiary.put("locality_name", "");
-					beneficiary.put("district_id", "");
-					beneficiary.put("district_code", "");
-					beneficiary.put("province_id", "");
 					
 				} else {
 					beneficiary.put("locality_id", locality.getId());
 					beneficiary.put("locality_name", locality.getName());
-					District district = locality.getDistrict();
-					beneficiary.put("district_id", district.getId());
-					beneficiary.put("district_code", district.getCode());
-					beneficiary.put("province_id", district.getProvince().getId());
 				}
 			}
+			beneficiary.put("district_id", district.getId());
+			beneficiary.put("district_code", district.getCode());
+			beneficiary.put("province_id", district.getProvince().getId());
             beneficiary.put("us_id", us == null ? null : us.getId());
             if(vbltLivesWith != null) beneficiary.put("vblt_lives_with", vbltLivesWith);
             if(vbltIsOrphan != null) beneficiary.put("vblt_is_orphan", vbltIsOrphan);
