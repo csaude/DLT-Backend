@@ -148,7 +148,7 @@ public class Us implements java.io.Serializable {
 		this.code = code;
 	}
 
-	@Column(name = "name", nullable = false, length = 150)
+	@Column(name = "name", nullable = false, length = 150, unique = true)
 	public String getName() {
 		return this.name;
 	}

@@ -96,7 +96,7 @@ public class Services implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "name", nullable = false, length = 150)
+	@Column(name = "name", nullable = false, length = 150, unique = true)
 	public String getName() {
 		return this.name;
 	}
