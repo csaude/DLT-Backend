@@ -291,15 +291,6 @@ public class ServicesConstants
     
     public static final Integer IMAGINANDO_MEU_FUTURO = 232;
 
-    // ESTADOS DE SERVICOS
-    public static final Integer PENDING = 0;
-
-    public static final Integer PARTIALLY_ATTENDED = 1;
-
-    public static final Integer ATTENDED = 2;
-
-    public static final Integer CANCELLED = 0;
-
     public static final List<Integer> ESTUDANTES_RECURSOS_SOCIAIS_MANDATORY = Arrays.asList(ESTUDANTES_FALAR_ALTO,
                                                                                             ADULTOS_APOIANTES,
                                                                                             ESTUDANTES_MODULO_1);

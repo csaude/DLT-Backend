@@ -28,15 +28,20 @@ import dlt.dltbackendmaster.domain.ReferencesServices;
 import dlt.dltbackendmaster.domain.ReferencesServicesId;
 import dlt.dltbackendmaster.domain.Users;
 import dlt.dltbackendmaster.service.DAOService;
+import dlt.dltbackendmaster.service.ReferenceService;
+import dlt.dltbackendmaster.util.ReferencesStatus;
+import dlt.dltbackendmaster.util.ServiceCompletionRules;
 
 @RestController
 @RequestMapping("/api/references")
 public class ReferencesController {
 	private final DAOService service;
+	private final ReferenceService referenceService;
 
 	@Autowired
-	public ReferencesController(DAOService service) {
+	public ReferencesController(DAOService service, ReferenceService referenceService) {
 		this.service = service;
+		this.referenceService = referenceService;
 	}
 
 	@GetMapping(produces = "application/json")
@@ -67,9 +72,7 @@ public class ReferencesController {
 
 	@GetMapping(path = "/byUser/{userId}", produces = "application/json")
 	public ResponseEntity<List<References>> getAllByUser(@PathVariable Integer userId,
-			@RequestParam(name = "pageIndex") int pageIndex,
-    		@RequestParam(name = "pageSize") int pageSize
-			) {
+			@RequestParam(name = "pageIndex") int pageIndex, @RequestParam(name = "pageSize") int pageSize) {
 
 		if (userId == null) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -81,7 +84,8 @@ public class ReferencesController {
 			List<References> references = null;
 
 			if (Arrays.asList(MANAGER, MENTOR, NURSE, COUNSELOR).contains(user.getProfiles().getId())) {
-				references = service.GetAllPagedEntityByNamedQuery("References.findAllByUserPermission", pageIndex, pageSize, userId);
+				references = service.GetAllPagedEntityByNamedQuery("References.findAllByUserPermission", pageIndex,
+						pageSize, userId);
 			} else {
 				references = service.GetAllPagedEntityByNamedQuery("References.findAll", pageIndex, pageSize);
 			}
@@ -178,7 +182,7 @@ public class ReferencesController {
 		}
 
 	}
-	
+
 	@GetMapping(path = "/byUser/{userId}/count", produces = "application/json")
 	public ResponseEntity<Long> getCountByUserPermission(@PathVariable Integer userId) {
 
@@ -203,4 +207,27 @@ public class ReferencesController {
 		}
 	}
 
+	@PutMapping("/update-status")
+	public ResponseEntity<List<References>> updateReferenceStatus(@RequestParam Integer status) {
+
+		List<References> references = referenceService.findByStatus(ReferencesStatus.ADDRESSED);
+
+		try {
+			for (References reference : references) {
+				for (ReferencesServices referenceService : reference.getReferencesServiceses()) {
+					Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(
+							reference.getBeneficiaries(), referenceService.getServices().getId());
+					referenceService.setStatus(referenceServiceStatus);
+					service.update(referenceService);
+				}
+				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference);
+				reference.setStatus(referenceStatus);
+				service.update(reference);
+			}
+			return new ResponseEntity<>(references, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

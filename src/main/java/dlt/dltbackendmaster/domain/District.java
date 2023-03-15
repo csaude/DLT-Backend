@@ -117,7 +117,7 @@ public class District implements java.io.Serializable
         this.province = province;
     }
 
-    @Column(name = "code", nullable = false, length = 45)
+    @Column(name = "code", nullable = false, unique = true, length = 45)
     public String getCode() {
         return this.code;
     }
@@ -126,7 +126,7 @@ public class District implements java.io.Serializable
         this.code = code;
     }
 
-    @Column(name = "name", nullable = false, length = 150, unique = true)
+    @Column(name = "name", nullable = false, unique = true, length = 150)
     public String getName() {
         return this.name;
     }

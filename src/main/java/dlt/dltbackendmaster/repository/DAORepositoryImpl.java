@@ -13,7 +13,6 @@ import javax.transaction.Transactional;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,9 +82,10 @@ public class DAORepositoryImpl implements DAORepository {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public <T> T GetUniqueEntityByNamedQuery(String query, Object... params) {
 		Query q = getCurrentSession().getNamedQuery(query);
-
+		
+		int i = 0;
 		for (Parameter param : q.getParameters()) {
-			q.setParameter(param, params[0]);
+			q.setParameter(param, params[i++]);
 		}
 
 		List<T> results = q.list();

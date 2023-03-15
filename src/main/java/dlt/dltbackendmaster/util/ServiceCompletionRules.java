@@ -321,11 +321,11 @@ public class ServiceCompletionRules {
 	public static boolean completedFamilyMatters(List<Integer> subServices) {
 		return subServices.contains(ServicesConstants.PAPO_FAMILIA);
 	}
-	
+
 	public static boolean completedViolencePrevention15Plus(AgywPrev agywPrev) {
 		return agywPrev.getViolence_prevention_15_plus() > 2;
 	}
-	
+
 	public static boolean startedViolencePrevention15Plus(AgywPrev agywPrev) {
 		return agywPrev.getViolence_prevention_15_plus() > 0;
 	}
@@ -337,87 +337,87 @@ public class ServiceCompletionRules {
 
 		switch (service) {
 		case 1:
-			return completedCondomsPromotionOrProvision(subServices) ? ServicesConstants.ATTENDED
-					: ServicesConstants.PENDING;
+			return completedCondomsPromotionOrProvision(subServices) ? ReferencesStatus.ADDRESSED
+					: ReferencesStatus.PENDING;
 		case 2:
-			return completedContraceptionsPromotionOrProvision(subServices) ? ServicesConstants.ATTENDED
-					: ServicesConstants.PENDING;
+			return completedContraceptionsPromotionOrProvision(subServices) ? ReferencesStatus.ADDRESSED
+					: ReferencesStatus.PENDING;
 		case 3:
-			return completedPostViolenceCare_US(subServices) ? ServicesConstants.ATTENDED
-					: startedPostViolenceCare_US(subServices) ? ServicesConstants.PARTIALLY_ATTENDED
-							: ServicesConstants.PENDING;
+			return completedPostViolenceCare_US(subServices) ? ReferencesStatus.ADDRESSED
+					: startedPostViolenceCare_US(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
+							: ReferencesStatus.PENDING;
 		// FIXME: Remove this option that stands only for testing purposes
 		case 4:
-			return completedPostViolenceCare_CM(subServices) ? ServicesConstants.ATTENDED
-					: startedPostViolenceCare_CM(subServices) ? ServicesConstants.PARTIALLY_ATTENDED
-							: ServicesConstants.PENDING;
+			return completedPostViolenceCare_CM(subServices) ? ReferencesStatus.ADDRESSED
+					: startedPostViolenceCare_CM(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
+							: ReferencesStatus.PENDING;
 		case 9:
-			return completedHIVTestingServices(subServices) ? ServicesConstants.ATTENDED : ServicesConstants.PENDING;
+			return completedHIVTestingServices(subServices) ? ReferencesStatus.ADDRESSED : ReferencesStatus.PENDING;
 		case 18:
-			return hadScoolAllowance(subServices) ? ServicesConstants.ATTENDED : ServicesConstants.PENDING;
+			return hadScoolAllowance(subServices) ? ReferencesStatus.ADDRESSED : ReferencesStatus.PENDING;
 		case 21:
-			return completedCombinedSocioEconomicApproaches(subServices) ? ServicesConstants.ATTENDED
-					: ServicesConstants.PENDING;
+			return completedCombinedSocioEconomicApproaches(subServices) ? ReferencesStatus.ADDRESSED
+					: ReferencesStatus.PENDING;
 		case 36:
-			return completedOtherSAAJServices(subServices) ? ServicesConstants.ATTENDED : ServicesConstants.PENDING;
+			return completedOtherSAAJServices(subServices) ? ReferencesStatus.ADDRESSED : ReferencesStatus.PENDING;
 		case 37:
-			return completedSAAJEducationSessions(subServices) ? ServicesConstants.ATTENDED
-					: startedSAAJEducationSessions(subServices) ? ServicesConstants.PARTIALLY_ATTENDED
-							: ServicesConstants.PENDING;
+			return completedSAAJEducationSessions(subServices) ? ReferencesStatus.ADDRESSED
+					: startedSAAJEducationSessions(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
+							: ReferencesStatus.PENDING;
 		case 38:
-			return completedCommunityMobilization(subServices) ? ServicesConstants.ATTENDED : ServicesConstants.PENDING;
+			return completedCommunityMobilization(subServices) ? ReferencesStatus.ADDRESSED : ReferencesStatus.PENDING;
 		case 40:
-			return completedFamilyMatters(subServices) ? ServicesConstants.ATTENDED : ServicesConstants.PENDING;
+			return completedFamilyMatters(subServices) ? ReferencesStatus.ADDRESSED : ReferencesStatus.PENDING;
 		case 42:
-			return completedPostViolenceCare_CM(subServices) ? ServicesConstants.ATTENDED
-					: startedPostViolenceCare_CM(subServices) ? ServicesConstants.PARTIALLY_ATTENDED
-							: ServicesConstants.PENDING;
+			return completedPostViolenceCare_CM(subServices) ? ReferencesStatus.ADDRESSED
+					: startedPostViolenceCare_CM(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
+							: ReferencesStatus.PENDING;
 		case 44:
-			return completedAvanteRaparigaSocialAssets(subServices) ? ServicesConstants.ATTENDED
-					: startedAvanteRaparigaSocialAssets(subServices) ? ServicesConstants.PARTIALLY_ATTENDED
-							: ServicesConstants.PENDING;
+			return completedAvanteRaparigaSocialAssets(subServices) ? ReferencesStatus.ADDRESSED
+					: startedAvanteRaparigaSocialAssets(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
+							: ReferencesStatus.PENDING;
 		case 45:
-			return completedAvanteEstudanteSocialAssets(subServices) ? ServicesConstants.ATTENDED
-					: startedAvanteEstudanteSocialAssets(subServices) ? ServicesConstants.PARTIALLY_ATTENDED
-							: ServicesConstants.PENDING;
+			return completedAvanteEstudanteSocialAssets(subServices) ? ReferencesStatus.ADDRESSED
+					: startedAvanteEstudanteSocialAssets(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
+							: ReferencesStatus.PENDING;
 		case 46:
-			return completedGuiaFacilitacaoSocialAssets(subServices) ? ServicesConstants.ATTENDED
-					: startedGuiaFacilitacaoSocialAssets(subServices) ? ServicesConstants.PARTIALLY_ATTENDED
-							: ServicesConstants.PENDING;
+			return completedGuiaFacilitacaoSocialAssets(subServices) ? ReferencesStatus.ADDRESSED
+					: startedGuiaFacilitacaoSocialAssets(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
+							: ReferencesStatus.PENDING;
 		case 47:
-			return completedAvanteRaparigaHIVPrevention(subServices) ? ServicesConstants.ATTENDED
-					: startedAvanteRaparigaHIVPrevention(subServices) ? ServicesConstants.PARTIALLY_ATTENDED
-							: ServicesConstants.PENDING;
+			return completedAvanteRaparigaHIVPrevention(subServices) ? ReferencesStatus.ADDRESSED
+					: startedAvanteRaparigaHIVPrevention(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
+							: ReferencesStatus.PENDING;
 		case 48:
-			return completedAvanteEstudanteHIVPrevention(subServices) ? ServicesConstants.ATTENDED
-					: startedAvanteEstudanteHIVPrevention(subServices) ? ServicesConstants.PARTIALLY_ATTENDED
-							: ServicesConstants.PENDING;
+			return completedAvanteEstudanteHIVPrevention(subServices) ? ReferencesStatus.ADDRESSED
+					: startedAvanteEstudanteHIVPrevention(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
+							: ReferencesStatus.PENDING;
 		case 49:
-			return completedGuiaFacilitacaoHIVPrevention(subServices) ? ServicesConstants.ATTENDED
-					: startedGuiaFacilitacaoHIVPrevention(subServices) ? ServicesConstants.PARTIALLY_ATTENDED
-							: ServicesConstants.PENDING;
+			return completedGuiaFacilitacaoHIVPrevention(subServices) ? ReferencesStatus.ADDRESSED
+					: startedGuiaFacilitacaoHIVPrevention(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
+							: ReferencesStatus.PENDING;
 		case 50:
-			return completedAvanteRaparigaViolencePrevention(subServices) ? ServicesConstants.ATTENDED
-					: startedAvanteRaparigaViolencePrevention(subServices) ? ServicesConstants.PARTIALLY_ATTENDED
-							: ServicesConstants.PENDING;
+			return completedAvanteRaparigaViolencePrevention(subServices) ? ReferencesStatus.ADDRESSED
+					: startedAvanteRaparigaViolencePrevention(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
+							: ReferencesStatus.PENDING;
 		case 51:
-			return completedAvanteEstudanteViolencePrevention(subServices) ? ServicesConstants.ATTENDED
-					: startedAvanteEstudanteViolencePrevention(subServices) ? ServicesConstants.PARTIALLY_ATTENDED
-							: ServicesConstants.PENDING;
+			return completedAvanteEstudanteViolencePrevention(subServices) ? ReferencesStatus.ADDRESSED
+					: startedAvanteEstudanteViolencePrevention(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
+							: ReferencesStatus.PENDING;
 		case 52:
-			return completedGuiaFacilitacaoViolencePrevention(subServices) ? ServicesConstants.ATTENDED
-					: startedGuiaFacilitacaoViolencePrevention(subServices) ? ServicesConstants.PARTIALLY_ATTENDED
-							: ServicesConstants.PENDING;
+			return completedGuiaFacilitacaoViolencePrevention(subServices) ? ReferencesStatus.ADDRESSED
+					: startedGuiaFacilitacaoViolencePrevention(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
+							: ReferencesStatus.PENDING;
 		case 53:
-			return completedPartnerAddressedInvervention(subServices) ? ServicesConstants.ATTENDED
-					: ServicesConstants.PENDING;
+			return completedPartnerAddressedInvervention(subServices) ? ReferencesStatus.ADDRESSED
+					: ReferencesStatus.PENDING;
 		case 54:
-			return completedPrep(subServices) ? ServicesConstants.ATTENDED : ServicesConstants.PENDING;
+			return completedPrep(subServices) ? ReferencesStatus.ADDRESSED : ReferencesStatus.PENDING;
 		case 55:
-			return completedFinancialLiteracy(subServices) ? ServicesConstants.ATTENDED : ServicesConstants.PENDING;
+			return completedFinancialLiteracy(subServices) ? ReferencesStatus.ADDRESSED : ReferencesStatus.PENDING;
 
 		default:
-			return ServicesConstants.PENDING;
+			return ReferencesStatus.PENDING;
 		}
 	}
 
@@ -438,19 +438,19 @@ public class ServiceCompletionRules {
 			Integer referenceServiceStatus = getReferenceServiceStatus(reference.getBeneficiaries(),
 					referencesServices.getId().getServiceId());
 
-			if (referenceServiceStatus == 0) {
+			if (referenceServiceStatus == ReferencesStatus.PENDING) {
 				pendingServices++;
-			} else if (referenceServiceStatus != 1) {
+			} else if (referenceServiceStatus != ReferencesStatus.PARTIALLY_ADDRESSED) {
 				completedServices++;
 			}
 		}
 
 		if (pendingServices == referencesServiceses.size()) {
-			return 0;
+			return ReferencesStatus.PENDING;
 		} else if (completedServices == referencesServiceses.size()) {
-			return 2;
+			return ReferencesStatus.ADDRESSED;
 		} else {
-			return 1;
+			return ReferencesStatus.PARTIALLY_ADDRESSED;
 		}
 	}
 

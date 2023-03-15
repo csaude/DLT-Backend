@@ -49,12 +49,10 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
             												+ "where l.id in (:localities)"),
     @NamedQuery(name = "BeneficiaryIntervention.findByDistricts", query = "SELECT bi FROM  BeneficiariesInterventions bi "
             												+ "left join fetch bi.beneficiaries b " 
-            												+ "left join fetch b.locality l "
-            												+ "where l.district.id in (:districts)"),
+            												+ "where b.district.id in (:districts)"),
     @NamedQuery(name = "BeneficiaryIntervention.findByProvinces", query = "SELECT bi FROM  BeneficiariesInterventions bi "
                                                             + "left join fetch bi.beneficiaries b " 
-            												+ "left join fetch b.locality l "
-            												+ "where l.district.province.id in (:provinces)"),  
+            												+ "where b.district.province.id in (:provinces)"),  
     
 	@NamedQuery(name = "BeneficiaryIntervention.findAll", query = "SELECT b FROM BeneficiariesInterventions b"),
 	@NamedQuery(name = "BeneficiaryIntervention.findByBeneficiaryAndSubService", 

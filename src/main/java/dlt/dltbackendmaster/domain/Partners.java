@@ -123,7 +123,7 @@ public class Partners implements java.io.Serializable {
 		this.district = district;
 	}
 
-	@Column(name = "name", nullable = false, length = 150, unique = true)
+	@Column(name = "name", nullable = false, unique = true, length = 150)
 	public String getName() {
 		return this.name;
 	}

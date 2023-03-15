@@ -82,7 +82,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.partners "
 																+ " left join fetch b.locality "
 																+ " left join fetch b.us "
-                												+ " where nb.locality.district.id in (:districts) "
+                												+ " where b.district.id in (:districts) "
                 												+ " and b.status = 1 "
                 												+ " order by b.id desc "
                                                                 + ""),
@@ -91,7 +91,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.partners "
 																+ " left join fetch b.locality "
 																+ " left join fetch b.us "
-                												+ " where nb.locality.district.province.id in (:provinces) "
+                												+ " where b.district.province.id in (:provinces) "
                 												+ " and b.status = 1 "
                 												+ " order by b.id desc "
                 												+ ""),
@@ -112,33 +112,23 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
                             									+ " and b.dateCreated = b.dateUpdated)"),                
                 @NamedQuery(name = "Beneficiary.findCountByLocalities", query = "SELECT count(b.id) as total FROM Beneficiaries b "
 										                		+ " left join  b.neighborhood nb "
-										                		+ " left join  b.partners "
-																+ " left join  b.locality "
-																+ " left join  b.us "
 																+ " where nb.locality.id in (:localities) "
 																+ " and b.status = 1 "
 																+ ""),
                 @NamedQuery(name = "Beneficiary.findCountByDistricts", query = "SELECT count(b.id) as total FROM Beneficiaries b "
-										                		+ " left join  b.neighborhood nb "
-										                		+ " left join  b.partners "
-																+ " left join  b.locality "
-																+ " left join  b.us "
-																+ " where nb.locality.district.id in (:districts)"
+																+ " where b.district.id in (:districts)"
+																+ " and b.status = 1 "
+																+ ""),
+                @NamedQuery(name = "Beneficiary.findCountByDistrictAndGender", query = "SELECT count(b.id) as total FROM Beneficiaries b "
+																+ " where b.district.id = :district "
+																+ " and b.gender = :gender "
 																+ " and b.status = 1 "
 																+ ""),
 				@NamedQuery(name = "Beneficiary.findCountByProvinces", query = "SELECT count(b.id) as total FROM Beneficiaries b "
-										                		+ " left join  b.neighborhood nb "
-										                		+ " left join  b.partners "
-																+ " left join  b.locality "
-																+ " left join  b.us "
-																+ " where nb.locality.district.province.id in (:provinces) "
+																+ " where b.district.province.id in (:provinces) "
 																+ " and b.status = 1 "
 																+ ""),
 				@NamedQuery(name = "Beneficiary.findCountAll", query = "SELECT count(b.id) as total FROM Beneficiaries b "
-																+ " left join  b.neighborhood nb "
-																+ " left join  b.partners "
-																+ " left join  b.locality "
-																+ " left join  b.us "
 																+ " where b.status = 1 "
 																+ ""),
 				@NamedQuery(name = "Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedBy", query = "SELECT  b FROM  Beneficiaries b "
