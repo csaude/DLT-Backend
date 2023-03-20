@@ -524,7 +524,7 @@ public class References implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "notify_to", nullable = false)
+	@JoinColumn(name = "notify_to", nullable = true)
 	public Users getNotifyTo() {
 		return notifyTo;
 	}

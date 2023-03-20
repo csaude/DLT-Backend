@@ -73,7 +73,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.partners "
 																+ " left join fetch b.locality "
 																+ " left join fetch b.us "
-                												+ " where nb.locality.id in (:localities) "
+                												+ " where b.locality.id in (:localities) "
                 												+ " and b.status = 1 "
                 												+ " order by b.id desc "
                 												+ ""),

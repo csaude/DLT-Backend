@@ -208,7 +208,7 @@ public class ReferencesController {
 	}
 
 	@PutMapping("/update-status")
-	public ResponseEntity<List<References>> updateReferenceStatus(@RequestParam Integer status) {
+	public ResponseEntity<List<References>> updateReferenceStatus() {
 
 		List<References> references = referenceService.findByStatus(ReferencesStatus.ADDRESSED);
 
@@ -217,12 +217,16 @@ public class ReferencesController {
 				for (ReferencesServices referenceService : reference.getReferencesServiceses()) {
 					Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(
 							reference.getBeneficiaries(), referenceService.getServices().getId());
-					referenceService.setStatus(referenceServiceStatus);
-					service.update(referenceService);
+					if (referenceService.getStatus() != referenceServiceStatus) {
+						referenceService.setStatus(referenceServiceStatus);
+						service.update(referenceService);
+					}
 				}
 				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference);
-				reference.setStatus(referenceStatus);
-				service.update(reference);
+				if (reference.getStatus() != referenceStatus) {
+					reference.setStatus(referenceStatus);
+					service.update(reference);
+				}
 			}
 			return new ResponseEntity<>(references, HttpStatus.OK);
 		} catch (Exception e) {

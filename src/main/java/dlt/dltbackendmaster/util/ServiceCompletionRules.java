@@ -299,7 +299,7 @@ public class ServiceCompletionRules {
 	}
 
 	public static boolean completedCombinedSocioEconomicApproaches(AgywPrev agywPrev) {
-		return agywPrev.getSocial_economics_approaches() > 0;
+		return agywPrev.getDisag_social_economics_approaches() > 0;
 	}
 
 	public static boolean hadScoolAllowance(List<Integer> subServices) {
