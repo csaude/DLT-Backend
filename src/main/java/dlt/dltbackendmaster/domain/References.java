@@ -438,7 +438,6 @@ public class References implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "references")
-    @JsonIgnore
 	public Set<ReferencesServices> getReferencesServiceses() {
 		return this.referencesServiceses;
 	}
