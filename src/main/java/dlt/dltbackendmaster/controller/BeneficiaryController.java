@@ -1,8 +1,10 @@
 package dlt.dltbackendmaster.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dlt.dltbackendmaster.domain.Beneficiaries;
+import dlt.dltbackendmaster.domain.Locality;
 import dlt.dltbackendmaster.domain.NumericSequence;
+import dlt.dltbackendmaster.domain.Users;
 import dlt.dltbackendmaster.domain.VulnerabilityHistory;
 import dlt.dltbackendmaster.service.DAOService;
 import dlt.dltbackendmaster.service.SequenceGenerator;
@@ -267,6 +271,24 @@ public class BeneficiaryController
             }
 		
 			return new ResponseEntity<>(beneficiariesTotal, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping(path = "/findByNui", produces = "application/json")
+	public ResponseEntity<List<Beneficiaries>> getBeneficiariesByNui(@RequestParam(name = "nui") String nui,@RequestParam(name = "userId") Integer userId) {
+		try {
+			List<Users> users = service.GetAllEntityByNamedQuery("Users.findById",userId);
+			List <Integer> localitiesIds = new ArrayList<>();
+			Set<Locality> localities = users.get(0).getLocalities();
+			localities.forEach(locality->{
+				localitiesIds.add(locality.getId());
+				});
+			
+			List<Beneficiaries> beneficiaries = service.GetAllEntityByNamedQuery("Beneficiary.getBeneficiariesByNui",nui, localitiesIds);
+		
+			return new ResponseEntity<List<Beneficiaries>>(beneficiaries, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

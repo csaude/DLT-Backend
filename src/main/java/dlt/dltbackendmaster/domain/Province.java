@@ -29,7 +29,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @NamedQueries({
     @NamedQuery(name = "Province.findAll", query = "SELECT u FROM Province u"),
     @NamedQuery(name = "Province.findByStatus", query = "SELECT p FROM Province p where p.status = :status"),
-    @NamedQuery(name = "Province.findByIds", query = "SELECT c FROM Province c WHERE c.id in (:provinces)")})
+    @NamedQuery(name = "Province.findByIds", query = "SELECT c FROM Province c WHERE c.id in (:provinces)"),
+    @NamedQuery(name = "Province.findById", query = "SELECT c FROM Province c WHERE c.id =:id")    
+})
 public class Province implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6226797610888544387L;

@@ -75,7 +75,11 @@ import dlt.dltbackendmaster.serializers.UssSerializer;
                 @NamedQuery(name = "Users.findByDateUpdated",
                             query = "select u from Users u where (u.dateUpdated >= :lastpulledat) or (u.dateUpdated >= :lastpulledat and u.dateCreated = u.dateUpdated)"),
                 @NamedQuery(name = "Users.findNames", 
-                			query = "SELECT u.id as id, u.username as username FROM Users u"),                
+                			query = "SELECT u.id as id, u.username as username FROM Users u"),  
+                @NamedQuery(name = "Users.findById", query = "SELECT u "
+                		+ "FROM Users u "
+                		+ "left join fetch u.localities "
+                		+ "where u.id = :id"),
 })
 public class Users implements java.io.Serializable
 {
