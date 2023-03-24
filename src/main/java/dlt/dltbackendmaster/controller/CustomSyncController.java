@@ -2,7 +2,6 @@ package dlt.dltbackendmaster.controller;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +31,6 @@ import dlt.dltbackendmaster.domain.Users;
 import dlt.dltbackendmaster.domain.watermelondb.SyncObject;
 import dlt.dltbackendmaster.serializers.SyncSerializer;
 import dlt.dltbackendmaster.service.DAOService;
-import dlt.dltbackendmaster.service.ReferenceService;
 import dlt.dltbackendmaster.service.SequenceGenerator;
 
 @RestController
@@ -47,7 +45,7 @@ public class CustomSyncController {
 		new SequenceGenerator(service);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	@GetMapping(path = "/beneficiaries", produces = "application/json")
 	public ResponseEntity get(@RequestParam(name = "lastPulledAt", required = false) @Nullable String lastPulledAt,
 			@RequestParam(name = "nui") String nui, @RequestParam(name = "userId") Integer userId)
@@ -115,9 +113,9 @@ public class CustomSyncController {
 					beneficiariesCreated.get(0).getId());
 
 			for (References ref : referencesCreated) {
-				List<ReferenceService> refServicesByRef = new ArrayList<ReferenceService>();
+				List<ReferencesServices> refServicesByRef = new ArrayList<ReferencesServices>();
 				refServicesByRef = service.GetAllEntityByNamedQuery("ReferencesServices.findByReference", ref.getId());
-				referenceServicesCreated.addAll((Collection<? extends ReferencesServices>) refServicesByRef);
+				referenceServicesCreated.addAll(refServicesByRef);
 			}
 
 			neighborhoodsCreated = service.GetAllEntityByNamedQuery("Neighborhood.findById",
