@@ -45,20 +45,21 @@ public class BeneficiaryController
     		@RequestParam(name = "level") String level, 
     		@RequestParam(name = "params",required = false) @Nullable Integer[] params,
     		@RequestParam(name = "pageIndex") int pageIndex,
-    		@RequestParam(name = "pageSize") int pageSize
+    		@RequestParam(name = "pageSize") int pageSize,
+    		@RequestParam(name = "searchNui", required = false) @Nullable String searchNui
     		) {
 
         try {
             List<Beneficiaries> beneficiaries = null;
 
             if (level.equals("CENTRAL")) {
-                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findAll", pageIndex, pageSize);
+                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findAll", pageIndex, pageSize, searchNui);
             } else if (level.equals("PROVINCIAL")) {
-                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByProvinces", pageIndex, pageSize, Arrays.asList(params));
+                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByProvinces", pageIndex, pageSize, searchNui, Arrays.asList(params));
             } else if (level.equals("DISTRITAL")) {
-                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByDistricts", pageIndex, pageSize, Arrays.asList(params));
+                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByDistricts", pageIndex, pageSize, searchNui, Arrays.asList(params));
             } else {
-                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByLocalities", pageIndex, pageSize, Arrays.asList(params));
+                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByLocalities", pageIndex, pageSize,searchNui, Arrays.asList(params));
             }
 
             return new ResponseEntity<List<Beneficiaries>>(beneficiaries, HttpStatus.OK);

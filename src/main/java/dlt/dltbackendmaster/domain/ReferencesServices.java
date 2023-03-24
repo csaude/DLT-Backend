@@ -41,12 +41,12 @@ import dlt.dltbackendmaster.serializers.ServiceSerializer;
 @NamedNativeQueries({
 	@NamedNativeQuery(name = "ReferencesServices.removeByReferenceId", query = "DELETE FROM references_services WHERE reference_id = :referenceId") })
 @NamedQueries({ 
-    @NamedQuery(name = "ReferencesServices.findByReferenceNotifyToOrBeneficiaryCreatedBy", query = "SELECT rs FROM  ReferencesServices rs "
+    @NamedQuery(name = "ReferencesServices.findByReferenceNotifyToOrReferredBy", query = "SELECT rs FROM  ReferencesServices rs "
 												            + "left join fetch rs.references r "
 												            + "left join fetch r.beneficiaries b " 
 												            + "left join fetch b.locality l "
-												            + "where r.status = 0 "
-												            + "and (r.notifyTo.id = :userId or b.createdBy like :userId) "), 
+												            + "where r.status in (0,1) "
+												            + "and (r.notifyTo.id = :userId or r.referredBy.id = :userId) "), 
     @NamedQuery(name = "ReferencesServices.findAll", query = "SELECT b FROM ReferencesServices b"),
     @NamedQuery(name = "ReferencesServices.findByReference", query = "SELECT r FROM ReferencesServices r where r.references.id = :reference_id"),
     @NamedQuery(name = "ReferencesServices.findByReferenceAndService", query = "SELECT b FROM ReferencesServices b where b.references.id = :reference_id and b.services.id = :service_id"),

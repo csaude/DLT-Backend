@@ -70,7 +70,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 	@NamedQuery(name = "BeneficiaryIntervention.findByReferenceNotifyToOrBeneficiaryCreatedBy", query = "SELECT bi FROM BeneficiariesInterventions bi "
 															+ " where bi.beneficiaries.id in "
 															+ " (SELECT distinct r.beneficiaries.id FROM  References r "										
-												            + " where r.status = 0 "
+												            + " where r.status in (0,1) "
 												            + " and (r.notifyTo.id = :userId or bi.beneficiaries.createdBy = :userId)) "
 												            ),
 })

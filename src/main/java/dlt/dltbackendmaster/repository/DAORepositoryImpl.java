@@ -112,11 +112,18 @@ public class DAORepositoryImpl implements DAORepository {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, Object... params) {
+	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchNui, Object... params) {
 		Query q = getCurrentSession().getNamedQuery(query);
 		int i = 0;
+		
+
 		for (Parameter param : q.getParameters()) {
-			q.setParameter(param, params[i++]);
+			if(!"searchNui".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			}else {
+				q.setParameter("searchNui", "%"+searchNui+"%");
+			}	
 		}
 
 		List<T> results = q

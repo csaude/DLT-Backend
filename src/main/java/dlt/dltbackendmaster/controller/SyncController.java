@@ -225,11 +225,11 @@ public class SyncController
 			subServicesUpdated = new ArrayList<SubServices>();
 			
 			// References
-			referencesCreated = service.GetAllEntityByNamedQuery("References.findByReferenceNotifyToOrBeneficiaryCreatedBy",user.getId());
+			referencesCreated = service.GetAllEntityByNamedQuery("References.findByReferenceNotifyToOrReferredBy",user.getId());
 			referencesUpdated = new ArrayList<References>();
 			
 			// ReferencesServices
-			referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findByReferenceNotifyToOrBeneficiaryCreatedBy",user.getId());
+			referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findByReferenceNotifyToOrReferredBy",user.getId());
 			referenceServicesUpdated = new ArrayList<ReferencesServices>();
 		} else {
 			Long t = Long.valueOf(lastPulledAt);

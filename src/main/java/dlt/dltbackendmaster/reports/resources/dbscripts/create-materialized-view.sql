@@ -51,6 +51,7 @@ CREATE TABLE agyw_prev_mview
    intervention_status int,
    registration_age_band int,
    current_age_band int,
+   service_date varchar(25),
    vulnerable int,
    level int,
    PRIMARY KEY (`id`)
@@ -68,6 +69,7 @@ from
    select a.*,
       if(registration_age between 9 and 14,1,if (registration_age between 15 and 19,2,if (registration_age between 20 and 24,3,if (registration_age between 25 and 29,4,5)))) registration_age_band,
       if(current_age between 9 and 14,1,if (current_age between 15 and 19,2,if (current_age between 20 and 24,3,if (current_age between 25 and 29,4,5)))) current_age_band,
+      max(intervention_date) service_date,
       if (gender = 2 
             and((vblt_tested_hiv is not null and vblt_tested_hiv < 2 and date_created < '2022-01-01')
             or vblt_multiple_partners = 1 
@@ -139,6 +141,9 @@ from
       left join sub_services ss on bi.sub_service_id = ss.id
       left join services s on ss.service_id = s.id
       left join us on bi.us_id = us.id
+      where b.status=1
    ) a
+    where intervention_date <= now()
+   group by beneficiary_id, sub_service_id
 ) a
 left join services_agebands sab on sab.service_id = a.service_id and sab.age_band = a.current_age_band;

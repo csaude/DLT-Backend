@@ -52,6 +52,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.locality "
 																+ " left join fetch b.us "
 																+ " where b.status = 1 "
+																+ " and b.nui like :searchNui "
 																+ " order by b.id desc"
 																+ ""),
                 @NamedQuery(name = "Beneficiary.findByNui", query = "SELECT b FROM Beneficiaries b "
@@ -74,6 +75,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.locality "
 																+ " left join fetch b.us "
                 												+ " where b.locality.id in (:localities) "
+                												+ " and b.nui like :searchNui "
                 												+ " and b.status = 1 "
                 												+ " order by b.id desc "
                 												+ ""),
@@ -83,6 +85,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.locality "
 																+ " left join fetch b.us "
                 												+ " where b.district.id in (:districts) "
+                												+ " and b.nui like :searchNui "
                 												+ " and b.status = 1 "
                 												+ " order by b.id desc "
                                                                 + ""),
@@ -92,6 +95,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.locality "
 																+ " left join fetch b.us "
                 												+ " where b.district.province.id in (:provinces) "
+                												+ " and b.nui like :searchNui "
                 												+ " and b.status = 1 "
                 												+ " order by b.id desc "
                 												+ ""),
@@ -139,7 +143,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " where b.status = 1 "
                                                                 + " and (b.createdBy = :userId "	
 																+ " or   b.id in (SELECT r.beneficiaries.id from References r"
-												                + " where r.status = 0 "
+												                + " where r.status in (0,1) "
 												                + " and r.notifyTo.id = :userId)) "    											     
 												                ),
 				@NamedQuery(name = "Beneficiary.getBeneficiariesByNui", query = "SELECT  b FROM  Beneficiaries b "

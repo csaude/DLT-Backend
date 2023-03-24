@@ -1,5 +1,7 @@
 package dlt.dltbackendmaster.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +21,8 @@ import dlt.dltbackendmaster.domain.SubServices;
  *
  */
 public class ServiceCompletionRules {
+
+	private static final String COP_22_START_DATE = "20220921";
 
 	public static boolean completedAvanteEstudanteSocialAssets(List<Integer> subServices) {
 		return subServices.containsAll(ServicesConstants.ESTUDANTES_RECURSOS_SOCIAIS_MANDATORY);
@@ -45,6 +49,10 @@ public class ServiceCompletionRules {
 	public static boolean startedGuiaFacilitacaoSocialAssets(List<Integer> subServices) {
 		return containsAny(ServicesConstants.GUIAO_FACILITACAO_RECURSOS_SOCIAIS, subServices)
 				|| containsAny(ServicesConstants.GUIAO_FACILITACAO_RECURSOS_SOCIAIS, subServices);
+	}
+
+	public static boolean startedGuiaFacilitacaoSocialAssets15Plus(AgywPrev agywPrev) {
+		return agywPrev.getSocial_assets_15_plus() > 0;
 	}
 
 	public static boolean completedAvanteEstudanteHIVPrevention(List<Integer> subServices) {
@@ -150,10 +158,17 @@ public class ServiceCompletionRules {
 		return subServices.containsAll(ServicesConstants.GUIAO_FACILITACAO_MANDATORY);
 	}
 
-	public static boolean completedGuiaFacilitacao(AgywPrev agywPrev, Date cop21StartDate) {
-		return agywPrev.getHiv_gbv_sessions() >= 9 && (agywPrev.getDate_created().before(cop21StartDate)
-				|| agywPrev.getDate_created().compareTo(cop21StartDate) >= 0
-						&& agywPrev.getHiv_gbv_sessions_prep() > 0);
+	public static boolean completedGuiaFacilitacao(AgywPrev agywPrev) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+		try {
+			Date cop22StartDate = df.parse(COP_22_START_DATE);
+			return agywPrev.getHiv_gbv_sessions() >= 9 && (agywPrev.getDate_created().before(cop22StartDate)
+					|| agywPrev.getDate_created().compareTo(cop22StartDate) >= 0
+							&& agywPrev.getHiv_gbv_sessions_prep() > 0);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public static boolean startedGuiaFacilitacao(List<Integer> subServices) {
@@ -298,15 +313,19 @@ public class ServiceCompletionRules {
 		return containsAny(ServicesConstants.ABORDAGENS_SOCIO_ECONOMICAS_COMBINADAS, subServices);
 	}
 
-	public static boolean completedCombinedSocioEconomicApproaches(AgywPrev agywPrev) {
+	public static boolean completedDisagCombinedSocioEconomicApproaches(AgywPrev agywPrev) {
 		return agywPrev.getDisag_social_economics_approaches() > 0;
+	}
+
+	public static boolean completedCombinedSocioEconomicApproaches(AgywPrev agywPrev) {
+		return agywPrev.getSocial_economics_approaches() > 0;
 	}
 
 	public static boolean hadScoolAllowance(List<Integer> subServices) {
 		return containsAny(ServicesConstants.SUBSIDIO_ESCOLAR, subServices);
 	}
 
-	public static boolean hadScoolAllowance(AgywPrev agywPrev) {
+	public static boolean hadSchoolAllowance(AgywPrev agywPrev) {
 		return agywPrev.getSchool_allowance() > 0;
 	}
 
@@ -328,6 +347,27 @@ public class ServiceCompletionRules {
 
 	public static boolean startedViolencePrevention15Plus(AgywPrev agywPrev) {
 		return agywPrev.getViolence_prevention_15_plus() > 0;
+	}
+
+	// Old Curriculum
+	public static boolean completedSocialAssetsOldCurriculum(AgywPrev agywPrev) {
+		return agywPrev.getOld_social_assets() > 9;
+	}
+
+	public static boolean startedSocialAssetsOldCurriculum(AgywPrev agywPrev) {
+		return agywPrev.getOld_social_assets() > 0;
+	}
+
+	public static boolean completedHivSessions(AgywPrev agywPrev) {
+		return agywPrev.getHiv_sessions() > 0;
+	}
+
+	public static boolean completedGbvSessions(AgywPrev agywPrev) {
+		return agywPrev.getGbv_sessions() > 0;
+	}
+
+	public static boolean completedPrep(AgywPrev agywPrev) {
+		return agywPrev.getPrep() > 0;
 	}
 
 	public static Integer getReferenceServiceStatus(Beneficiaries beneficiary, Integer service) {
