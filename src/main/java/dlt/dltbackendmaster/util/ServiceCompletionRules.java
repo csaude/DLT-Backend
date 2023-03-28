@@ -306,7 +306,7 @@ public class ServiceCompletionRules {
 	}
 
 	public static boolean completedPrep(List<Integer> subServices) {
-		return subServices.contains(ServicesConstants.PROFILAXIA_PREP);
+		return subServices.contains(ServicesConstants.PROVISAO_PREP);
 	}
 
 	public static boolean completedCombinedSocioEconomicApproaches(List<Integer> subServices) {

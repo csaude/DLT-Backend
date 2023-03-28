@@ -41,7 +41,7 @@ public class BeneficiaryController
 
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<Beneficiaries>> get(
-    		@RequestParam(name = "profile") Integer profile, 
+    		@RequestParam(name = "userId") Integer userId, 
     		@RequestParam(name = "level") String level, 
     		@RequestParam(name = "params",required = false) @Nullable Integer[] params,
     		@RequestParam(name = "pageIndex") int pageIndex,
@@ -59,7 +59,7 @@ public class BeneficiaryController
             } else if (level.equals("DISTRITAL")) {
                 beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByDistricts", pageIndex, pageSize, searchNui, Arrays.asList(params));
             } else {
-                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByLocalities", pageIndex, pageSize,searchNui, Arrays.asList(params));
+                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByLocalitiesOrReferenceNotifyTo", pageIndex, pageSize, searchNui, Arrays.asList(params), userId);
             }
 
             return new ResponseEntity<List<Beneficiaries>>(beneficiaries, HttpStatus.OK);
@@ -256,7 +256,7 @@ public class BeneficiaryController
 	}
 	
 	@GetMapping(path = "/count", produces = "application/json")
-	public ResponseEntity<Long> countByBeneficiary(@RequestParam(name = "level") String level, @RequestParam(name = "params",
+	public ResponseEntity<Long> countByBeneficiary(@RequestParam(name = "userId") Integer userId, @RequestParam(name = "level") String level, @RequestParam(name = "params",
             required = false) @Nullable Integer[] params) {
 		try {
 			Long beneficiariesTotal;
@@ -268,7 +268,7 @@ public class BeneficiaryController
             } else if (level.equals("DISTRITAL")) {
             	beneficiariesTotal = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByDistricts", Arrays.asList(params));
             } else {
-            	beneficiariesTotal = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByLocalities", Arrays.asList(params));
+            	beneficiariesTotal = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByLocalitiesOrReferenceNotifyTo", Arrays.asList(params), userId);
             }
 		
 			return new ResponseEntity<>(beneficiariesTotal, HttpStatus.OK);

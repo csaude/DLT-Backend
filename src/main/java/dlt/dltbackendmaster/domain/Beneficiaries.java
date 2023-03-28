@@ -79,6 +79,18 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
                 												+ " and b.status = 1 "
                 												+ " order by b.id desc "
                 												+ ""),
+                @NamedQuery(name = "Beneficiary.findByLocalitiesOrReferenceNotifyTo", query = "SELECT b FROM Beneficiaries b "
+										                		+ " left join fetch b.neighborhood nb "
+																+ " left join fetch b.partners "
+																+ " left join fetch b.locality "
+																+ " left join fetch b.us "
+																+ " where (b.locality.id in (:localities) "	
+																+ " or b.id in (SELECT r.beneficiaries.id from References r "
+																+ "				where r.notifyTo.id = :userId)) "
+																+ " and b.nui like :searchNui "
+																+ " and b.status = 1 "
+																+ " order by b.id desc "
+																+ ""),
                 @NamedQuery(name = "Beneficiary.findByDistricts", query = "SELECT b FROM Beneficiaries b "
 										                		+ " left join fetch b.neighborhood nb "
 																+ " left join fetch b.partners "
@@ -115,8 +127,13 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
                             									+ " or (b.dateUpdated >= :lastpulledat "
                             									+ " and b.dateCreated = b.dateUpdated)"),                
                 @NamedQuery(name = "Beneficiary.findCountByLocalities", query = "SELECT count(b.id) as total FROM Beneficiaries b "
-										                		+ " left join  b.neighborhood nb "
-																+ " where nb.locality.id in (:localities) "
+																+ " where b.locality.id in (:localities) "
+																+ " and b.status = 1 "
+																+ ""),              
+                @NamedQuery(name = "Beneficiary.findCountByLocalitiesOrReferenceNotifyTo", query = "SELECT count(b.id) as total FROM Beneficiaries b "
+																+ " where (b.locality.id in (:localities) "	
+																+ " or b.id in (SELECT r.beneficiaries.id from References r "
+																+ "				where r.notifyTo.id = :userId)) "
 																+ " and b.status = 1 "
 																+ ""),
                 @NamedQuery(name = "Beneficiary.findCountByDistricts", query = "SELECT count(b.id) as total FROM Beneficiaries b "
