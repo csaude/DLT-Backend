@@ -53,6 +53,7 @@ import dlt.dltbackendmaster.domain.watermelondb.UsersSyncModel;
 import dlt.dltbackendmaster.serializers.SyncSerializer;
 import dlt.dltbackendmaster.service.DAOService;
 import dlt.dltbackendmaster.service.SequenceGenerator;
+import dlt.dltbackendmaster.service.VulnerabilityHistoryService;
 
 @RestController
 @RequestMapping("/sync")
@@ -63,6 +64,9 @@ public class SyncController
 	private SequenceGenerator generator;
 	private String level;
 	private Integer[] params;
+	
+	@Autowired
+    private VulnerabilityHistoryService vulnerabilityHistoryService;
 
 	@Autowired
 	public SyncController(DAOService service) {
@@ -399,6 +403,7 @@ public class SyncController
 						Beneficiaries beneficiary = new Beneficiaries(created, lastPulledAt);
 						beneficiary.setCreatedBy(user.getId());
 						Integer beneficiaryId = (Integer) service.Save(beneficiary);
+						vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
 						beneficiariesIds.put(created.getId(), beneficiaryId);
 					} else {
 						beneficiariesIds.put(created.getId(), created.getOnline_id());
@@ -416,6 +421,7 @@ public class SyncController
 						Beneficiaries beneficiary = new Beneficiaries(updated, lastPulledAt);
 						beneficiary.setCreatedBy(user.getId());
 						Integer beneficiaryId = (Integer) service.Save(beneficiary);
+						vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
 						beneficiariesIds.put(updated.getId(), beneficiaryId);
 
 					} else {
@@ -424,6 +430,7 @@ public class SyncController
 						beneficiary.setDateUpdated(new Date());
 						beneficiary.update(updated, lastPulledAt);
 						service.update(beneficiary);
+						vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
 						beneficiariesIds.put(updated.getId(), updated.getOnline_id());
 					}
 				}

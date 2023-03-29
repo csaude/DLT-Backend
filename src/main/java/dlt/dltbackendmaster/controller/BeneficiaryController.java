@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -25,6 +26,7 @@ import dlt.dltbackendmaster.domain.Users;
 import dlt.dltbackendmaster.domain.VulnerabilityHistory;
 import dlt.dltbackendmaster.service.DAOService;
 import dlt.dltbackendmaster.service.SequenceGenerator;
+import dlt.dltbackendmaster.service.VulnerabilityHistoryService;
 
 @RestController
 @RequestMapping("/api/beneficiaries")
@@ -33,6 +35,9 @@ public class BeneficiaryController
     private final DAOService service;
 
     private SequenceGenerator generator;
+    
+    @Autowired
+    private VulnerabilityHistoryService vulnerabilityHistoryService;
 
     public BeneficiaryController(DAOService service) {
         this.service = service;
@@ -107,7 +112,7 @@ public class BeneficiaryController
             Integer beneficiaryId = (Integer) service.Save(beneficiary);
             Beneficiaries createdBeneficiary = service.find(Beneficiaries.class, beneficiaryId);
             
-            saveVulnerabilityHistory(createdBeneficiary);
+            vulnerabilityHistoryService.saveVulnerabilityHistory(createdBeneficiary);
             
             return new ResponseEntity<>(createdBeneficiary, HttpStatus.OK);
         } catch (Exception e) {
@@ -137,7 +142,7 @@ public class BeneficiaryController
 			}
 			Beneficiaries updatedBeneficiary = service.update(beneficiary);
 
-			saveVulnerabilityHistory(updatedBeneficiary);
+			vulnerabilityHistoryService.saveVulnerabilityHistory(updatedBeneficiary);
 
 			return new ResponseEntity<>(updatedBeneficiary, HttpStatus.OK);
 		} catch (Exception e) {
@@ -145,116 +150,6 @@ public class BeneficiaryController
 		}
 	}
 
-	private void saveVulnerabilityHistory(Beneficiaries beneficiary) {
-		if(beneficiary.getVbltIsDeficient()!=null) {
-			createVulnerability("IS_DEFICIENT", String.valueOf(beneficiary.getVbltIsDeficient()), beneficiary);
-			if(beneficiary.getVbltIsDeficient()==1 && beneficiary.getVbltDeficiencyType()!=null) {
-				createVulnerability("DEFICIENCY_TYPE", beneficiary.getVbltDeficiencyType(), beneficiary);
-			}
-		}			
-		if(beneficiary.getVbltChildren() !=null) {
-			createVulnerability("CHILDREN", String.valueOf(beneficiary.getVbltChildren()), beneficiary);
-		}
-		if(beneficiary.getVbltSexWorker() !=null) {
-			createVulnerability("SEX_WORKER", String.valueOf(beneficiary.getVbltSexWorker()), beneficiary);
-		}
-		if(beneficiary.getVbltIsEmployed()!= null) {
-			createVulnerability("IS_EMPLOYED", beneficiary.getVbltIsEmployed(), beneficiary);
-		}
-		if( beneficiary.getVbltLivesWith()!=null) {
-			createVulnerability("LIVES_WITH", beneficiary.getVbltLivesWith(), beneficiary);
-		}
-		if(beneficiary.getVbltSchoolName()!=null) {
-			createVulnerability("SCHOOL_NAME", beneficiary.getVbltSchoolName(), beneficiary);
-		}
-		if(beneficiary.getVbltSexploitationTime()!=null) {
-			createVulnerability("SEXPLOITATION_TIME", beneficiary.getVbltSexploitationTime(), beneficiary);
-		}
-		if( beneficiary.getVbltTestedHiv()!=null) {
-			createVulnerability("TESTED_HIV", beneficiary.getVbltTestedHiv(), beneficiary);
-		}
-		if(beneficiary.getVbltVbgTime()!=null) {
-			createVulnerability("VBG_TIME", beneficiary.getVbltVbgTime(), beneficiary);
-		}
-		if(beneficiary.getVbltVbgType()!=null) {
-			createVulnerability("VBG_TYPE", beneficiary.getVbltVbgType(), beneficiary);
-		}
-		if(beneficiary.getVbltAlcoholDrugsUse()!=null) {
-			createVulnerability("ALCOHOL_DRUGS_USE", String.valueOf(beneficiary.getVbltAlcoholDrugsUse()), beneficiary);
-		}
-		if(beneficiary.getVbltAlcoholDrugsUse()!=null) {
-			createVulnerability("HOUSE_SUSTAINER", String.valueOf(beneficiary.getVbltHouseSustainer()), beneficiary);
-		}
-		if(beneficiary.getVbltIsMigrant()!=null) {
-			createVulnerability("IS_MIGRANT", String.valueOf(beneficiary.getVbltIsMigrant()), beneficiary);
-		}
-		if(beneficiary.getVbltIsOrphan()!=null) {
-			createVulnerability("IS_ORPHAN", String.valueOf(beneficiary.getVbltIsOrphan()), beneficiary);
-		}
-		if(beneficiary.getVbltIsStudent()!=null) {
-			createVulnerability("IS_STUDENT", String.valueOf(beneficiary.getVbltIsStudent()), beneficiary);
-		}
-		if(beneficiary.getVbltMarriedBefore()!=null) {
-			createVulnerability("MARRIED_BEFORE", String.valueOf(beneficiary.getVbltMarriedBefore()), beneficiary);
-		}
-		if(beneficiary.getVbltMultiplePartners()!=null) {
-			createVulnerability("MULTIPLE_PARTNERS", String.valueOf(beneficiary.getVbltMultiplePartners()), beneficiary);
-		}
-		if(beneficiary.getVbltPregnantBefore()!=null) {
-			createVulnerability("PREGNANT_BEFORE", String.valueOf(beneficiary.getVbltPregnantBefore()), beneficiary);
-		}
-		if(beneficiary.getVbltPregnantOrBreastfeeding()!=null) {
-			createVulnerability("PREGNANT_OR_BREASTFEEDING", String.valueOf(beneficiary.getVbltPregnantOrBreastfeeding()),
-				beneficiary);
-		}
-		if(beneficiary.getVbltSchoolGrade()!=null) {
-			createVulnerability("SCHOOL_GRADE", String.valueOf(beneficiary.getVbltSchoolGrade()), beneficiary);
-		}
-		if(beneficiary.getVbltSexualExploitation()!=null) {
-			createVulnerability("SEXUAL_EXPLOITATION", String.valueOf(beneficiary.getVbltSexualExploitation()),
-				beneficiary);
-		}
-		if(beneficiary.getVbltSexuallyActive()!=null) {
-			createVulnerability("SEXUALLY_ACTIVE", String.valueOf(beneficiary.getVbltSexuallyActive()), beneficiary);
-		}
-		if(beneficiary.getVbltStiHistory()!=null) {
-			createVulnerability("STI_HISTORY", String.valueOf(beneficiary.getVbltStiHistory()), beneficiary);}
-		
-		if(beneficiary.getVbltTraffickingVictim()!=null) {
-			createVulnerability("TRAFFICKING_VICTIM", String.valueOf(beneficiary.getVbltTraffickingVictim()), beneficiary);
-		}
-		if(beneficiary.getVbltVbgVictim()!=null) {
-			createVulnerability("VBG_VICTIM", String.valueOf(beneficiary.getVbltVbgVictim()), beneficiary);
-		}
-		if(beneficiary.getVbltHouseSustainer()!=null) {
-			createVulnerability("HOUSE_SUSTAINER", String.valueOf(beneficiary.getVbltHouseSustainer()), beneficiary);
-		}
-	}
-
-	private void createVulnerability(String vulnerabilityKey, String vulnerabilityValue, Beneficiaries beneficiary) {
-		VulnerabilityHistory history = new VulnerabilityHistory();
-
-		history.setBeneficiaries(beneficiary);
-		history.setVulnerability(vulnerabilityKey);
-		history.setValue(vulnerabilityValue);
-		history.setStatus(beneficiary.getStatus());
-		history.setCreatedBy(String.valueOf(beneficiary.getCreatedBy()));
-		history.setDateCreated(new Date());
-
-		try {
-		
-			List<VulnerabilityHistory> vulnerabilityHistoryOrdered = service.GetAllEntityByNamedQuery(
-					"VulnerabilityHistory.findByBeneficiaryAndVulnerability", beneficiary.getId(), vulnerabilityKey);
-
-			if (vulnerabilityValue != null  && (vulnerabilityHistoryOrdered.isEmpty() || !vulnerabilityValue.equals(vulnerabilityHistoryOrdered.get(0).getValue()))) 
-			{
-				service.Save(history);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	@GetMapping(path = "/count", produces = "application/json")
 	public ResponseEntity<Long> countByBeneficiary(@RequestParam(name = "userId") Integer userId, @RequestParam(name = "level") String level, @RequestParam(name = "params",
             required = false) @Nullable Integer[] params) {
