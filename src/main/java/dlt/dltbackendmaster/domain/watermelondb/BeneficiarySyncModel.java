@@ -14,6 +14,8 @@ public class BeneficiarySyncModel extends BasicLifeCycleSyncModel
     private String phone_number;
     private String e_mail;
     private Date enrollment_date;
+    private Date date_created;
+    private Date date_update;
     private Integer via;
     private Integer nationality;
     private Integer partner_id;
@@ -131,6 +133,22 @@ public class BeneficiarySyncModel extends BasicLifeCycleSyncModel
         this.enrollment_date = enrollment_date;
     }
 
+    public Date getDate_created() {
+        return date_created;
+    }
+
+    public void setDate_created(Date date_created) {
+        this.date_created = date_created;
+    }
+
+    public Date getDate_update() {
+        return date_update;
+    }
+
+    public void setDate_update(Date date_update) {
+        this.date_update = date_update;
+    }
+	
     public Integer getVia() {
         return via;
     }

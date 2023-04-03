@@ -325,8 +325,8 @@ public class Beneficiaries implements java.io.Serializable
     }
 
     public Beneficiaries(BeneficiarySyncModel model, String timestamp) {
-        Long t = Long.valueOf(timestamp);
-        Date regDate = new Date(t);
+//        Long t = Long.valueOf(timestamp);
+//        Date regDate = new Date(t);
         this.nui = model.getNui();
         this.surname = model.getSurname();
         this.nickName = model.getNick_name();
@@ -335,6 +335,8 @@ public class Beneficiaries implements java.io.Serializable
         this.locality = new Locality(model.getLocality_id());
         this.district = new District(model.getDistrict_id());
         this.dateOfBirth = model.getDate_of_birth();
+        this.dateCreated = model.getDate_created();
+        this.dateUpdated = model.getDate_update();
         this.gender = model.getGender();
         this.address = model.getAddress();
         this.phoneNumber = model.getPhone_number();
@@ -373,7 +375,6 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltStiHistory = model.getVblt_sti_history();
         this.vbltSexWorker = model.getVblt_sex_worker();
         this.vbltHouseSustainer = model.getVblt_house_sustainer();
-        this.dateCreated = regDate;
         this.status = Integer.valueOf(model.getStatus());
     }
 
@@ -386,6 +387,8 @@ public class Beneficiaries implements java.io.Serializable
         this.locality = new Locality(model.getLocality_id());
         this.district = new District(model.getDistrict_id());
         this.dateOfBirth = model.getDate_of_birth();
+        this.dateCreated = model.getDate_created();
+        this.dateUpdated = model.getDate_update();
         this.gender = model.getGender();
         this.address = model.getAddress();
         this.phoneNumber = model.getPhone_number();
@@ -969,13 +972,17 @@ public class Beneficiaries implements java.io.Serializable
             beneficiary.put("id", id);
         }
         
-        if (dateUpdated == null || dateUpdated.after(dateCreated) || lastPulledAt == null || lastPulledAt.equals("null")) {
+        if (
+            // dateUpdated == null || dateUpdated.after(dateCreated) ||
+             lastPulledAt == null || lastPulledAt.equals("null")) {
 			beneficiary.put("nui", nui);
 			beneficiary.put("name", name);
 			beneficiary.put("surname", surname);
 			beneficiary.put("nick_name", nickName);
 			beneficiary.put("organization_id", partners == null ? null : partners.getId());
 			beneficiary.put("date_of_birth", dateOfBirth == null ? null : dateFormat.format(dateOfBirth));
+			beneficiary.put("date_created", dateCreated == null ? null : dateFormat.format(dateCreated));
+			beneficiary.put("date_updated", dateUpdated == null ? null : dateFormat.format(dateUpdated));
 			beneficiary.put("gender", String.valueOf(gender));
 			beneficiary.put("address", address);
 			beneficiary.put("phone_number", phoneNumber);
@@ -1055,6 +1062,8 @@ public class Beneficiaries implements java.io.Serializable
         this.nickName = model.getNick_name();
         this.partners.setId(model.getOrganization_id());
         this.dateOfBirth = model.getDate_of_birth();
+        this.dateCreated = model.getDate_created();
+        this.dateUpdated = model.getDate_update();
         this.gender = model.getGender();
         this.address = model.getAddress();
         this.phoneNumber = model.getPhone_number();
