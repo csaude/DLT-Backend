@@ -325,8 +325,6 @@ public class Beneficiaries implements java.io.Serializable
     }
 
     public Beneficiaries(BeneficiarySyncModel model, String timestamp) {
-//        Long t = Long.valueOf(timestamp);
-//        Date regDate = new Date(t);
         this.nui = model.getNui();
         this.surname = model.getSurname();
         this.nickName = model.getNick_name();
@@ -972,9 +970,7 @@ public class Beneficiaries implements java.io.Serializable
             beneficiary.put("id", id);
         }
         
-        if (
-            // dateUpdated == null || dateUpdated.after(dateCreated) ||
-             lastPulledAt == null || lastPulledAt.equals("null")) {
+        if ( lastPulledAt == null || lastPulledAt.equals("null")) {
 			beneficiary.put("nui", nui);
 			beneficiary.put("name", name);
 			beneficiary.put("surname", surname);
