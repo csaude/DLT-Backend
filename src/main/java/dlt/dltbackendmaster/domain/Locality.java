@@ -111,7 +111,7 @@ public class Locality implements java.io.Serializable {
 		this.district = district;
 	}
 
-	@Column(name = "name", nullable = false, length = 150, unique = true)
+	@Column(name = "name", nullable = false, length = 150)
 	public String getName() {
 		return this.name;
 	}

@@ -114,7 +114,7 @@ public class SubServices implements java.io.Serializable {
 		this.services = services;
 	}
 
-	@Column(name = "name", nullable = false, length = 150, unique = true)
+	@Column(name = "name", nullable = false, length = 150)
 	public String getName() {
 		return this.name;
 	}
