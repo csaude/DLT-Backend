@@ -455,6 +455,14 @@ public class ServiceCompletionRules {
 			return completedPrep(subServices) ? ReferencesStatus.ADDRESSED : ReferencesStatus.PENDING;
 		case 55:
 			return completedFinancialLiteracy(subServices) ? ReferencesStatus.ADDRESSED : ReferencesStatus.PENDING;
+		case 56:
+			return completedFinancialLiteracyAflatoun(subServices) ? ReferencesStatus.ADDRESSED
+					: startedFinancialLiteracyAflatoun(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
+							: ReferencesStatus.PENDING;
+		case 57:
+			return completedFinancialLiteracyAflateen(subServices) ? ReferencesStatus.ADDRESSED
+					: startedFinancialLiteracyAflateen(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
+							: ReferencesStatus.PENDING;
 
 		default:
 			return ReferencesStatus.PENDING;
