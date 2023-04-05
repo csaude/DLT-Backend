@@ -334,7 +334,7 @@ public class Beneficiaries implements java.io.Serializable
         this.district = new District(model.getDistrict_id());
         this.dateOfBirth = model.getDate_of_birth();
         this.dateCreated = model.getDate_created();
-        this.dateUpdated = model.getDate_update();
+        this.dateUpdated = model.getDate_updated();
         this.gender = model.getGender();
         this.address = model.getAddress();
         this.phoneNumber = model.getPhone_number();
@@ -386,7 +386,7 @@ public class Beneficiaries implements java.io.Serializable
         this.district = new District(model.getDistrict_id());
         this.dateOfBirth = model.getDate_of_birth();
         this.dateCreated = model.getDate_created();
-        this.dateUpdated = model.getDate_update();
+        this.dateUpdated = model.getDate_updated();
         this.gender = model.getGender();
         this.address = model.getAddress();
         this.phoneNumber = model.getPhone_number();
@@ -1049,9 +1049,7 @@ public class Beneficiaries implements java.io.Serializable
     }
 
     public void update(BeneficiarySyncModel model, String timestamp) {
-        Long t = Long.valueOf(timestamp);
         this.offlineId = model.getId();
-        this.dateUpdated = new Date(t);
         this.nui = model.getNui();
         this.name = model.getName();
         this.surname = model.getSurname();
@@ -1059,7 +1057,7 @@ public class Beneficiaries implements java.io.Serializable
         this.partners.setId(model.getOrganization_id());
         this.dateOfBirth = model.getDate_of_birth();
         this.dateCreated = model.getDate_created();
-        this.dateUpdated = model.getDate_update();
+        this.dateUpdated = model.getDate_updated();
         this.gender = model.getGender();
         this.address = model.getAddress();
         this.phoneNumber = model.getPhone_number();

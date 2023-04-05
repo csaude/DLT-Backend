@@ -2,7 +2,6 @@ package dlt.dltbackendmaster.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -23,7 +22,6 @@ import dlt.dltbackendmaster.domain.Beneficiaries;
 import dlt.dltbackendmaster.domain.Locality;
 import dlt.dltbackendmaster.domain.NumericSequence;
 import dlt.dltbackendmaster.domain.Users;
-import dlt.dltbackendmaster.domain.VulnerabilityHistory;
 import dlt.dltbackendmaster.service.DAOService;
 import dlt.dltbackendmaster.service.SequenceGenerator;
 import dlt.dltbackendmaster.service.VulnerabilityHistoryService;
@@ -98,7 +96,6 @@ public class BeneficiaryController
         }
 
         try {
-            beneficiary.setDateCreated(new Date());
             String partnerNUI = beneficiary.getPartnerNUI();
 
             if (partnerNUI != null && partnerNUI != "") {
@@ -129,7 +126,6 @@ public class BeneficiaryController
         }
 
         try {
-            beneficiary.setDateUpdated(new Date());
             String partnerNUI = beneficiary.getPartnerNUI();
 
             if (partnerNUI != null && partnerNUI != "") {

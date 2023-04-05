@@ -402,6 +402,7 @@ public class SyncController
 					if (created.getOnline_id() == null) {
 						Beneficiaries beneficiary = new Beneficiaries(created, lastPulledAt);
 						beneficiary.setCreatedBy(user.getId());
+						beneficiary.setDateUpdated(new Date());
 						Integer beneficiaryId = (Integer) service.Save(beneficiary);
 						vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
 						beneficiariesIds.put(created.getId(), beneficiaryId);
@@ -427,7 +428,6 @@ public class SyncController
 					} else {
 						Beneficiaries beneficiary = service.find(Beneficiaries.class, updated.getOnline_id());
 						beneficiary.setUpdatedBy(user.getId());
-						beneficiary.setDateUpdated(new Date());
 						beneficiary.update(updated, lastPulledAt);
 						service.update(beneficiary);
 						vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
