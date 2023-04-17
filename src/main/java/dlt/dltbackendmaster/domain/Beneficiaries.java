@@ -225,7 +225,7 @@ public class Beneficiaries implements java.io.Serializable
     private Byte vbltHouseSustainer;
     private int status;
     private int createdBy;
-    private Date dateCreated;
+    private Date dateCreated = new Date();
     private Integer updatedBy;
     private Date dateUpdated;
     private String offlineId;
