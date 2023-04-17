@@ -271,6 +271,6 @@ public class ReferencesServices implements java.io.Serializable {
 		this.references.setId(Integer.valueOf(model.getReference_id()));
 		this.services.setId(model.getService_id());
 		this.description = model.getDescription();
-		this.status = model.getStatus();
+//		this.status = model.getStatus();
 	}
 }

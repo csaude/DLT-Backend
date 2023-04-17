@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,6 +122,8 @@ public class SyncController
 
 		Users user = service.GetUniqueEntityByNamedQuery("Users.findByUsername", username);
 		defineLevelAndParms(user);
+		
+		Set<Integer> localitiesIds = new TreeSet<>();
 
 		if (lastPulledAt == null || lastPulledAt.equals("null")) {
 
@@ -141,31 +145,6 @@ public class SyncController
 				districtsCreated = service.GetAllEntityByNamedQuery("District.findAll");
 			}
 
-			// localities
-			if (user.getLocalities().size() > 0) {
-				localityCreated = new ArrayList<Locality>(user.getLocalities());
-			} else if (user.getDistricts().size() > 0) {
-				List<Integer> distIds = user.getDistricts().stream().map(District::getId).collect(Collectors.toList());
-				localityCreated = service.GetAllEntityByNamedQuery("Locality.findByDistricts", distIds);
-			} else {
-				localityCreated = service.GetAllEntityByNamedQuery("Locality.findAll");
-			}
-			localityUpdated = new ArrayList<Locality>();
-
-			// users
-			if (level.equals("CENTRAL")) {
-	            usersCreated = service.GetAllEntityByNamedQuery("Users.findAll");
-            } else if (level.equals("PROVINCIAL")) {
-                usersCreated = service.GetAllEntityByNamedNativeQuery("Users.findByProvinces", Arrays.asList(params));
-            } else if (level.equals("DISTRITAL")) {
-                usersCreated = service.GetAllEntityByNamedNativeQuery("Users.findByDistricts", Arrays.asList(params));
-            } else {
-                usersCreated = service.GetAllEntityByNamedNativeQuery("Users.findByLocalities", Arrays.asList(params));
-            }
-			
-			usersUpdated = new ArrayList<Users>();
-			listDeleted = new ArrayList<Integer>();
-
 			// Partners
             if (level.equals("CENTRAL")) {
                 partnersCreated = service.GetAllEntityByNamedQuery("Partners.findAll");
@@ -184,42 +163,36 @@ public class SyncController
 			profilesCreated = service.GetAllEntityByNamedQuery("Profiles.findAll");
 			profilesUpdated = new ArrayList<Profiles>();
 
-			// Us
-			if (level.equals("CENTRAL")) {
-	            usCreated = service.GetAllEntityByNamedQuery("Us.findAll");
-            } else if (level.equals("PROVINCIAL")) {
-                usCreated = service.GetAllEntityByNamedQuery("Us.findByProvinces", Arrays.asList(params));
-            } else if (level.equals("DISTRITAL")) {
-                usCreated = service.GetAllEntityByNamedQuery("Us.findByDistricts", Arrays.asList(params));
-            } else {
-                usCreated = service.GetAllEntityByNamedQuery("Us.findBySyncLocalities", Arrays.asList(params));
-            }
-			usUpdated = new ArrayList<Us>();
-
 			// Beneficiary
 			beneficiariesCreated = service.GetAllEntityByNamedQuery("Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedBy",user.getId());
 			beneficiariesUpdated = new ArrayList<Beneficiaries>();
+			
+			for (Beneficiaries beneficiary : beneficiariesCreated) {
+				localitiesIds.add(beneficiary.getLocality().getId());
+			}
 
+
+			// localities
+			localityCreated = service.GetAllEntityByNamedQuery("Locality.findByIds", Arrays.asList(localitiesIds.toArray()));
+			localityUpdated = new ArrayList<Locality>();
+
+			// users
+			usersCreated = service.GetAllEntityByNamedNativeQuery("Users.findByLocalities", Arrays.asList(localitiesIds.toArray()));
+			usersUpdated = new ArrayList<Users>();
+			listDeleted = new ArrayList<Integer>();
+
+			// Us
+			usUpdated = new ArrayList<Us>();
+			usCreated = service.GetAllEntityByNamedQuery("Us.findBySyncLocalities", Arrays.asList(localitiesIds.toArray()));
+			
 			// Interventions
 			beneficiariesInterventionsCreated = service
 						.GetAllEntityByNamedQuery("BeneficiaryIntervention.findByReferenceNotifyToOrBeneficiaryCreatedBy", user.getId());
 			beneficiariesInterventionsUpdated = new ArrayList<BeneficiariesInterventions>();
-
 			
-			// Neighborhood
-            if (level.equals("CENTRAL")) {
-                neighborhoodsCreated = service.GetAllEntityByNamedQuery("Neighborhood.findAll");
-            } else if (level.equals("PROVINCIAL")) {
-                neighborhoodsCreated = service.GetAllEntityByNamedQuery("Neighborhood.findBySyncProvinces",
-                        Arrays.asList(params));
-            } else if (level.equals("DISTRITAL")) {
-                neighborhoodsCreated = service.GetAllEntityByNamedQuery("Neighborhood.findBySyncDistricts",
-                        Arrays.asList(params));
-            } else {
-                neighborhoodsCreated = service.GetAllEntityByNamedQuery("Neighborhood.findBySyncLocalities",
-                        Arrays.asList(params));
-            }
-			
+			// Neighborhood	
+			neighborhoodsCreated = service.GetAllEntityByNamedQuery("Neighborhood.findBySyncLocalities",
+                    Arrays.asList(localitiesIds.toArray()));
 			neighborhoodUpdated = new ArrayList<Neighborhood>();
 
 			servicesCreated = service.GetAllEntityByNamedQuery("Service.findAll");

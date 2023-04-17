@@ -524,7 +524,7 @@ public class References implements java.io.Serializable {
 		this.referTo = model.getRefer_to();
 		this.notifyTo.setId(model.getNotify_to());
 		this.referredBy.setId(model.getReferred_by());
-		this.status = model.getStatus();
+//		this.status = model.getStatus();
 		this.us.setId(model.getUs_id());
 		this.cancelReason = model.getCancel_reason();
 		this.otherReason = model.getOther_reason();
