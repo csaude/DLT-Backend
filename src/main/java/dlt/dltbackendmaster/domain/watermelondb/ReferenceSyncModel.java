@@ -2,6 +2,10 @@ package dlt.dltbackendmaster.domain.watermelondb;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class ReferenceSyncModel {
 
 	private String id;
@@ -19,6 +23,8 @@ public class ReferenceSyncModel {
 	private Integer cancel_reason;
 	private String other_reason;
 	private String user_created;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date date_created;
 	private Integer status;
 	private Integer us_id;

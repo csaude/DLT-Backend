@@ -1,11 +1,17 @@
 package dlt.dltbackendmaster.domain.watermelondb;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class ReferenceServicesSyncModel {
 
 	private String id;
     private String reference_id;
     private Integer service_id;
     private String description;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private String date_created;
     private Integer status;
     private String _status;

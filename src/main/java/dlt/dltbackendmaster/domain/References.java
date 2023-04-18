@@ -468,7 +468,7 @@ public class References implements java.io.Serializable {
 
 	public ObjectNode toObjectNode(String lastPulledAt) {
 		ObjectMapper mapper = new ObjectMapper();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		ObjectNode reference = mapper.createObjectNode();
 

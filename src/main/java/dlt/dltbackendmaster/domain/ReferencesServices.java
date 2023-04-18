@@ -238,7 +238,7 @@ public class ReferencesServices implements java.io.Serializable {
 				.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
 		ObjectNode referenceService = mapper.createObjectNode();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		if (offlineId != null) {
 			referenceService.put("id", offlineId);

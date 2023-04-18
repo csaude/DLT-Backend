@@ -2,6 +2,10 @@ package dlt.dltbackendmaster.domain.watermelondb;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class BeneficiarySyncModel extends BasicLifeCycleSyncModel
 {
     private String nui;
@@ -14,7 +18,11 @@ public class BeneficiarySyncModel extends BasicLifeCycleSyncModel
     private String phone_number;
     private String e_mail;
     private Date enrollment_date;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date_created;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date_updated;
     private Integer via;
     private Integer nationality;

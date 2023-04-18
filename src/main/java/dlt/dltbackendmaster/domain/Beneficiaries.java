@@ -961,7 +961,9 @@ public class Beneficiaries implements java.io.Serializable
         //mapper.configOverride(Map.class).setInclude(Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL));  
         
         ObjectNode beneficiary = mapper.createObjectNode();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat shortDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        
         //String nullValue = null;
 
         if (offlineId != null) {
@@ -976,14 +978,14 @@ public class Beneficiaries implements java.io.Serializable
 			beneficiary.put("surname", surname);
 			beneficiary.put("nick_name", nickName);
 			beneficiary.put("organization_id", partners == null ? null : partners.getId());
-			beneficiary.put("date_of_birth", dateOfBirth == null ? null : dateFormat.format(dateOfBirth));
+			beneficiary.put("date_of_birth", dateOfBirth == null ? null : shortDateFormat.format(dateOfBirth));
 			beneficiary.put("date_created", dateCreated == null ? null : dateFormat.format(dateCreated));
 			beneficiary.put("date_updated", dateUpdated == null ? null : dateFormat.format(dateUpdated));
 			beneficiary.put("gender", String.valueOf(gender));
 			beneficiary.put("address", address);
 			beneficiary.put("phone_number", phoneNumber);
 			beneficiary.put("e_mail", EMail);
-			beneficiary.put("enrollment_date", enrollmentDate != null ? dateFormat.format(enrollmentDate) : null);
+			beneficiary.put("enrollment_date", enrollmentDate != null ? shortDateFormat.format(enrollmentDate) : null);
             beneficiary.put("via", via);
             beneficiary.put("partner_id", partnerId);
             beneficiary.put("nationality", nationality);

@@ -124,6 +124,8 @@ public class SyncController
 		defineLevelAndParms(user);
 		
 		Set<Integer> localitiesIds = new TreeSet<>();
+		List<Integer> userLocalitiesIds = user.getLocalities().stream().map(Locality::getId).collect(Collectors.toList());
+		localitiesIds.addAll(userLocalitiesIds);
 
 		if (lastPulledAt == null || lastPulledAt.equals("null")) {
 
