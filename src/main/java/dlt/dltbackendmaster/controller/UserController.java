@@ -261,10 +261,10 @@ public class UserController {
 		return false;
 	}
 	
-	@GetMapping(path = "/get-names", produces = "application/json")
+	@GetMapping(path = "/get-usernames", produces = "application/json")
 	public ResponseEntity<List<Users>>  getNames() throws AccountLockedException {
 		try {
-			List<Users> user = service.GetAllEntityByNamedQuery("Users.findNames");
+			List<Users> user = service.GetAllEntityByNamedQuery("Users.findUsernames");
 
 			return new ResponseEntity<>(user, HttpStatus.OK);
 		} catch (Exception e) {
