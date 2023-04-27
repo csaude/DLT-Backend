@@ -11,7 +11,7 @@ public class ReferenceServicesSyncModel {
     private Integer service_id;
     private String description;
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="Africa/Maputo")
     private String date_created;
     private Integer status;
     private String _status;

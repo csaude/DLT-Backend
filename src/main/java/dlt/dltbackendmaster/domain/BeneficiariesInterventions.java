@@ -74,6 +74,25 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 												            + " where r.status in (0,1) "
 												            + " and r.notifyTo.id = :userId) "
 												            ),
+	@NamedQuery(name = "BeneficiaryIntervention.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateCreated", query = "SELECT bi FROM BeneficiariesInterventions bi "
+															+ " where (bi.beneficiaries.createdBy = :userId"
+															+ " or bi.beneficiaries.id in "
+															+ " (SELECT distinct r.beneficiaries.id FROM  References r "										
+												            + " where r.status in (0,1) "
+												            + " and r.notifyTo.id = :userId))"
+												            + " and bi.dateCreated >= :lastpulledat"
+												            ),
+	@NamedQuery(name = "BeneficiaryIntervention.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateUpdated", query = "SELECT bi FROM BeneficiariesInterventions bi "
+															+ " where (bi.beneficiaries.createdBy = :userId"
+															+ " or bi.beneficiaries.id in "
+															+ " (SELECT distinct r.beneficiaries.id FROM  References r "										
+												            + " where r.status in (0,1) "
+												            + " and r.notifyTo.id = :userId))"
+												            + " and bi.dateCreated < :lastpulledat "
+												            + " and bi.dateUpdated >= :lastpulledat"
+												            ),
+	@NamedQuery(name = "BeneficiaryIntervention.findAllByBeneficiaryAndDate", 
+		query = "select b from BeneficiariesInterventions b where b.beneficiaries.id = :beneficiaryId and b.id.date > :date"),
 })
 public class BeneficiariesInterventions implements java.io.Serializable {
 	
@@ -350,7 +369,7 @@ public class BeneficiariesInterventions implements java.io.Serializable {
             beneficiaryIntervention.put("id", id.toString());
         }
 
-        if (dateUpdated == null || dateUpdated.after(dateCreated) || lastPulledAt == null || lastPulledAt.equals("null")) {
+        if (dateUpdated == null || dateUpdated.compareTo(dateCreated) >= 0 || lastPulledAt == null || lastPulledAt.equals("null")) {
             beneficiaryIntervention.put("beneficiary_offline_id", beneficiaries.getOfflineId());
             beneficiaryIntervention.put("sub_service_id", subServices.getId());
             beneficiaryIntervention.put("result", result);

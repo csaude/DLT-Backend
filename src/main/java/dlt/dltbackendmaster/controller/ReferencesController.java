@@ -5,6 +5,7 @@ import static dlt.dltbackendmaster.util.ProfilesConstants.MANAGER;
 import static dlt.dltbackendmaster.util.ProfilesConstants.MENTOR;
 import static dlt.dltbackendmaster.util.ProfilesConstants.NURSE;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -25,12 +26,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import dlt.dltbackendmaster.domain.BeneficiariesInterventions;
 import dlt.dltbackendmaster.domain.District;
 import dlt.dltbackendmaster.domain.Locality;
 import dlt.dltbackendmaster.domain.Province;
 import dlt.dltbackendmaster.domain.References;
 import dlt.dltbackendmaster.domain.ReferencesServices;
 import dlt.dltbackendmaster.domain.ReferencesServicesId;
+import dlt.dltbackendmaster.domain.Us;
 import dlt.dltbackendmaster.domain.Users;
 import dlt.dltbackendmaster.service.DAOService;
 import dlt.dltbackendmaster.service.ReferenceService;
@@ -77,10 +80,8 @@ public class ReferencesController {
 
 	@GetMapping(path = "/byUser/{userId}", produces = "application/json")
 	public ResponseEntity<List<References>> getAllByUser(@PathVariable Integer userId,
-			@RequestParam(name = "pageIndex") int pageIndex, 
-			@RequestParam(name = "pageSize") int pageSize,
-			@RequestParam(name = "searchNui", required = false) @Nullable String searchNui
-			) {
+			@RequestParam(name = "pageIndex") int pageIndex, @RequestParam(name = "pageSize") int pageSize,
+			@RequestParam(name = "searchNui", required = false) @Nullable String searchNui) {
 
 		if (userId == null) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -91,27 +92,36 @@ public class ReferencesController {
 
 			List<References> references = null;
 			if (Arrays.asList(MANAGER, MENTOR, NURSE, COUNSELOR).contains(user.getProfiles().getId())) {
+				List<Integer> ussId = user.getUs().stream().map(Us::getId).collect(Collectors.toList());
+
 				references = service.GetAllPagedEntityByNamedQuery("References.findAllByUserPermission", pageIndex,
-						pageSize, searchNui, userId);
-			} else if(user.getLocalities().size() > 0) {
-				List<Integer> localitiesId = user.getLocalities().stream().map(Locality::getId).collect(Collectors.toList());
-				
-				references = service.GetAllPagedEntityByNamedQuery("References.findByLocalities", pageIndex, pageSize,searchNui, localitiesId);	
-				
-			} else if(user.getDistricts().size() > 0) {
-				
-				List<Integer> districtsId = user.getDistricts().stream().map(District::getId).collect(Collectors.toList());
-				
-				references = service.GetAllPagedEntityByNamedQuery("References.findByDistricts", pageIndex, pageSize,searchNui, districtsId);	
-				
-			}else if(user.getProvinces().size() > 0) {
-				
-				List<Integer> provincesId = user.getProvinces().stream().map(Province::getId).collect(Collectors.toList());
-				
-				references = service.GetAllPagedEntityByNamedQuery("References.findByProvinces", pageIndex, pageSize, searchNui, provincesId);	
-				
+						pageSize, searchNui, ussId, userId);
+			} else if (user.getLocalities().size() > 0) {
+				List<Integer> localitiesId = user.getLocalities().stream().map(Locality::getId)
+						.collect(Collectors.toList());
+
+				references = service.GetAllPagedEntityByNamedQuery("References.findByLocalities", pageIndex, pageSize,
+						searchNui, localitiesId);
+
+			} else if (user.getDistricts().size() > 0) {
+
+				List<Integer> districtsId = user.getDistricts().stream().map(District::getId)
+						.collect(Collectors.toList());
+
+				references = service.GetAllPagedEntityByNamedQuery("References.findByDistricts", pageIndex, pageSize,
+						searchNui, districtsId);
+
+			} else if (user.getProvinces().size() > 0) {
+
+				List<Integer> provincesId = user.getProvinces().stream().map(Province::getId)
+						.collect(Collectors.toList());
+
+				references = service.GetAllPagedEntityByNamedQuery("References.findByProvinces", pageIndex, pageSize,
+						searchNui, provincesId);
+
 			} else {
-				references = service.GetAllPagedEntityByNamedQuery("References.findAll", pageIndex, pageSize,searchNui);
+				references = service.GetAllPagedEntityByNamedQuery("References.findAll", pageIndex, pageSize,
+						searchNui);
 			}
 
 			return new ResponseEntity<>(references, HttpStatus.OK);
@@ -131,7 +141,13 @@ public class ReferencesController {
 		try {
 			reference.setCancelReason(null);
 			reference.setOtherReason(null);
-			reference.setDateCreated(new Date());
+
+			List<BeneficiariesInterventions> beneficiaryInterventions = service.GetAllEntityByNamedQuery(
+					"BeneficiaryIntervention.findAllByBeneficiaryAndDate",
+					reference.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+					reference.getBeneficiaries().getId());
+			Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference, beneficiaryInterventions);
+			reference.setStatus(referenceStatus);
 
 			service.Save(reference);
 
@@ -142,6 +158,11 @@ public class ReferencesController {
 				services.getId().setReferenceId(reference.getId());
 				services.getId().setServiceId(services.getServices().getId());
 				services.setDateCreated(new Date());
+
+				Integer referenceServiceStatus = ServiceCompletionRules
+						.getReferenceServiceStatus(beneficiaryInterventions, services.getServices().getId());
+				services.setStatus(referenceServiceStatus);
+
 				service.Save(services);
 				registeredServices.add(services);
 			}
@@ -218,27 +239,32 @@ public class ReferencesController {
 			Users user = service.find(Users.class, userId);
 
 			Long referencesTotal;
-			
 
 			if (Arrays.asList(MANAGER, MENTOR, NURSE, COUNSELOR).contains(user.getProfiles().getId())) {
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByUserPermission", userId);
-			} else if(user.getLocalities().size() > 0) {
-				List<Integer> localitiesId = user.getLocalities().stream().map(Locality::getId).collect(Collectors.toList());
-				
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByLocalities", localitiesId);	
-				
-			} else if(user.getDistricts().size() > 0) {
-				
-				List<Integer> districtsId = user.getDistricts().stream().map(District::getId).collect(Collectors.toList());
-				
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByDistricts", districtsId);	
-				
-			}else if(user.getProvinces().size() > 0) {
-				
-				List<Integer> provincesId = user.getProvinces().stream().map(Province::getId).collect(Collectors.toList());
-				
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByProvinces", provincesId);	
-				
+				List<Integer> ussId = user.getUs().stream().map(Us::getId).collect(Collectors.toList());
+
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByUserPermission", ussId,
+						userId);
+			} else if (user.getLocalities().size() > 0) {
+				List<Integer> localitiesId = user.getLocalities().stream().map(Locality::getId)
+						.collect(Collectors.toList());
+
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByLocalities", localitiesId);
+
+			} else if (user.getDistricts().size() > 0) {
+
+				List<Integer> districtsId = user.getDistricts().stream().map(District::getId)
+						.collect(Collectors.toList());
+
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByDistricts", districtsId);
+
+			} else if (user.getProvinces().size() > 0) {
+
+				List<Integer> provincesId = user.getProvinces().stream().map(Province::getId)
+						.collect(Collectors.toList());
+
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByProvinces", provincesId);
+
 			} else {
 				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountAll");
 			}
@@ -257,15 +283,18 @@ public class ReferencesController {
 
 		try {
 			for (References reference : references) {
+				Set<BeneficiariesInterventions> interventions = reference.getBeneficiaries()
+						.getBeneficiariesInterventionses();
 				for (ReferencesServices referenceService : reference.getReferencesServiceses()) {
-					Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(
-							reference.getBeneficiaries(), referenceService.getServices().getId());
+
+					Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(interventions,
+							referenceService.getServices().getId());
 					if (referenceService.getStatus() != referenceServiceStatus) {
 						referenceService.setStatus(referenceServiceStatus);
 						service.update(referenceService);
 					}
 				}
-				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference);
+				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference, interventions);
 				if (reference.getStatus() != referenceStatus) {
 					reference.setStatus(referenceStatus);
 					service.update(reference);

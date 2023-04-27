@@ -67,7 +67,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.partners "
 																+ " left join fetch b.locality "
 																+ " left join fetch b.us "
-                												+ " where offlineId = :offlineId "
+                												+ " where b.offlineId = :offlineId "
                 												+ ""),
                 @NamedQuery(name = "Beneficiary.findByLocalities", query = "SELECT b FROM Beneficiaries b "
 										                		+ " left join fetch b.neighborhood nb "
@@ -163,6 +163,30 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 												                + " where r.status in (0,1) "
 												                + " and r.notifyTo.id = :userId)) "    											     
 												                ),
+				@NamedQuery(name = "Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateCreated", query = "SELECT  b FROM  Beneficiaries b "
+																+ " left join  b.neighborhood nb "
+																+ " left join  b.partners "
+																+ " left join  b.locality "
+																+ " left join  b.us "
+																+ " where b.status = 1 "
+										                        + " and (b.createdBy = :userId "	
+																+ " or   b.id in (SELECT r.beneficiaries.id from References r"
+												                + " where r.status in (0,1) "
+												                + " and r.notifyTo.id = :userId))"
+												                + " and b.dateCreated >= :lastpulledat "    											     
+												                ),
+				@NamedQuery(name = "Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateUpdated", query = "SELECT  b FROM  Beneficiaries b "
+																+ " left join  b.neighborhood nb "
+																+ " left join  b.partners "
+																+ " left join  b.locality "
+																+ " left join  b.us "
+																+ " where b.status = 1 "
+										                        + " and (b.createdBy = :userId "	
+																+ " or   b.id in (SELECT r.beneficiaries.id from References r"
+												                + " where r.status in (0,1) "
+												                + " and r.notifyTo.id = :userId))"
+												                + " and b.dateCreated < :lastpulledat "
+												                + " and b.dateUpdated >= :lastpulledat "),
 				@NamedQuery(name = "Beneficiary.getBeneficiariesByNui", query = "SELECT  b FROM  Beneficiaries b "
 																+ " left join  b.neighborhood nb "
 																+ " left join  b.partners "
@@ -972,7 +996,7 @@ public class Beneficiaries implements java.io.Serializable
             beneficiary.put("id", id);
         }
         
-        if ( lastPulledAt == null || lastPulledAt.equals("null")) {
+        if (dateUpdated == null || dateUpdated.compareTo(dateCreated) >= 0 || lastPulledAt == null || lastPulledAt.equals("null")) {
 			beneficiary.put("nui", nui);
 			beneficiary.put("name", name);
 			beneficiary.put("surname", surname);

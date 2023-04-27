@@ -39,6 +39,15 @@ import dlt.dltbackendmaster.serializers.UsTypeSerializer;
     @NamedQuery(name = "Us.findBySyncLocalities", query = "SELECT u FROM  Us u  "
             									+ "left join fetch u.locality l "
             									+ "where l.id in (:localities)"),
+    @NamedQuery(name = "Us.findByLocalitiesAndDateCreated", query = "SELECT u FROM  Us u  "
+												+ "left join fetch u.locality l "
+												+ "where l.id in (:localities) "
+												+ "and u.dateCreated >= :lastpulledat"),
+    @NamedQuery(name = "Us.findByLocalitiesAndDateUpdated", query = "SELECT u FROM  Us u  "
+												+ "left join fetch u.locality l "
+												+ "where l.id in (:localities) "
+												+ "and u.dateCreated < :lastpulledat "
+												+ "and u.dateUpdated >= :lastpulledat"),
 	@NamedQuery(name = "Us.findByDistricts", query = "SELECT u FROM  Us u "
             									+ "left join fetch u.locality l "
             									+ "where l.district.id in (:districts)"),

@@ -224,31 +224,41 @@ public class SyncController
 			 * TODO: include provinces and district created after validatedDate
 			 */
 
-			// users
-			usersCreated = service.GetAllEntityByNamedQuery("Users.findByDateCreated", validatedDate);
-			usersUpdated = service.GetAllEntityByNamedQuery("Users.findByDateUpdated", validatedDate);
-			listDeleted = new ArrayList<Integer>();
+			beneficiariesCreated = service.GetAllEntityByNamedQuery("Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateCreated", user.getId(), validatedDate);
+			beneficiariesUpdated = service.GetAllEntityByNamedQuery("Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateUpdated", user.getId(), validatedDate);
+			
+			for (Beneficiaries beneficiary : beneficiariesCreated) {
+				localitiesIds.add(beneficiary.getLocality().getId());
+			}
+			for (Beneficiaries beneficiary : beneficiariesUpdated) {
+				localitiesIds.add(beneficiary.getLocality().getId());
+			}
 
 			// localities
-			localityCreated = service.GetAllEntityByNamedQuery("Locality.findByDateCreated", validatedDate);
-			localityUpdated = service.GetAllEntityByNamedQuery("Locality.findByDateUpdated", validatedDate);
+			localityCreated = service.GetAllEntityByNamedQuery("Locality.findByIdsAndDateCreated", Arrays.asList(localitiesIds.toArray()), validatedDate);
+			localityUpdated = service.GetAllEntityByNamedQuery("Locality.findByIdsAndDateUpdated", Arrays.asList(localitiesIds.toArray()), validatedDate);
+
+			usersCreated = service.GetAllEntityByNamedQuery("Users.findByDateCreated", validatedDate);
+			usersUpdated = service.GetAllEntityByNamedQuery("Users.findByDateUpdated", validatedDate);
+			
+			// users
+			usersCreated = service.GetAllEntityByNamedNativeQuery("Users.findByLocalitiesAndDateCreated", Arrays.asList(localitiesIds.toArray()), validatedDate);
+			usersUpdated = service.GetAllEntityByNamedNativeQuery("Users.findByLocalitiesAndDateUpdated", Arrays.asList(localitiesIds.toArray()), validatedDate);
+			listDeleted = new ArrayList<Integer>();
 			// partners
-			partnersCreated = service.GetAllEntityByNamedQuery("Partners.findByDateCreated", validatedDate);
-			partnersUpdated = service.GetAllEntityByNamedQuery("Partners.findByDateUpdated", validatedDate);
+			partnersCreated = service.GetAllEntityByNamedQuery("Partners.findByLocalitiesAndDateCreated", Arrays.asList(localitiesIds.toArray()), validatedDate);
+			partnersUpdated = service.GetAllEntityByNamedQuery("Partners.findByLocalitiesAndDateCreated", Arrays.asList(localitiesIds.toArray()), validatedDate);
 			// profiles
 			profilesCreated = service.GetAllEntityByNamedQuery("Profiles.findByDateCreated", validatedDate);
 			profilesUpdated = service.GetAllEntityByNamedQuery("Profiles.findByDateUpdated", validatedDate);
 			// us
-			usCreated = service.GetAllEntityByNamedQuery("Us.findByDateCreated", validatedDate);
-			usUpdated = service.GetAllEntityByNamedQuery("Us.findByDateUpdated", validatedDate);
-
-			beneficiariesCreated = service.GetAllEntityByNamedQuery("Beneficiary.findByDateCreated", validatedDate);
-			beneficiariesUpdated = service.GetAllEntityByNamedQuery("Beneficiary.findByDateUpdated", validatedDate);
+			usCreated = service.GetAllEntityByNamedQuery("Us.findByLocalitiesAndDateCreated", Arrays.asList(localitiesIds.toArray()), validatedDate);
+			usUpdated = service.GetAllEntityByNamedQuery("Us.findByLocalitiesAndDateUpdated", Arrays.asList(localitiesIds.toArray()), validatedDate);
 
 			beneficiariesInterventionsCreated = service
-					.GetAllEntityByNamedQuery("BeneficiaryIntervention.findByDateCreated", validatedDate);
+					.GetAllEntityByNamedQuery("BeneficiaryIntervention.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateCreated", user.getId(), validatedDate);
 			beneficiariesInterventionsUpdated = service
-					.GetAllEntityByNamedQuery("BeneficiaryIntervention.findByDateUpdated", validatedDate);
+					.GetAllEntityByNamedQuery("BeneficiaryIntervention.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateUpdated", user.getId(), validatedDate);
 
 			neighborhoodsCreated = service.GetAllEntityByNamedQuery("Neighborhood.findByDateCreated", validatedDate);
 			neighborhoodUpdated = service.GetAllEntityByNamedQuery("Neighborhood.findByDateUpdated", validatedDate);
@@ -259,13 +269,13 @@ public class SyncController
 			subServicesCreated = service.GetAllEntityByNamedQuery("SubService.findByDateCreated", validatedDate);
 			subServicesUpdated = service.GetAllEntityByNamedQuery("SubService.findByDateUpdated", validatedDate);
 
-			referencesCreated = service.GetAllEntityByNamedQuery("References.findByDateCreated", validatedDate);
-			referencesUpdated = service.GetAllEntityByNamedQuery("References.findByDateUpdated", validatedDate);
+			referencesCreated = service.GetAllEntityByNamedQuery("References.findByReferenceNotifyToOrReferredByAndDateCreated", user.getId(), validatedDate);
+			referencesUpdated = service.GetAllEntityByNamedQuery("References.findByReferenceNotifyToOrReferredByAndDateUpdated", user.getId(), validatedDate);
 
-			referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findByDateCreated",
-					validatedDate);
-			referenceServicesUpdated = service.GetAllEntityByNamedQuery("ReferencesServices.findByDateUpdated",
-					validatedDate);
+			referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findByReferenceNotifyToOrReferredByAndDateCreated",
+					user.getId(), validatedDate);
+			referenceServicesUpdated = service.GetAllEntityByNamedQuery("ReferencesServices.findByReferenceNotifyToOrReferredByAndDateUpdated",
+					user.getId(), validatedDate);
 		}
 
 		try {
@@ -292,13 +302,9 @@ public class SyncController
 			SyncObject<ReferencesServices> referencesServicesSO = new SyncObject<ReferencesServices>(
 					referenceServicesCreated, referenceServicesUpdated, listDeleted);
 
-			// String object = SyncSerializer.createUsersSyncObject(usersCreated,
-			// usersUpdated, new ArrayList<Integer>());
-
 			String object = SyncSerializer.createSyncObject(usersSO, provinceSO, districtSO, localitySO, profilesSO,
 					partnersSO, usSO, beneficiarySO, beneficiaryInterventionSO, neighborhoodSO, serviceSO, subServiceSO,
 					referencesSO, referencesServicesSO, lastPulledAt);
-			// System.out.println("PULLING " + object);
 
 			return new ResponseEntity<>(object, HttpStatus.OK);
 		} catch (Exception e) {
@@ -455,10 +461,9 @@ public class SyncController
 								beneficiaryId = beneficiary.getId();
 							}
 							reference.setBeneficiaries(new Beneficiaries(beneficiaryId));
-							reference.setDateUpdated(new Date());
-							reference.setUpdatedBy(user.getId());
 						}
 						reference.setUserCreated(user.getId() + "");
+						reference.setDateUpdated(new Date());
 						service.Save(reference);
 						referenceIds.put(reference.getOfflineId(), reference.getId());
 					}

@@ -49,9 +49,17 @@ import dlt.dltbackendmaster.serializers.UssSerializer;
 @Table(name = "users", catalog = "dreams_db")
 @NamedNativeQueries({
 		@NamedNativeQuery(name = "Users.findByLocalities", query = "SELECT u.* FROM users u "
-				+ "LEFT JOIN users_districts ud on ud.user_id = u.id "
 				+ "LEFT JOIN users_localities ul on ul.user_id = u.id "
 				+ "where ul.locality_id in (:localities)", resultClass = Users.class),
+		@NamedNativeQuery(name = "Users.findByLocalitiesAndDateCreated", query = "SELECT u.* FROM users u "
+				+ "LEFT JOIN users_localities ul on ul.user_id = u.id "
+				+ "where ul.locality_id in (:localities) "
+				+ "and u.date_created >= :lastpulledat", resultClass = Users.class),
+		@NamedNativeQuery(name = "Users.findByLocalitiesAndDateUpdated", query = "SELECT u.* FROM users u "
+				+ "LEFT JOIN users_localities ul on ul.user_id = u.id "
+				+ "where ul.locality_id in (:localities) "
+				+ "and u.date_created < :lastpulledat "
+				+ "and u.date_updated >= :lastpulledat", resultClass = Users.class),
 
 		@NamedNativeQuery(name = "Users.findByDistricts", query = "SELECT u.* FROM users u  "
 				+ "LEFT JOIN users_districts ud on ud.user_id = u.id "
@@ -62,7 +70,7 @@ import dlt.dltbackendmaster.serializers.UssSerializer;
 
 @NamedQueries({ @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
 		@NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u where u.username = :username"),
-		@NamedQuery(name = "Users.findByUsId", query = "SELECT u FROM Users u INNER JOIN u.us us where us.id in (:us)"),
+		@NamedQuery(name = "Users.findByUsId", query = "SELECT u FROM Users u INNER JOIN u.us us where us.id in (:us) and u.status = 1"),
 		@NamedQuery(name = "Users.findByResetPasswordToken", query = "SELECT u FROM Users u where u.recoverPasswordToken = :recoverPasswordToken"),
 		@NamedQuery(name = "Users.findByProfiles", query = "SELECT u FROM Users u where u.profiles.id in (:profiles)"),
 		@NamedQuery(name = "Users.findByProfilesAndOrganization", query = "SELECT u FROM Users u where u.profiles.id in (:profiles) and u.partners.id = :organizationId"),
@@ -547,7 +555,7 @@ public class Users implements java.io.Serializable {
 			user.put("id", id);
 		}
 
-		if (dateUpdated == null || dateUpdated.after(dateCreated) || lastPulledAt == null
+		if (dateUpdated == null || dateUpdated.compareTo(dateCreated) >= 0 || lastPulledAt == null
 				|| lastPulledAt.equals("null")) {
 
 			int[] usIds = us.stream().mapToInt(Us::getId).toArray();

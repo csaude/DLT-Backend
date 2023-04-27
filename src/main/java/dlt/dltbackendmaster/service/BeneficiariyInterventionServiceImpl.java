@@ -3,6 +3,7 @@ package dlt.dltbackendmaster.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,8 @@ public class BeneficiariyInterventionServiceImpl implements BeneficiariyInterven
 
 		for (ReferencesServices referenceServices : referencesServices) {
 
-			Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(beneficiary, serviceId);
+			Set<BeneficiariesInterventions> interventions = beneficiary.getBeneficiariesInterventionses();
+			Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(interventions, serviceId);
 
 			if (referenceServiceStatus.intValue() != (referenceServices.getStatus())) {
 				referenceServices.setStatus(referenceServiceStatus);
@@ -53,7 +55,7 @@ public class BeneficiariyInterventionServiceImpl implements BeneficiariyInterven
 
 				// Actualizar o status da referências
 				References reference = referenceServices.getReferences();
-				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference);
+				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference, interventions);
 
 				if (referenceStatus.intValue() != reference.getStatus()) {
 					reference.setStatus(referenceStatus);
@@ -78,13 +80,13 @@ public class BeneficiariyInterventionServiceImpl implements BeneficiariyInterven
 
 		return beneficiariesInterventions;
 	}
-	
+
 	@Override
 	public List<CountIntervention> findInterventionsPerBeneficiary() {
 
 		List<CountIntervention> beneficiariesInterventions = daoService
 				.GetAllEntityByNamedQuery("BeneficiaryIntervention.findInterventionsPerBeneficiary");
-		
+
 		return beneficiariesInterventions;
 	}
 }

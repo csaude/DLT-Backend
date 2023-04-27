@@ -28,8 +28,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @Table(name = "profiles", catalog = "dreams_db")
 @NamedQueries({
     @NamedQuery(name = "Profiles.findAll", query = "SELECT c FROM Profiles c"),
-    @NamedQuery(name = "Profiles.findByDateCreated", query = "SELECT c FROM Profiles c WHERE c.dateCreated = :lastpulledat"),
-    @NamedQuery(name = "Profiles.findByDateUpdated", query = "SELECT c FROM Profiles c WHERE c.dateUpdated = :lastpulledat")})
+    @NamedQuery(name = "Profiles.findByDateCreated", query = "SELECT c FROM Profiles c WHERE c.dateCreated >= :lastpulledat"),
+    @NamedQuery(name = "Profiles.findByDateUpdated", query = "SELECT c FROM Profiles c WHERE c.dateCreated < :lastpulledat and c.dateUpdated >= :lastpulledat")})
 public class Profiles implements java.io.Serializable {
 
 	private static final long serialVersionUID = 3465583000432844297L;

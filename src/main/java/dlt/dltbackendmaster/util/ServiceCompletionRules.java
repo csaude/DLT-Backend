@@ -2,13 +2,13 @@ package dlt.dltbackendmaster.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import dlt.dltbackendmaster.domain.AgywPrev;
-import dlt.dltbackendmaster.domain.Beneficiaries;
 import dlt.dltbackendmaster.domain.BeneficiariesInterventions;
 import dlt.dltbackendmaster.domain.References;
 import dlt.dltbackendmaster.domain.ReferencesServices;
@@ -370,10 +370,10 @@ public class ServiceCompletionRules {
 		return agywPrev.getPrep() > 0;
 	}
 
-	public static Integer getReferenceServiceStatus(Beneficiaries beneficiary, Integer service) {
-		List<Integer> subServices = beneficiary.getBeneficiariesInterventionses().stream()
-				.map(BeneficiariesInterventions::getSubServices).collect(Collectors.toList()).stream()
-				.map(SubServices::getId).collect(Collectors.toList());
+	public static Integer getReferenceServiceStatus(Collection<BeneficiariesInterventions> interventions,
+			Integer service) {
+		List<Integer> subServices = interventions.stream().map(BeneficiariesInterventions::getSubServices)
+				.collect(Collectors.toList()).stream().map(SubServices::getId).collect(Collectors.toList());
 
 		switch (service) {
 		case 1:
@@ -476,15 +476,16 @@ public class ServiceCompletionRules {
 	 * @param reference
 	 * @return
 	 */
-	public static Integer getReferenceStatus(References reference) {
+	public static Integer getReferenceStatus(References reference,
+			Collection<BeneficiariesInterventions> interventions) {
 		int pendingServices = 0;
 		int completedServices = 0;
 
 		Set<ReferencesServices> referencesServiceses = reference.getReferencesServiceses();
 
 		for (ReferencesServices referencesServices : referencesServiceses) {
-			Integer referenceServiceStatus = getReferenceServiceStatus(reference.getBeneficiaries(),
-					referencesServices.getId().getServiceId());
+			Integer referenceServiceStatus = getReferenceServiceStatus(interventions,
+					referencesServices.getServices().getId());
 
 			if (referenceServiceStatus == ReferencesStatus.PENDING) {
 				pendingServices++;

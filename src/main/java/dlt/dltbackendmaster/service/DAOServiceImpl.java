@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,12 @@ import dlt.dltbackendmaster.util.ServiceCompletionRules;
 
 /**
  * This class implements the Service interface
+ * 
  * @author derciobucuane
  *
  */
 @Service
-public class DAOServiceImpl implements DAOService{
+public class DAOServiceImpl implements DAOService {
 
 	@Autowired
 	private DAORepository repository;
@@ -80,16 +82,17 @@ public class DAOServiceImpl implements DAOService{
 	public <T> List<T> GetAllEntityByNamedQuery(String query, Object... params) {
 		return repository.GetAllEntityByNamedQuery(query, params);
 	}
-	
+
 	@Transactional
-	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchNui, Object... params) {
-		return repository.GetAllPagedEntityByNamedQuery(query,pageIndex,pageSize,searchNui, params);
+	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchNui,
+			Object... params) {
+		return repository.GetAllPagedEntityByNamedQuery(query, pageIndex, pageSize, searchNui, params);
 	}
-	
+
 	@Transactional
-    public <T> List<T> GetAllEntityByNamedNativeQuery(String query, Object... params) {
-        return repository.GetAllEntityByNamedNativeQuery(query, params);
-    }
+	public <T> List<T> GetAllEntityByNamedNativeQuery(String query, Object... params) {
+		return repository.GetAllEntityByNamedNativeQuery(query, params);
+	}
 
 	@Override
 	public <T> T find(Class<T> klass, Object id) {
@@ -117,12 +120,10 @@ public class DAOServiceImpl implements DAOService{
 		return repository.findByJPQueryFilter(hql, namedParams, f, m);
 	}
 
-	
 	public Class<? extends Annotation> annotationType() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	public String value() {
 		// TODO Auto-generated method stub
@@ -137,48 +138,45 @@ public class DAOServiceImpl implements DAOService{
 
 	@Override
 	public <T> ReferencesServicesObject registerServiceCompletionStatus(BeneficiariesInterventions intervention) {
-		
-        
-        SubServices subService = find(SubServices.class, intervention.getId().getSubServiceId());
-        intervention.setSubServices(subService);
-        
-        // Actualizar o status dos serviços solicitados
-        Beneficiaries beneficiary = find(Beneficiaries.class, intervention.getBeneficiaries().getId());
-        Integer serviceId = subService.getServices().getId();
-        List<ReferencesServices> referencesServices = GetAllEntityByNamedQuery("ReferencesServices.findByBeneficiaryAndService",
-                                                                                       beneficiary.getId(),
-                                                                                       serviceId);
-        
-        List<References> updatedReferences = new ArrayList<>();
-        
-        for (ReferencesServices referenceServices : referencesServices) {
 
-            Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(beneficiary,
-                                                                                              serviceId);
+		SubServices subService = find(SubServices.class, intervention.getId().getSubServiceId());
+		intervention.setSubServices(subService);
 
-            if (referenceServiceStatus.intValue() != (referenceServices.getStatus())) {
-                referenceServices.setStatus(referenceServiceStatus);
-                referenceServices.setDateUpdated(new Date());
-                referenceServices.setUpdatedBy(subService.getCreatedBy());
-                referenceServices = update(referenceServices);
+		// Actualizar o status dos serviços solicitados
+		Beneficiaries beneficiary = find(Beneficiaries.class, intervention.getBeneficiaries().getId());
+		Integer serviceId = subService.getServices().getId();
+		List<ReferencesServices> referencesServices = GetAllEntityByNamedQuery(
+				"ReferencesServices.findByBeneficiaryAndService", beneficiary.getId(), serviceId);
 
-                // Actualizar o status da referências
-                References reference = referenceServices.getReferences();
-                Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference);
+		List<References> updatedReferences = new ArrayList<>();
 
-                if (referenceStatus.intValue() != reference.getStatus()) {
-                    reference.setStatus(referenceStatus);
-                    reference.setDateUpdated(new Date());
-                    reference.setUpdatedBy(subService.getCreatedBy());
-                    reference = update(reference);
-                }
-                updatedReferences.add(reference);
-            }
-        }
-        ReferencesServicesObject referenceServiceObject = new ReferencesServicesObject(intervention,
-                updatedReferences);
-		
+		for (ReferencesServices referenceServices : referencesServices) {
+
+			Set<BeneficiariesInterventions> interventions = beneficiary.getBeneficiariesInterventionses();
+			Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(interventions, serviceId);
+
+			if (referenceServiceStatus.intValue() != (referenceServices.getStatus())) {
+				referenceServices.setStatus(referenceServiceStatus);
+				referenceServices.setDateUpdated(new Date());
+				referenceServices.setUpdatedBy(subService.getCreatedBy());
+				referenceServices = update(referenceServices);
+
+				// Actualizar o status da referências
+				References reference = referenceServices.getReferences();
+				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference, interventions);
+
+				if (referenceStatus.intValue() != reference.getStatus()) {
+					reference.setStatus(referenceStatus);
+					reference.setDateUpdated(new Date());
+					reference.setUpdatedBy(subService.getCreatedBy());
+					reference = update(reference);
+				}
+				updatedReferences.add(reference);
+			}
+		}
+		ReferencesServicesObject referenceServiceObject = new ReferencesServicesObject(intervention, updatedReferences);
+
 		return referenceServiceObject;
-		
+
 	}
 }

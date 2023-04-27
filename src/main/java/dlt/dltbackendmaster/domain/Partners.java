@@ -38,7 +38,18 @@ import dlt.dltbackendmaster.serializers.DistrictSerializer;
         @NamedQuery(name = "Partners.findBySyncLocalities", query = "SELECT p FROM  Partners p "
                                                     + "where  p.district.id  in (SELECT DISTINCT l.district.id "
                                                     + "FROM Locality l "
-                                                    + "WHERE l.id in (:locality))"),        
+                                                    + "WHERE l.id in (:locality))"),
+        @NamedQuery(name = "Partners.findByLocalitiesAndDateCreated", query = "SELECT p FROM  Partners p "
+									                + "where  p.district.id  in (SELECT DISTINCT l.district.id "
+									                + "FROM Locality l "
+									                + "WHERE l.id in (:locality)) "
+									                + "and p.dateCreated >= :lastpulledat"),
+        @NamedQuery(name = "Partners.findByLocalitiesAndDateUpdated", query = "SELECT p FROM  Partners p "
+									                + "where  p.district.id  in (SELECT DISTINCT l.district.id "
+									                + "FROM Locality l "
+									                + "WHERE l.id in (:locality)) "
+									                + "and p.dateCreated < :lastpulledat "
+									                + "and p.dateUpdated >= :lastpulledat"),
     	@NamedQuery(name = "Partners.findBySyncDistricts", query = "SELECT p FROM  Partners p "
     	                                            + "where p.district.id  in (:districts)"),
     	@NamedQuery(name = "Partners.findBySyncProvinces", query = "SELECT p FROM  Partners p "

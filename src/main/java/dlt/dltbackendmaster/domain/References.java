@@ -60,7 +60,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "and b.nui like :searchNui "
 																+ "and (r.userCreated = cast(:userId as string) "
 																+ "or r.notifyTo.id = : userId "
-																+ "or r.referredBy.id = : userId) "
+																+ "or r.referredBy.id = : userId "
+																+ "or r.us.id in (:ussId)) "
 																+ "order by r.id desc "),
 		@NamedQuery(name = "References.findAllByNotifyTo", query = "SELECT r FROM References r "
 																+ "left join fetch r.beneficiaries "
@@ -101,7 +102,7 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 	    															+ "left join fetch r.notifyTo u "
 	    															+ "left join fetch r.us us "
 												    				+ "left join fetch r.beneficiaries b "
-													                + "where b.neighborhood.locality.id in (:localities) "
+													                + "where b.locality.id in (:localities) "
 													                + "and b.nui like :searchNui "
 													                + "and r.status <> 3 "
 													                + "order by r.id desc"
@@ -153,7 +154,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																	+ "where r.status <> 3 "
 																	+ "and (r.userCreated = cast(:userId as string) "
 																	+ "or r.notifyTo.id = : userId "
-																	+ "or r.referredBy.id = : userId) "
+																	+ "or r.referredBy.id = : userId "
+																	+ "or r.us.id in (:ussId)) "
 																	+ "order by r.id desc "),
 		@NamedQuery(name = "References.findByReferenceNotifyToOrReferredBy", 
 																	query = "SELECT distinct r FROM  References r "		
@@ -164,6 +166,27 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 														            + " where r.status in (0,1) "
 														            + " and (r.notifyTo.id = :userId or r.referredBy.id = :userId) "
 														            ),
+		@NamedQuery(name = "References.findByReferenceNotifyToOrReferredByAndDateCreated", 
+																	query = "SELECT distinct r FROM  References r "		
+																	+ "left join fetch r.beneficiaries "
+																	+ "left join fetch r.referredBy "
+																	+ "left join fetch r.us "
+																	+ "left join fetch r.notifyTo "
+															        + " where r.status in (0,1) "
+															        + " and (r.notifyTo.id = :userId or r.referredBy.id = :userId) "
+															        + " and r.dateCreated >= :lastpulledat"
+															        ),
+		@NamedQuery(name = "References.findByReferenceNotifyToOrReferredByAndDateUpdated", 
+																	query = "SELECT distinct r FROM  References r "		
+																	+ "left join fetch r.beneficiaries "
+																	+ "left join fetch r.referredBy "
+																	+ "left join fetch r.us "
+																	+ "left join fetch r.notifyTo "
+															        + " where r.status in (0,1) "
+															        + " and (r.notifyTo.id = :userId or r.referredBy.id = :userId) "
+															        + " and r.dateCreated < :lastpulledat "
+															        + " and r.dateUpdated >= :lastpulledat"
+															        ),
 		@NamedQuery(name = "References.findByBeneficiaryId", query = "SELECT distinct r FROM  References r "		
 																	+ "left join fetch r.beneficiaries "
 																	+ "left join fetch r.referredBy "
@@ -181,6 +204,7 @@ public class References implements java.io.Serializable {
 	private Users referredBy;
 	private Users notifyTo;
 	private String referenceNote;
+	private Date date;
 	private String description;
 	private String referTo;
 	private String bookNumber;
@@ -215,7 +239,7 @@ public class References implements java.io.Serializable {
 		this.dateCreated = dateCreated;
 	}
 
-	public References(Beneficiaries beneficiaries, Users referredBy, Users notifyTo, String referenceNote,
+	public References(Beneficiaries beneficiaries, Users referredBy, Users notifyTo, String referenceNote, Date date,
 			String description, String referTo, String bookNumber, String referenceCode, String serviceType,
 			String remarks, Integer status, Us us, Integer cancelReason, String otherReason, String userCreated,
 			Date dateCreated, Integer updatedBy, Date dateUpdated, Set<ReferencesServices> referencesServiceses) {
@@ -223,6 +247,7 @@ public class References implements java.io.Serializable {
 		this.referredBy = referredBy;
 		this.notifyTo = notifyTo;
 		this.referenceNote = referenceNote;
+		this.date = date;
 		this.description = description;
 		this.referTo = referTo;
 		this.bookNumber = bookNumber;
@@ -241,12 +266,11 @@ public class References implements java.io.Serializable {
 	}
 
 	public References(ReferenceSyncModel model, String timestamp) {
-		Long t = Long.valueOf(timestamp);
-		Date regDate = new Date(t);
 		this.offlineId = model.getId();
 		this.beneficiaries = new Beneficiaries();
 		this.beneficiaries.setId(model.getBeneficiary_id());
 		this.bookNumber = model.getBook_number();
+		this.date = model.getDate();
 		this.description = model.getDescription();
 		this.referenceCode = model.getReference_code();
 		this.referenceNote = model.getReference_note();
@@ -263,8 +287,7 @@ public class References implements java.io.Serializable {
 		this.cancelReason = model.getCancel_reason();
 		this.otherReason = model.getOther_reason();
 		this.userCreated = model.getUser_created();
-		this.dateCreated = regDate;
-		this.dateUpdated = regDate;
+		this.dateCreated = model.getDate_created();
 		this.beneficiaryOfflineId = model.getBeneficiary_offline_id();
 	}
 
@@ -316,6 +339,16 @@ public class References implements java.io.Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	@Temporal(TemporalType.DATE)
+    @Column(name = "date", nullable = false, length = 10)
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	@Column(name = "refer_to", nullable = false, length = 50)
@@ -471,6 +504,7 @@ public class References implements java.io.Serializable {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		ObjectNode reference = mapper.createObjectNode();
+        DateFormat shortDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 		if (offlineId != null) {
 			reference.put("id", offlineId);
@@ -478,7 +512,7 @@ public class References implements java.io.Serializable {
 			reference.put("id", id);
 		}
 
-		if (dateUpdated == null || dateUpdated.after(dateCreated) || lastPulledAt == null
+		if (dateUpdated == null || dateUpdated.compareTo(dateCreated) >= 0 || lastPulledAt == null
 				|| lastPulledAt.equals("null")) {
             reference.put("beneficiary_offline_id", beneficiaries.getOfflineId());
 			reference.put("referred_by", referredBy.getId());
@@ -489,6 +523,7 @@ public class References implements java.io.Serializable {
 			reference.put("book_number", bookNumber);
 			reference.put("reference_code", referenceCode);
 			reference.put("service_type", serviceType);
+			reference.put("date", date != null ? shortDateFormat.format(date) : null);
 			reference.put("remarks", remarks);
 			reference.put("status", status);
 			reference.put("us_id", us == null? null : us.getId());
@@ -520,6 +555,7 @@ public class References implements java.io.Serializable {
 		this.referenceCode = model.getReference_code();
 		this.referenceNote = model.getReference_note();
 		this.serviceType = model.getService_type();
+		this.date = model.getDate();
 		this.remarks = model.getRemarks();
 		this.referTo = model.getRefer_to();
 		this.notifyTo.setId(model.getNotify_to());
