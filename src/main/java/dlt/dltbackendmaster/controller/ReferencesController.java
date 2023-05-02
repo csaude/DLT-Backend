@@ -93,9 +93,12 @@ public class ReferencesController {
 			List<References> references = null;
 			if (Arrays.asList(MANAGER, MENTOR, NURSE, COUNSELOR).contains(user.getProfiles().getId())) {
 				List<Integer> ussId = user.getUs().stream().map(Us::getId).collect(Collectors.toList());
+				List<Users> users = service.GetAllEntityByNamedQuery("Users.findByUsId", ussId);
+				List<Integer> usersIds = users.stream().map(Users::getId).collect(Collectors.toList());
+				List<String> strUsersIds = usersIds.stream().map(String::valueOf).collect(Collectors.toList());
 
 				references = service.GetAllPagedEntityByNamedQuery("References.findAllByUserPermission", pageIndex,
-						pageSize, searchNui, ussId, userId);
+						pageSize, searchNui, strUsersIds, ussId, usersIds);
 			} else if (user.getLocalities().size() > 0) {
 				List<Integer> localitiesId = user.getLocalities().stream().map(Locality::getId)
 						.collect(Collectors.toList());
@@ -242,9 +245,12 @@ public class ReferencesController {
 
 			if (Arrays.asList(MANAGER, MENTOR, NURSE, COUNSELOR).contains(user.getProfiles().getId())) {
 				List<Integer> ussId = user.getUs().stream().map(Us::getId).collect(Collectors.toList());
+				List<Users> users = service.GetAllEntityByNamedQuery("Users.findByUsId", ussId);
+				List<Integer> usersIds = users.stream().map(Users::getId).collect(Collectors.toList());
+				List<String> strUsersIds = usersIds.stream().map(String::valueOf).collect(Collectors.toList());
 
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByUserPermission", ussId,
-						userId);
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByUserPermission",
+						strUsersIds, ussId, usersIds);
 			} else if (user.getLocalities().size() > 0) {
 				List<Integer> localitiesId = user.getLocalities().stream().map(Locality::getId)
 						.collect(Collectors.toList());
