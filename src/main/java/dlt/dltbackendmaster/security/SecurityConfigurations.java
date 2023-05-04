@@ -71,6 +71,8 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter{
 			.authorizeRequests()
 			
 			.antMatchers("/").permitAll()
+				//Verify if backend is oN
+			.antMatchers("/ping/**").permitAll()
             .antMatchers("/resources/**").permitAll()
             	//allow anonymous to Sync
             .antMatchers(HttpMethod.POST, "/sync").permitAll()
