@@ -160,7 +160,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " where b.status = 1 "
                                                                 + " and (b.createdBy = :userId "	
 																+ " or   b.id in (SELECT r.beneficiaries.id from References r"
-												                + " where r.status in (0,1,2,3) "
+												                + " where r.status in (0,1,2) "
 												                + " and r.notifyTo.id = :userId)) "    											     
 												                ),
 				@NamedQuery(name = "Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateCreated", query = "SELECT  b FROM  Beneficiaries b "
@@ -171,7 +171,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " where b.status = 1 "
 										                        + " and (b.createdBy = :userId "	
 																+ " or   b.id in (SELECT r.beneficiaries.id from References r"
-												                + " where r.status in (0,1,2,3) "
+												                + " where r.status in (0,1,2) "
 												                + " and r.notifyTo.id = :userId))"
 												                + " and b.dateCreated >= :lastpulledat "    											     
 												                ),
@@ -183,7 +183,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " where b.status = 1 "
 										                        + " and (b.createdBy = :userId "	
 																+ " or   b.id in (SELECT r.beneficiaries.id from References r"
-												                + " where r.status in (0,1,2,3) "
+												                + " where r.status in (0,1,2) "
 												                + " and r.notifyTo.id = :userId))"
 												                + " and b.dateCreated < :lastpulledat "
 												                + " and b.dateUpdated >= :lastpulledat "),

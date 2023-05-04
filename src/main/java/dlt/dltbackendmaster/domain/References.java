@@ -161,7 +161,7 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "left join fetch r.referredBy "
 																+ "left join fetch r.us "
 																+ "left join fetch r.notifyTo "
-																+ " where r.status in (0,1,2,3) "
+																+ " where r.status in (0,1) "
 																+ " and (r.notifyTo.id = :userId or r.referredBy.id = :userId) "
 																),
 		@NamedQuery(name = "References.findByReferenceNotifyToOrReferredByAndDateCreated", 
@@ -170,7 +170,7 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "left join fetch r.referredBy "
 																+ "left join fetch r.us "
 																+ "left join fetch r.notifyTo "
-																+ " where r.status in (0,1,2,3) "
+																+ " where r.status in (0,1) "
 																+ " and (r.notifyTo.id = :userId or r.referredBy.id = :userId) "
 																+ " and r.dateCreated >= :lastpulledat"
 																),
@@ -180,7 +180,7 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "left join fetch r.referredBy "
 																+ "left join fetch r.us "
 																+ "left join fetch r.notifyTo "
-																+ " where r.status in (0,1,2,3) "
+																+ " where r.status in (0,1) "
 																+ " and (r.notifyTo.id = :userId or r.referredBy.id = :userId) "
 																+ " and r.dateCreated < :lastpulledat "
 																+ " and r.dateUpdated >= :lastpulledat"
