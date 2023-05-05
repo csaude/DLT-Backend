@@ -48,7 +48,8 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
     @NamedQuery(name = "Neighborhood.findByLocalities", query = "SELECT c FROM Neighborhood c WHERE c.locality.id in (:localities) and c.status=1"),
     @NamedQuery(name = "Neighborhood.findByDateCreated", query = "SELECT c FROM Neighborhood c WHERE c.dateCreated >= :lastpulledat"),
     @NamedQuery(name = "Neighborhood.findByDateUpdated", query = "SELECT c FROM Neighborhood c WHERE c.dateCreated < :lastpulledat and c.dateUpdated >= :lastpulledat"),
-    @NamedQuery(name = "Neighborhood.findById", query = "SELECT n FROM  Neighborhood n where n.id = :id"),    
+    @NamedQuery(name = "Neighborhood.findById", query = "SELECT n FROM  Neighborhood n where n.id = :id"),   
+    @NamedQuery(name = "Neighborhood.findByIds", query = "SELECT n FROM  Neighborhood n where n.id in :ids"),  
 })
 public class Neighborhood implements java.io.Serializable
 {

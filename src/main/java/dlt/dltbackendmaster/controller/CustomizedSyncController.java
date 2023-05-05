@@ -2,8 +2,12 @@ package dlt.dltbackendmaster.controller;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityExistsException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,19 +32,23 @@ import dlt.dltbackendmaster.domain.Services;
 import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.domain.Us;
 import dlt.dltbackendmaster.domain.Users;
+import dlt.dltbackendmaster.domain.UsersBeneficiariesCustomSync;
 import dlt.dltbackendmaster.domain.watermelondb.SyncObject;
 import dlt.dltbackendmaster.serializers.SyncSerializer;
 import dlt.dltbackendmaster.service.DAOService;
 import dlt.dltbackendmaster.service.SequenceGenerator;
+import dlt.dltbackendmaster.service.UsersBeneficiariesCustomSyncService;
 
 @RestController
 @RequestMapping("/custom/sync")
-public class CustomSyncController {
+public class CustomizedSyncController {
 
 	private final DAOService service;
+	@Autowired
+	private UsersBeneficiariesCustomSyncService usersBeneficiariesCustomSyncService;
 
 	@Autowired
-	public CustomSyncController(DAOService service) {
+	public CustomizedSyncController(DAOService service) {
 		this.service = service;
 		new SequenceGenerator(service);
 	}
@@ -162,6 +170,10 @@ public class CustomSyncController {
 					partnersSO, usSO, beneficiarySO, beneficiaryInterventionSO, neighborhoodSO, serviceSO, subServiceSO,
 					referencesSO, referencesServicesSO, lastPulledAt);
 			// System.out.println("PULLING " + object);
+			
+			if(beneficiariesCreated.size()>0) {
+				createBeneficiariesAndUsersAssociation(beneficiariesCreated.get(0), users.get(0));
+			}
 
 			return new ResponseEntity<>(object, HttpStatus.OK);
 		} catch (Exception e) {
@@ -171,4 +183,18 @@ public class CustomSyncController {
 			return new ResponseEntity<>("Parameter not present", HttpStatus.BAD_REQUEST);
 		}
 	}
+
+	private void createBeneficiariesAndUsersAssociation(Beneficiaries beneficiary, Users user) {
+		
+			List<UsersBeneficiariesCustomSync> userBeneficiariesSync = usersBeneficiariesCustomSyncService
+					.findByUserIdAndBeneficiaryId(user.getId(), beneficiary.getId());
+			if(userBeneficiariesSync.isEmpty()) {
+				UsersBeneficiariesCustomSync userBeneficiary = new UsersBeneficiariesCustomSync();
+				userBeneficiary.setUser(user);
+				userBeneficiary.setBeneficiary(beneficiary);
+				userBeneficiary.setSyncDate(new Date());
+				service.Save(userBeneficiary);
+			}
+	}
 }
+
