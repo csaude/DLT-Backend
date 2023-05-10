@@ -58,7 +58,7 @@ import dlt.dltbackendmaster.serializers.ServiceSerializer;
 												            + "left join fetch rs.references r "
 												            + "left join fetch r.beneficiaries b " 
 												            + "left join fetch b.locality l "
-												            + "where r.status in (0,1) "
+												            + "where r.status in (0,1,2) "
 												            + "and (r.notifyTo.id = :userId or r.referredBy.id = :userId) "
 												            + "and rs.dateCreated < :lastpulledat "
 												            + "and rs.dateUpdated >= :lastpulledat"), 
