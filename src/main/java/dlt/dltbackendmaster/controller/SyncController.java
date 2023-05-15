@@ -328,6 +328,8 @@ public class SyncController {
 
 		List<ReferencesServices> referenceServicesCreatedCustomized = new ArrayList<ReferencesServices>();
 		List<ReferencesServices> referenceServicesUpdatedCustomized = new ArrayList<ReferencesServices>();
+		
+		List<Neighborhood> neighborhoodsCreatedCustomized = new ArrayList<>();
 
 		beneficiariesCreatedCustomized = userBeneficiariesSync.stream()
 				.map(UsersBeneficiariesCustomSync::getBeneficiary).collect(Collectors.toList());
@@ -338,6 +340,9 @@ public class SyncController {
 					.collect(Collectors.toList());
 			List<Integer> neighborhoodsIds = beneficiariesCreatedCustomized.stream()
 					.map(beneficiary -> beneficiary.getNeighborhood().getId()).collect(Collectors.toList());
+			
+			neighborhoodsCreatedCustomized = service.GetAllEntityByNamedQuery("Neighborhood.findByIds",
+					neighborhoodsIds);
 
 			beneficiariesInterventionsCreatedCustomized = service
 					.GetAllEntityByNamedQuery("BeneficiaryIntervention.findByBeneficiariesIds", beneficiariesIds);
@@ -359,6 +364,8 @@ public class SyncController {
 
 			beneficiariesInterventionsCreated.addAll(beneficiariesInterventionsCreatedCustomized);
 			beneficiariesInterventionsUpdated.addAll(beneficiariesInterventionsUpdatedCustomized);
+			
+			neighborhoodsCreated.addAll(neighborhoodsCreatedCustomized);
 		}
 
 		List<Beneficiaries> uniqueBeneficiariesCreated = beneficiariesCreated.stream().distinct()
