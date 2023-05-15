@@ -124,6 +124,8 @@ public class SyncController
 
 		List<ReferencesServices> referenceServicesCreated;
 		List<ReferencesServices> referenceServicesUpdated;
+		
+		List<UsersBeneficiariesCustomSync> userBeneficiariesSync;
 
 		Users user = service.GetUniqueEntityByNamedQuery("Users.findByUsername", username);
 		defineLevelAndParms(user);
@@ -215,6 +217,10 @@ public class SyncController
 			// ReferencesServices
 			referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findByReferenceNotifyToOrReferredBy",user.getId());
 			referenceServicesUpdated = new ArrayList<ReferencesServices>();
+			
+			/**Sync Customized, previous fetched by NUI**/
+			userBeneficiariesSync = usersBeneficiariesCustomSyncService
+					.getUserBeneficiariesSync(user.getId(),null);
 		} else {
 			Long t = Long.valueOf(lastPulledAt);
 			// validatedDate = new Date(t);
@@ -281,13 +287,12 @@ public class SyncController
 					user.getId(), validatedDate);
 			referenceServicesUpdated = service.GetAllEntityByNamedQuery("ReferencesServices.findByReferenceNotifyToOrReferredByAndDateUpdated",
 					user.getId(), validatedDate);
+			
+			/**Sync Customized, previous fetched by NUI**/
+			userBeneficiariesSync = usersBeneficiariesCustomSyncService
+					.getUserBeneficiariesSync(user.getId(),validatedDate);
 		}
 		
-		/**Sync Customized, previous fetched by NUI**/
-		List<UsersBeneficiariesCustomSync> userBeneficiariesSync = usersBeneficiariesCustomSyncService
-				.getUserBeneficiariesSync(user.getId());
-
-
 		List<Locality> localityCreatedCustomized = new ArrayList<Locality>();
 		List<Locality> localityUpdatedCustomized = new ArrayList<Locality>();
 

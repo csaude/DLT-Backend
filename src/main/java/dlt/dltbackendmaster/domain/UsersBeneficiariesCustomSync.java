@@ -35,6 +35,11 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 @NamedQueries({
 		@NamedQuery(name = "UsersBeneficiariesCustomSync.findByUserId", query = "SELECT ub FROM UsersBeneficiariesCustomSync ub "
 				+ " INNER JOIN fetch ub.user u " + " INNER JOIN fetch ub.beneficiary b " + " where u.id = :userId"),
+		@NamedQuery(name = "UsersBeneficiariesCustomSync.findByUserIdAndSyncDate", query = "SELECT ub FROM UsersBeneficiariesCustomSync ub "
+				+ " INNER JOIN fetch ub.user u " 
+				+ " INNER JOIN fetch ub.beneficiary b " 
+				+ " where u.id = :userId "
+				+ " and ub.syncDate > :lastPulledAt "),
 		@NamedQuery(name = "UsersBeneficiariesCustomSync.findByUserIdAndBeneficiaryId", query = "SELECT ub FROM UsersBeneficiariesCustomSync ub "
 				+ " INNER JOIN fetch ub.user u " + " INNER JOIN fetch ub.beneficiary b " + " where u.id = :userId "
 				+ " and b.id =:beneficiaryId"), })
@@ -45,7 +50,7 @@ public class UsersBeneficiariesCustomSync implements java.io.Serializable {
 	private Integer id;
 	private Beneficiaries beneficiary;
 	private Users user;
-	private Date syncDate = new Date();
+	private Date syncDate;
 
 	public UsersBeneficiariesCustomSync() {
 		this.beneficiary = new Beneficiaries();
