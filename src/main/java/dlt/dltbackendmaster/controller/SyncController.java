@@ -124,6 +124,8 @@ public class SyncController {
 		List<ReferencesServices> referenceServicesCreated;
 		List<ReferencesServices> referenceServicesUpdated;
 
+		List<UsersBeneficiariesCustomSync> userBeneficiariesSync;
+
 		Users user = service.GetUniqueEntityByNamedQuery("Users.findByUsername", username);
 		defineLevelAndParms(user);
 
@@ -222,6 +224,9 @@ public class SyncController {
 			referenceServicesCreated = service
 					.GetAllEntityByNamedQuery("ReferencesServices.findByReferenceNotifyToOrReferredBy", user.getId());
 			referenceServicesUpdated = new ArrayList<ReferencesServices>();
+
+			/** Sync Customized, previous fetched by NUI **/
+			userBeneficiariesSync = usersBeneficiariesCustomSyncService.getUserBeneficiariesSync(user.getId(), null);
 		} else {
 			Long t = Long.valueOf(lastPulledAt);
 			// validatedDate = new Date(t);
@@ -306,20 +311,17 @@ public class SyncController {
 			referenceServicesUpdated = service.GetAllEntityByNamedQuery(
 					"ReferencesServices.findByReferenceNotifyToOrReferredByAndDateUpdated", user.getId(),
 					validatedDate);
-		}
 
-		/** Sync Customized, previous fetched by NUI **/
-		List<UsersBeneficiariesCustomSync> userBeneficiariesSync = usersBeneficiariesCustomSyncService
-				.getUserBeneficiariesSync(user.getId());
+			/** Sync Customized, previous fetched by NUI **/
+			userBeneficiariesSync = usersBeneficiariesCustomSyncService.getUserBeneficiariesSync(user.getId(),
+					validatedDate);
+		}
 
 		List<Beneficiaries> beneficiariesCreatedCustomized = new ArrayList<Beneficiaries>();
 		List<Beneficiaries> beneficiariesUpdatedCustomized = new ArrayList<Beneficiaries>();
 
 		List<BeneficiariesInterventions> beneficiariesInterventionsCreatedCustomized = new ArrayList<BeneficiariesInterventions>();
 		List<BeneficiariesInterventions> beneficiariesInterventionsUpdatedCustomized = new ArrayList<BeneficiariesInterventions>();
-
-		List<Neighborhood> neighborhoodsCreatedCustomized = new ArrayList<>();
-		List<Neighborhood> neighborhoodUpdatedCustomized = new ArrayList<>();
 
 		List<References> referencesCreatedCustomized = new ArrayList<References>();
 		List<References> referencesUpdatedCustomized = new ArrayList<References>();
@@ -330,12 +332,12 @@ public class SyncController {
 		beneficiariesCreatedCustomized = userBeneficiariesSync.stream()
 				.map(UsersBeneficiariesCustomSync::getBeneficiary).collect(Collectors.toList());
 
-		List<Integer> beneficiariesIds = beneficiariesCreatedCustomized.stream().map(Beneficiaries::getId)
-				.collect(Collectors.toList());
-		List<Integer> neighborhoodsIds = beneficiariesCreatedCustomized.stream()
-				.map(beneficiary -> beneficiary.getNeighborhood().getId()).collect(Collectors.toList());
-
 		if (beneficiariesCreatedCustomized.size() > 0) {
+
+			List<Integer> beneficiariesIds = beneficiariesCreatedCustomized.stream().map(Beneficiaries::getId)
+					.collect(Collectors.toList());
+			List<Integer> neighborhoodsIds = beneficiariesCreatedCustomized.stream()
+					.map(beneficiary -> beneficiary.getNeighborhood().getId()).collect(Collectors.toList());
 
 			beneficiariesInterventionsCreatedCustomized = service
 					.GetAllEntityByNamedQuery("BeneficiaryIntervention.findByBeneficiariesIds", beneficiariesIds);
@@ -349,18 +351,20 @@ public class SyncController {
 				referenceServicesCreatedCustomized.addAll(refServicesByRef);
 			}
 
-			neighborhoodsCreatedCustomized = service.GetAllEntityByNamedQuery("Neighborhood.findByIds",
-					neighborhoodsIds);
+			beneficiariesCreated.addAll(beneficiariesCreatedCustomized);
+			beneficiariesUpdated.addAll(beneficiariesUpdatedCustomized);
+
+			referencesCreated.addAll(referencesCreatedCustomized);
+			referencesUpdated.addAll(referencesUpdatedCustomized);
+
+			beneficiariesInterventionsCreated.addAll(beneficiariesInterventionsCreatedCustomized);
+			beneficiariesInterventionsUpdated.addAll(beneficiariesInterventionsUpdatedCustomized);
 		}
 
-		beneficiariesCreated.addAll(beneficiariesCreatedCustomized);
-		beneficiariesUpdated.addAll(beneficiariesUpdatedCustomized);
-
-		List<Beneficiaries> uniqueBeneficiariesCreated = beneficiariesCreated.stream().distinct().collect(Collectors.toList());
-		List<Beneficiaries> uniqueBeneficiariesUpdated = beneficiariesUpdated.stream().distinct().collect(Collectors.toList());
-
-		referencesCreated.addAll(referencesCreatedCustomized);
-		referencesUpdated.addAll(referencesUpdatedCustomized);
+		List<Beneficiaries> uniqueBeneficiariesCreated = beneficiariesCreated.stream().distinct()
+				.collect(Collectors.toList());
+		List<Beneficiaries> uniqueBeneficiariesUpdated = beneficiariesUpdated.stream().distinct()
+				.collect(Collectors.toList());
 
 		List<References> uniqueReferencesCreated = referencesCreated.stream().distinct().collect(Collectors.toList());
 		List<References> uniqueReferencesUpdated = referencesUpdated.stream().distinct().collect(Collectors.toList());
@@ -373,16 +377,10 @@ public class SyncController {
 		List<ReferencesServices> uniqueReferenceServicesUpdated = referenceServicesUpdated.stream().distinct()
 				.collect(Collectors.toList());
 
-		beneficiariesInterventionsCreated.addAll(beneficiariesInterventionsCreatedCustomized);
-		beneficiariesInterventionsUpdated.addAll(beneficiariesInterventionsUpdatedCustomized);
-
-		List<BeneficiariesInterventions> uniqueBeneficiariesIntervetnionsCreated = beneficiariesInterventionsCreated.stream().distinct()
-				.collect(Collectors.toList());
-		List<BeneficiariesInterventions> uniqueBeneficiariesIntervetnionsUpdated = beneficiariesInterventionsUpdated.stream().distinct()
-				.collect(Collectors.toList());
-
-		neighborhoodsCreated.addAll(neighborhoodsCreatedCustomized);
-		neighborhoodsUpdated.addAll(neighborhoodUpdatedCustomized);
+		List<BeneficiariesInterventions> uniqueBeneficiariesIntervetnionsCreated = beneficiariesInterventionsCreated
+				.stream().distinct().collect(Collectors.toList());
+		List<BeneficiariesInterventions> uniqueBeneficiariesIntervetnionsUpdated = beneficiariesInterventionsUpdated
+				.stream().distinct().collect(Collectors.toList());
 
 		List<Neighborhood> uniqueNeighborhoodCreated = neighborhoodsCreated.stream().distinct()
 				.collect(Collectors.toList());
