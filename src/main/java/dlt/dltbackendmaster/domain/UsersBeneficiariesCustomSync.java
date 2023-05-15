@@ -39,7 +39,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 				+ " INNER JOIN fetch ub.user u " 
 				+ " INNER JOIN fetch ub.beneficiary b " 
 				+ " where u.id = :userId "
-				+ " and ub.syncDate > :lastPulledAt "),
+				+ " and ub.syncDate > :lastpulledat "),
 		@NamedQuery(name = "UsersBeneficiariesCustomSync.findByUserIdAndBeneficiaryId", query = "SELECT ub FROM UsersBeneficiariesCustomSync ub "
 				+ " INNER JOIN fetch ub.user u " + " INNER JOIN fetch ub.beneficiary b " + " where u.id = :userId "
 				+ " and b.id =:beneficiaryId"), })
