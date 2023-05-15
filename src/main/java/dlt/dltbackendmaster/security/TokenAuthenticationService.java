@@ -15,6 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dlt.dltbackendmaster.domain.Account;
+import dlt.dltbackendmaster.dto.AccountCloner;
 
 
 /**
@@ -45,6 +46,7 @@ public class TokenAuthenticationService {
         Map<String, Object> mapResponse = new HashMap<>();
         mapResponse.put("token", tokenHandler.createTokenForUser(account));
         mapResponse.put("account", account.toUser());
+        
         new ObjectMapper().writeValue(response.getOutputStream(), mapResponse);
         
     }
@@ -61,7 +63,8 @@ public class TokenAuthenticationService {
         		username = tokenHandler.parseUserFromToken(token);
                 final Account account = serviceImpl.loadUserByUsername(username);
                 if (account != null) {
-                    return new UserAuthentication(account);
+                	
+                    return new UserAuthentication(account,request.getHeader("Platform"));
                 }
         	}
         	

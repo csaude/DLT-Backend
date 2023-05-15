@@ -209,7 +209,7 @@ public class Users implements java.io.Serializable {
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 		this.username = username;
-		this.password = password;
+		this.password = password;//web
 		this.newPassword = newPassword;
 		this.entryPoint = entryPoint;
 		this.us = us;
@@ -346,7 +346,6 @@ public class Users implements java.io.Serializable {
 		this.username = username;
 	}
 
-	@JsonIgnore
 	@Column(name = "password", nullable = false, length = 150)
 	public String getPassword() {
 		return this.password;
@@ -572,7 +571,7 @@ public class Users implements java.io.Serializable {
 			user.put("phone_number", phoneNumber);
 			user.put("email", email);
 			user.put("username", username);
-			user.put("password", password);
+			user.put("password", password);//
 			user.put("entry_point", entryPoint);
 			user.put("status", status);
 

@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 import dlt.dltbackendmaster.domain.Account;
+import dlt.dltbackendmaster.dto.AccountCloner;
 
 /**
  * 
@@ -17,9 +18,11 @@ public class UserAuthentication implements Authentication{
 	private static final long serialVersionUID = 1L;
 	private final Account account;
 	private boolean authenticated = true;
+	private final String platform;
 
-    public UserAuthentication(Account account) {
+    public UserAuthentication(Account account, String platform) {
         this.account = account;
+        this.platform=platform;
     }
 
 	@Override
@@ -34,17 +37,17 @@ public class UserAuthentication implements Authentication{
 
 	@Override
 	public Object getCredentials() {
-		return account.getPassword();
+		return platform=="web"? null : account.getPassword();
 	}
 
 	@Override
 	public Object getDetails() {
-		return account;
+		return getAccountResponse(platform);
 	}
 
 	@Override
 	public Object getPrincipal() {
-		return account;
+		return getAccountResponse(platform);
 	}
 
 	@Override
@@ -55,6 +58,18 @@ public class UserAuthentication implements Authentication{
 	@Override
 	public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
 		this.authenticated = isAuthenticated;
+	}
+	
+	private Object getAccountResponse(String platform) {
+		if("web".equals(platform)) {
+			try {
+			    Account clonedAccount = AccountCloner.cloneAndRemoveField(account);
+				return clonedAccount;
+			} catch (CloneNotSupportedException e) {
+			    e.printStackTrace();
+			}
+		}
+		return account;
 	}
 
 }

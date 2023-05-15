@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import dlt.dltbackendmaster.domain.Account;
 import dlt.dltbackendmaster.domain.Users;
+import dlt.dltbackendmaster.dto.AccountCloner;
+import dlt.dltbackendmaster.dto.UsersDTO;
 import dlt.dltbackendmaster.service.DAOService;
 
 /**
@@ -61,10 +63,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		throw new UsernameNotFoundException("no user found with " + username);
 	}
 
-	public ResponseEntity<Users> verifyUserByUsername(@PathVariable String username) throws AccountLockedException {
+	public ResponseEntity<UsersDTO> verifyUserByUsername(@PathVariable String username) throws AccountLockedException {
 		Map<String, Object> todo = new HashMap<String, Object>();
 		todo.put("username", username);
-		ResponseEntity<Users> responseEntity = null;
+		ResponseEntity<UsersDTO> responseDTO = null;
 		try {
 			List<Users> users = service.findByJPQuery(QUERY_FIND_USER_BY_USERNAME, todo);
 
@@ -72,20 +74,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				Users user = users.get(0);
 				if (user.getStatus() == 0) {
 					logger.warn("user " +user.getUsername()+" tried to login, but this user is locked, check error code returned "+HttpStatus.LOCKED);
-					responseEntity = new ResponseEntity<>(null, HttpStatus.LOCKED);
+					responseDTO = new ResponseEntity<>(null, HttpStatus.LOCKED);
 				} else {
-					responseEntity = new ResponseEntity<>(user, HttpStatus.OK);
+					UsersDTO userDTO = new UsersDTO().transformToDTO(user);
+					responseDTO = new ResponseEntity<>(userDTO, HttpStatus.OK);
 				}
 			} else {
 				logger.warn("user " +username+" tried to login, but this user does not exists on system , check error code returned "+HttpStatus.NOT_FOUND);
-				responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+				responseDTO = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 			}
 		} catch (Exception e) {
 			/*** Its OK **/
 		}
-		return responseEntity;
+		return responseDTO;
 
 	}
+
+	
 	
 	public ResponseEntity<Users> checkPasswordValidity(@PathVariable String username) {
 		Map<String, Object> todo = new HashMap<String, Object>();

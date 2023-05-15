@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author derciobucuane
  *
  */
-public class Account extends Users implements Serializable, UserDetails {
+public class Account extends Users implements Serializable, UserDetails, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -27,16 +27,15 @@ public class Account extends Users implements Serializable, UserDetails {
 		super();
 	}
 
-	public Account(int id, Set<Locality> locality, Partners partner, Profiles profiles, Set<Province> provinces, Set<District> districts, String surname, String name,
-			String phoneNumber, String email, String username, String password, String entryPoint, Set<Us> us, int status,
-			int newPassword,
-			Byte isLocked, Byte isExpired, Byte isCredentialsExpired, Byte isEnabled, int createdBy, Date dateCreated,
-			Integer updatedBy, Date dateUpdated, Date passwordLastChangeDate) {
+	public Account(int id, Set<Locality> locality, Partners partner, Profiles profiles, Set<Province> provinces,
+			Set<District> districts, String surname, String name, String phoneNumber, String email, String username,
+			String password, String entryPoint, Set<Us> us, int status, int newPassword, Byte isLocked, Byte isExpired,
+			Byte isCredentialsExpired, Byte isEnabled, int createdBy, Date dateCreated, Integer updatedBy,
+			Date dateUpdated, Date passwordLastChangeDate) {
 
-		super(id, locality, partner, profiles, provinces, districts, surname, name,
-				phoneNumber, email, username, password, newPassword, entryPoint, us, status,
-				isLocked, isExpired, isCredentialsExpired, isEnabled, createdBy, dateCreated,
-				updatedBy, dateUpdated, passwordLastChangeDate);
+		super(id, locality, partner, profiles, provinces, districts, surname, name, phoneNumber, email, username,
+				password, newPassword, entryPoint, us, status, isLocked, isExpired, isCredentialsExpired, isEnabled,
+				createdBy, dateCreated, updatedBy, dateUpdated, passwordLastChangeDate);
 
 		this.isaccountenabled = isEnabled == 0 ? false : true;
 		this.isaccountexpired = isExpired == 0 ? false : true;
@@ -46,12 +45,12 @@ public class Account extends Users implements Serializable, UserDetails {
 	}
 
 	public Account(Users user) {
-		super(user.getId(), user.getLocalities(), user.getPartners(), user.getProfiles(), user.getProvinces(), user.getDistricts(), user.getSurname(),
-				user.getName(), user.getPhoneNumber(), user.getEmail(), user.getUsername(), user.getPassword(),
-				user.getNewPassword(), user.getEntryPoint(), user.getUs(),
+		super(user.getId(), user.getLocalities(), user.getPartners(), user.getProfiles(), user.getProvinces(),
+				user.getDistricts(), user.getSurname(), user.getName(), user.getPhoneNumber(), user.getEmail(),
+				user.getUsername(), user.getPassword(), user.getNewPassword(), user.getEntryPoint(), user.getUs(),
 				user.getStatus(), user.getIsLocked(), user.getIsExpired(), user.getIsCredentialsExpired(),
-				user.getIsEnabled(),
-				user.getCreatedBy(), user.getDateCreated(), user.getUpdatedBy(), user.getDateUpdated(), user.getPasswordLastChangeDate());
+				user.getIsEnabled(), user.getCreatedBy(), user.getDateCreated(), user.getUpdatedBy(),
+				user.getDateUpdated(), user.getPasswordLastChangeDate());
 
 		this.setNewPassword(user.getNewPassword());
 		this.isaccountenabled = user.getIsEnabled() == 0 ? false : true;
@@ -90,10 +89,15 @@ public class Account extends Users implements Serializable, UserDetails {
 
 	public Users toUser() {
 
-		return new Users(getId(), getLocalities(), getPartners(), getProfiles(), getProvinces(), getDistricts(), 
+		return new Users(getId(), getLocalities(), getPartners(), getProfiles(), getProvinces(), getDistricts(),
 				getSurname(), getName(), getPhoneNumber(), getEmail(), getUsername(), getPassword(), getNewPassword(),
 				getEntryPoint(), getUs(), getStatus(), getIsLocked(), getIsExpired(), getIsCredentialsExpired(),
-				getIsEnabled(), getCreatedBy(), getDateCreated(), getUpdatedBy(), getDateUpdated(), getPasswordLastChangeDate());
+				getIsEnabled(), getCreatedBy(), getDateCreated(), getUpdatedBy(), getDateUpdated(),
+				getPasswordLastChangeDate());
 	}
 
+	@Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

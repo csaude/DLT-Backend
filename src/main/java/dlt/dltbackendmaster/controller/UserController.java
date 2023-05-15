@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dlt.dltbackendmaster.domain.Locality;
 import dlt.dltbackendmaster.domain.Users;
+import dlt.dltbackendmaster.dto.UsersDTO;
 import dlt.dltbackendmaster.security.EmailSender;
 import dlt.dltbackendmaster.security.UserDetailsServiceImpl;
 import dlt.dltbackendmaster.security.utils.PasswordGenerator;
@@ -67,7 +68,7 @@ public class UserController {
 	}
 
 	@GetMapping(path = "/{Id}", produces = "application/json")
-	public ResponseEntity<Users> get(@PathVariable Integer Id) {
+	public ResponseEntity<UsersDTO> get(@PathVariable Integer Id) {
 
 		if (Id == null) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -75,7 +76,8 @@ public class UserController {
 
 		try {
 			Users user = service.find(Users.class, Id);
-			return new ResponseEntity<>(user, HttpStatus.OK);
+			UsersDTO userDTO = new UsersDTO().transformToDTO(user);
+			return new ResponseEntity<>(userDTO, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -241,8 +243,9 @@ public class UserController {
 	}
 
 	@GetMapping(path = "/username/{username}", produces = "application/json")
-	public ResponseEntity<Users> verifyUserByUsername(@PathVariable String username) throws AccountLockedException {
-		return userDetailsService.verifyUserByUsername(username);
+	public ResponseEntity<UsersDTO> verifyUserByUsername(@PathVariable String username) throws AccountLockedException {
+		 ResponseEntity<UsersDTO> usersDTOs = userDetailsService.verifyUserByUsername(username);
+		 return usersDTOs;
 	}
 
 	@GetMapping(path = "/username/{username}/password-validity", produces = "application/json")
@@ -264,9 +267,10 @@ public class UserController {
 	@GetMapping(path = "/get-usernames", produces = "application/json")
 	public ResponseEntity<List<Users>>  getNames() throws AccountLockedException {
 		try {
-			List<Users> user = service.GetAllEntityByNamedQuery("Users.findUsernames");
-
-			return new ResponseEntity<>(user, HttpStatus.OK);
+			List<Users> users = service.GetAllEntityByNamedQuery("Users.findUsernames");
+//			List<UsersDTO> userDTOs = new UsersDTO().transformToDTOS(users) ;
+			
+			return new ResponseEntity<>(users, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
