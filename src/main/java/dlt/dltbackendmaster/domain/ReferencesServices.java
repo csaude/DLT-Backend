@@ -58,7 +58,7 @@ import dlt.dltbackendmaster.serializers.ServiceSerializer;
 												            + "left join fetch rs.references r "
 												            + "left join fetch r.beneficiaries b " 
 												            + "left join fetch b.locality l "
-												            + "where r.status in (0,1) "
+												            + "where r.status in (0,1,2) "
 												            + "and (r.notifyTo.id = :userId or r.referredBy.id = :userId) "
 												            + "and rs.dateCreated < :lastpulledat "
 												            + "and rs.dateUpdated >= :lastpulledat"), 
@@ -287,5 +287,28 @@ public class ReferencesServices implements java.io.Serializable {
 		this.services.setId(model.getService_id());
 		this.description = model.getDescription();
 //		this.status = model.getStatus();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		int id = this.id == null? services.getId() : this.id.getReferenceId() + this.id.getServiceId();
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ReferencesServices other = (ReferencesServices) obj;
+		if (id.getReferenceId() != other.id.getReferenceId() || id.getServiceId() != other.id.getServiceId())
+			return false;
+		return true;
 	}
 }

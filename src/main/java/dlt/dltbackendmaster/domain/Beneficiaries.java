@@ -159,9 +159,12 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join  b.us "
 																+ " where b.status = 1 "
                                                                 + " and (b.createdBy = :userId "	
-																+ " or   b.id in (SELECT r.beneficiaries.id from References r"
-												                + " where r.status in (0,1,2) "
-												                + " and r.notifyTo.id = :userId)) "    											     
+																+ " or   b.id in "
+																+ "	("
+																+ "		SELECT r.beneficiaries.id from References r"
+												                + " 	where r.status in (0,1,2) "
+												                + " 	and r.notifyTo.id = :userId"
+												                + "	)) "    											     
 												                ),
 				@NamedQuery(name = "Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateCreated", query = "SELECT  b FROM  Beneficiaries b "
 																+ " left join  b.neighborhood nb "
@@ -169,11 +172,15 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join  b.locality "
 																+ " left join  b.us "
 																+ " where b.status = 1 "
-										                        + " and (b.createdBy = :userId "	
-																+ " or   b.id in (SELECT r.beneficiaries.id from References r"
-												                + " where r.status in (0,1,2) "
-												                + " and r.notifyTo.id = :userId))"
-												                + " and b.dateCreated >= :lastpulledat "    											     
+										                        + " and (b.createdBy = :userId "
+										                        + " and b.dateCreated >= :lastpulledat"	
+																+ " or   b.id in "
+																+ "	("
+																+ "		SELECT r.beneficiaries.id from References r"
+												                + " 	where r.status in (0,1,2) "
+												                + " 	and r.notifyTo.id = :userId"
+												                + " 	and r.dateCreated >= :lastpulledat"
+												                + "	))"    											     
 												                ),
 				@NamedQuery(name = "Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateUpdated", query = "SELECT  b FROM  Beneficiaries b "
 																+ " left join  b.neighborhood nb "
@@ -181,12 +188,17 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join  b.locality "
 																+ " left join  b.us "
 																+ " where b.status = 1 "
-										                        + " and (b.createdBy = :userId "	
-																+ " or   b.id in (SELECT r.beneficiaries.id from References r"
-												                + " where r.status in (0,1,2) "
-												                + " and r.notifyTo.id = :userId))"
+										                        + " and (b.createdBy = :userId "
+																+ " or   b.id in "
+																+ " ("
+																+ "		SELECT r.beneficiaries.id from References r"
+												                + " 	where r.status in (0,1,2) "
+												                + " 	and r.notifyTo.id = :userId "
+												                + "		and r.dateCreated >= :lastpulledat"
+												                + "	))"
 												                + " and b.dateCreated < :lastpulledat "
-												                + " and b.dateUpdated >= :lastpulledat "),
+												                + " and b.dateUpdated >= :lastpulledat "
+												                ),
 				@NamedQuery(name = "Beneficiary.getBeneficiariesByNui", query = "SELECT  b FROM  Beneficiaries b "
 																+ " left join  b.neighborhood nb "
 																+ " left join  b.partners "
@@ -1145,5 +1157,27 @@ public class Beneficiaries implements java.io.Serializable
     		obj.put(field, (Float)value);
     	}
     }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Beneficiaries other = (Beneficiaries) obj;
+		if (!id.equals(other.id))
+			return false;
+		return true;
+	}
 
 }

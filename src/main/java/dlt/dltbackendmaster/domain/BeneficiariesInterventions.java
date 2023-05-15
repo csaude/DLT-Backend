@@ -77,19 +77,25 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 												            + " and r.notifyTo.id = :userId) "
 												            ),
 	@NamedQuery(name = "BeneficiaryIntervention.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateCreated", query = "SELECT bi FROM BeneficiariesInterventions bi "
-															+ " where (bi.beneficiaries.createdBy = :userId"
+															+ " where (bi.beneficiaries.createdBy = :userId "
+												            + " and bi.dateCreated >= :lastpulledat "
 															+ " or bi.beneficiaries.id in "
-															+ " (SELECT distinct r.beneficiaries.id FROM  References r "										
-												            + " where r.status in (0,1,2) "
-												            + " and r.notifyTo.id = :userId))"
-												            + " and bi.dateCreated >= :lastpulledat"
+															+ " ("
+															+ "		SELECT distinct r.beneficiaries.id FROM  References r "										
+												            + " 	where r.status in (0,1,2) "
+												            + " 	and r.notifyTo.id = :userId"
+											                + "		and r.dateCreated >= :lastpulledat"
+												            + "	))"
 												            ),
 	@NamedQuery(name = "BeneficiaryIntervention.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateUpdated", query = "SELECT bi FROM BeneficiariesInterventions bi "
 															+ " where (bi.beneficiaries.createdBy = :userId"
 															+ " or bi.beneficiaries.id in "
-															+ " (SELECT distinct r.beneficiaries.id FROM  References r "										
-												            + " where r.status in (0,1,2) "
-												            + " and r.notifyTo.id = :userId))"
+															+ " ("
+															+ "		SELECT distinct r.beneficiaries.id FROM  References r "										
+												            + " 	where r.status in (0,1,2) "
+												            + " 	and r.notifyTo.id = :userId"
+											                + "		and r.dateCreated >= :lastpulledat"
+												            + "	))"
 												            + " and bi.dateCreated < :lastpulledat "
 												            + " and bi.dateUpdated >= :lastpulledat"
 												            ),
@@ -409,5 +415,27 @@ public class BeneficiariesInterventions implements java.io.Serializable {
         this.remarks = model.getRemarks();
         this.status = model.getStatus();
     }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id.getBeneficiaryId() + id.getSubServiceId();
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BeneficiariesInterventions other = (BeneficiariesInterventions) obj;
+		if (id.getBeneficiaryId() != other.id.getBeneficiaryId() || id.getSubServiceId() != other.id.getSubServiceId())
+			return false;
+		return true;
+	}
 
 }

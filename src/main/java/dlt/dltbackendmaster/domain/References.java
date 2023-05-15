@@ -180,7 +180,7 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "left join fetch r.referredBy "
 																+ "left join fetch r.us "
 																+ "left join fetch r.notifyTo "
-																+ " where r.status in (0,1) "
+																+ " where r.status in (0,1,2) "
 																+ " and (r.notifyTo.id = :userId or r.referredBy.id = :userId) "
 																+ " and r.dateCreated < :lastpulledat "
 																+ " and r.dateUpdated >= :lastpulledat"
@@ -592,6 +592,28 @@ public class References implements java.io.Serializable {
 
 	public void setNotifyTo(Users notifyTo) {
 		this.notifyTo = notifyTo;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		References other = (References) obj;
+		if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 
 }
