@@ -346,7 +346,6 @@ public class Users implements java.io.Serializable {
 		this.username = username;
 	}
 
-	@JsonIgnore
 	@Column(name = "password", nullable = false, length = 150)
 	public String getPassword() {
 		return this.password;
