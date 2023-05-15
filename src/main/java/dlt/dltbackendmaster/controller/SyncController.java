@@ -61,19 +61,18 @@ import dlt.dltbackendmaster.service.VulnerabilityHistoryService;
 
 @RestController
 @RequestMapping("/sync")
-public class SyncController 
-{
+public class SyncController {
 
 	private final DAOService service;
 	private SequenceGenerator generator;
 	private String level;
 	private Integer[] params;
-	
+
 	@Autowired
 	private UsersBeneficiariesCustomSyncService usersBeneficiariesCustomSyncService;
-	
+
 	@Autowired
-    private VulnerabilityHistoryService vulnerabilityHistoryService;
+	private VulnerabilityHistoryService vulnerabilityHistoryService;
 
 	@Autowired
 	public SyncController(DAOService service) {
@@ -84,7 +83,7 @@ public class SyncController
 	@SuppressWarnings("rawtypes")
 	@GetMapping(produces = "application/json")
 	public ResponseEntity get(@RequestParam(name = "lastPulledAt", required = false) @Nullable String lastPulledAt,
-				@RequestParam(name = "username") String username) throws ParseException {
+			@RequestParam(name = "username") String username) throws ParseException {
 
 		Date validatedDate;
 		List<Users> usersCreated;
@@ -127,9 +126,10 @@ public class SyncController
 
 		Users user = service.GetUniqueEntityByNamedQuery("Users.findByUsername", username);
 		defineLevelAndParms(user);
-		
+
 		Set<Integer> localitiesIds = new TreeSet<>();
-		List<Integer> userLocalitiesIds = user.getLocalities().stream().map(Locality::getId).collect(Collectors.toList());
+		List<Integer> userLocalitiesIds = user.getLocalities().stream().map(Locality::getId)
+				.collect(Collectors.toList());
 		localitiesIds.addAll(userLocalitiesIds);
 
 		if (lastPulledAt == null || lastPulledAt.equals("null")) {
@@ -153,53 +153,58 @@ public class SyncController
 			}
 
 			// Partners
-            if (level.equals("CENTRAL")) {
-                partnersCreated = service.GetAllEntityByNamedQuery("Partners.findAll");
-            } else if (level.equals("PROVINCIAL")) {
-                partnersCreated = service.GetAllEntityByNamedQuery("Partners.findBySyncProvinces",
-                        Arrays.asList(params));
-            } else if (level.equals("DISTRITAL")) {
-                partnersCreated = service.GetAllEntityByNamedQuery("Partners.findBySyncDistricts", 
-                        Arrays.asList(params));
-            } else {
-                partnersCreated = service.GetAllEntityByNamedQuery("Partners.findBySyncLocalities",
-                        Arrays.asList(params));
-            }
+			if (level.equals("CENTRAL")) {
+				partnersCreated = service.GetAllEntityByNamedQuery("Partners.findAll");
+			} else if (level.equals("PROVINCIAL")) {
+				partnersCreated = service.GetAllEntityByNamedQuery("Partners.findBySyncProvinces",
+						Arrays.asList(params));
+			} else if (level.equals("DISTRITAL")) {
+				partnersCreated = service.GetAllEntityByNamedQuery("Partners.findBySyncDistricts",
+						Arrays.asList(params));
+			} else {
+				partnersCreated = service.GetAllEntityByNamedQuery("Partners.findBySyncLocalities",
+						Arrays.asList(params));
+			}
 			partnersUpdated = new ArrayList<Partners>();
 
 			profilesCreated = service.GetAllEntityByNamedQuery("Profiles.findAll");
 			profilesUpdated = new ArrayList<Profiles>();
 
 			// Beneficiary
-			beneficiariesCreated = service.GetAllEntityByNamedQuery("Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedBy",user.getId());
+			beneficiariesCreated = service.GetAllEntityByNamedQuery(
+					"Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedBy", user.getId());
 			beneficiariesUpdated = new ArrayList<Beneficiaries>();
-			
+
 			for (Beneficiaries beneficiary : beneficiariesCreated) {
-				localitiesIds.add(beneficiary.getLocality().getId());
+				if (beneficiary.getLocality() != null) {
+					localitiesIds.add(beneficiary.getLocality().getId());
+				}
 			}
 
-
 			// localities
-			localityCreated = service.GetAllEntityByNamedQuery("Locality.findByIds", Arrays.asList(localitiesIds.toArray()));
+			localityCreated = service.GetAllEntityByNamedQuery("Locality.findByIds",
+					Arrays.asList(localitiesIds.toArray()));
 			localityUpdated = new ArrayList<Locality>();
 
 			// users
-			usersCreated = service.GetAllEntityByNamedNativeQuery("Users.findByLocalities", Arrays.asList(localitiesIds.toArray()));
+			usersCreated = service.GetAllEntityByNamedNativeQuery("Users.findByLocalities",
+					Arrays.asList(localitiesIds.toArray()));
 			usersUpdated = new ArrayList<Users>();
 			listDeleted = new ArrayList<Integer>();
 
 			// Us
 			usUpdated = new ArrayList<Us>();
-			usCreated = service.GetAllEntityByNamedQuery("Us.findBySyncLocalities", Arrays.asList(localitiesIds.toArray()));
-			
+			usCreated = service.GetAllEntityByNamedQuery("Us.findBySyncLocalities",
+					Arrays.asList(localitiesIds.toArray()));
+
 			// Interventions
-			beneficiariesInterventionsCreated = service
-						.GetAllEntityByNamedQuery("BeneficiaryIntervention.findByReferenceNotifyToOrBeneficiaryCreatedBy", user.getId());
+			beneficiariesInterventionsCreated = service.GetAllEntityByNamedQuery(
+					"BeneficiaryIntervention.findByReferenceNotifyToOrBeneficiaryCreatedBy", user.getId());
 			beneficiariesInterventionsUpdated = new ArrayList<BeneficiariesInterventions>();
-			
-			// Neighborhood	
+
+			// Neighborhood
 			neighborhoodsCreated = service.GetAllEntityByNamedQuery("Neighborhood.findBySyncLocalities",
-                    Arrays.asList(localitiesIds.toArray()));
+					Arrays.asList(localitiesIds.toArray()));
 			neighborhoodsUpdated = new ArrayList<Neighborhood>();
 
 			servicesCreated = service.GetAllEntityByNamedQuery("Service.findAll");
@@ -207,13 +212,15 @@ public class SyncController
 
 			subServicesCreated = service.GetAllEntityByNamedQuery("SubService.findAll");
 			subServicesUpdated = new ArrayList<SubServices>();
-			
+
 			// References
-			referencesCreated = service.GetAllEntityByNamedQuery("References.findByReferenceNotifyToOrReferredBy",user.getId());
+			referencesCreated = service.GetAllEntityByNamedQuery("References.findByReferenceNotifyToOrReferredBy",
+					user.getId());
 			referencesUpdated = new ArrayList<References>();
-			
+
 			// ReferencesServices
-			referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findByReferenceNotifyToOrReferredBy",user.getId());
+			referenceServicesCreated = service
+					.GetAllEntityByNamedQuery("ReferencesServices.findByReferenceNotifyToOrReferredBy", user.getId());
 			referenceServicesUpdated = new ArrayList<ReferencesServices>();
 		} else {
 			Long t = Long.valueOf(lastPulledAt);
@@ -229,9 +236,13 @@ public class SyncController
 			 * TODO: include provinces and district created after validatedDate
 			 */
 
-			beneficiariesCreated = service.GetAllEntityByNamedQuery("Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateCreated", user.getId(), validatedDate);
-			beneficiariesUpdated = service.GetAllEntityByNamedQuery("Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateUpdated", user.getId(), validatedDate);
-			
+			beneficiariesCreated = service.GetAllEntityByNamedQuery(
+					"Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateCreated", user.getId(),
+					validatedDate);
+			beneficiariesUpdated = service.GetAllEntityByNamedQuery(
+					"Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateUpdated", user.getId(),
+					validatedDate);
+
 			for (Beneficiaries beneficiary : beneficiariesCreated) {
 				localitiesIds.add(beneficiary.getLocality().getId());
 			}
@@ -240,30 +251,40 @@ public class SyncController
 			}
 
 			// localities
-			localityCreated = service.GetAllEntityByNamedQuery("Locality.findByIdsAndDateCreated", Arrays.asList(localitiesIds.toArray()), validatedDate);
-			localityUpdated = service.GetAllEntityByNamedQuery("Locality.findByIdsAndDateUpdated", Arrays.asList(localitiesIds.toArray()), validatedDate);
+			localityCreated = service.GetAllEntityByNamedQuery("Locality.findByIdsAndDateCreated",
+					Arrays.asList(localitiesIds.toArray()), validatedDate);
+			localityUpdated = service.GetAllEntityByNamedQuery("Locality.findByIdsAndDateUpdated",
+					Arrays.asList(localitiesIds.toArray()), validatedDate);
 
 			usersCreated = service.GetAllEntityByNamedQuery("Users.findByDateCreated", validatedDate);
 			usersUpdated = service.GetAllEntityByNamedQuery("Users.findByDateUpdated", validatedDate);
-			
+
 			// users
-			usersCreated = service.GetAllEntityByNamedNativeQuery("Users.findByLocalitiesAndDateCreated", Arrays.asList(localitiesIds.toArray()), validatedDate);
-			usersUpdated = service.GetAllEntityByNamedNativeQuery("Users.findByLocalitiesAndDateUpdated", Arrays.asList(localitiesIds.toArray()), validatedDate);
+			usersCreated = service.GetAllEntityByNamedNativeQuery("Users.findByLocalitiesAndDateCreated",
+					Arrays.asList(localitiesIds.toArray()), validatedDate);
+			usersUpdated = service.GetAllEntityByNamedNativeQuery("Users.findByLocalitiesAndDateUpdated",
+					Arrays.asList(localitiesIds.toArray()), validatedDate);
 			listDeleted = new ArrayList<Integer>();
 			// partners
-			partnersCreated = service.GetAllEntityByNamedQuery("Partners.findByLocalitiesAndDateCreated", Arrays.asList(localitiesIds.toArray()), validatedDate);
-			partnersUpdated = service.GetAllEntityByNamedQuery("Partners.findByLocalitiesAndDateCreated", Arrays.asList(localitiesIds.toArray()), validatedDate);
+			partnersCreated = service.GetAllEntityByNamedQuery("Partners.findByLocalitiesAndDateCreated",
+					Arrays.asList(localitiesIds.toArray()), validatedDate);
+			partnersUpdated = service.GetAllEntityByNamedQuery("Partners.findByLocalitiesAndDateCreated",
+					Arrays.asList(localitiesIds.toArray()), validatedDate);
 			// profiles
 			profilesCreated = service.GetAllEntityByNamedQuery("Profiles.findByDateCreated", validatedDate);
 			profilesUpdated = service.GetAllEntityByNamedQuery("Profiles.findByDateUpdated", validatedDate);
 			// us
-			usCreated = service.GetAllEntityByNamedQuery("Us.findByLocalitiesAndDateCreated", Arrays.asList(localitiesIds.toArray()), validatedDate);
-			usUpdated = service.GetAllEntityByNamedQuery("Us.findByLocalitiesAndDateUpdated", Arrays.asList(localitiesIds.toArray()), validatedDate);
+			usCreated = service.GetAllEntityByNamedQuery("Us.findByLocalitiesAndDateCreated",
+					Arrays.asList(localitiesIds.toArray()), validatedDate);
+			usUpdated = service.GetAllEntityByNamedQuery("Us.findByLocalitiesAndDateUpdated",
+					Arrays.asList(localitiesIds.toArray()), validatedDate);
 
-			beneficiariesInterventionsCreated = service
-					.GetAllEntityByNamedQuery("BeneficiaryIntervention.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateCreated", user.getId(), validatedDate);
-			beneficiariesInterventionsUpdated = service
-					.GetAllEntityByNamedQuery("BeneficiaryIntervention.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateUpdated", user.getId(), validatedDate);
+			beneficiariesInterventionsCreated = service.GetAllEntityByNamedQuery(
+					"BeneficiaryIntervention.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateCreated", user.getId(),
+					validatedDate);
+			beneficiariesInterventionsUpdated = service.GetAllEntityByNamedQuery(
+					"BeneficiaryIntervention.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateUpdated", user.getId(),
+					validatedDate);
 
 			neighborhoodsCreated = service.GetAllEntityByNamedQuery("Neighborhood.findByDateCreated", validatedDate);
 			neighborhoodsUpdated = service.GetAllEntityByNamedQuery("Neighborhood.findByDateUpdated", validatedDate);
@@ -274,28 +295,22 @@ public class SyncController
 			subServicesCreated = service.GetAllEntityByNamedQuery("SubService.findByDateCreated", validatedDate);
 			subServicesUpdated = service.GetAllEntityByNamedQuery("SubService.findByDateUpdated", validatedDate);
 
-			referencesCreated = service.GetAllEntityByNamedQuery("References.findByReferenceNotifyToOrReferredByAndDateCreated", user.getId(), validatedDate);
-			referencesUpdated = service.GetAllEntityByNamedQuery("References.findByReferenceNotifyToOrReferredByAndDateUpdated", user.getId(), validatedDate);
+			referencesCreated = service.GetAllEntityByNamedQuery(
+					"References.findByReferenceNotifyToOrReferredByAndDateCreated", user.getId(), validatedDate);
+			referencesUpdated = service.GetAllEntityByNamedQuery(
+					"References.findByReferenceNotifyToOrReferredByAndDateUpdated", user.getId(), validatedDate);
 
-			referenceServicesCreated = service.GetAllEntityByNamedQuery("ReferencesServices.findByReferenceNotifyToOrReferredByAndDateCreated",
-					user.getId(), validatedDate);
-			referenceServicesUpdated = service.GetAllEntityByNamedQuery("ReferencesServices.findByReferenceNotifyToOrReferredByAndDateUpdated",
-					user.getId(), validatedDate);
+			referenceServicesCreated = service.GetAllEntityByNamedQuery(
+					"ReferencesServices.findByReferenceNotifyToOrReferredByAndDateCreated", user.getId(),
+					validatedDate);
+			referenceServicesUpdated = service.GetAllEntityByNamedQuery(
+					"ReferencesServices.findByReferenceNotifyToOrReferredByAndDateUpdated", user.getId(),
+					validatedDate);
 		}
-		
-		/**Sync Customized, previous fetched by NUI**/
+
+		/** Sync Customized, previous fetched by NUI **/
 		List<UsersBeneficiariesCustomSync> userBeneficiariesSync = usersBeneficiariesCustomSyncService
 				.getUserBeneficiariesSync(user.getId());
-
-
-		List<Locality> localityCreatedCustomized = new ArrayList<Locality>();
-		List<Locality> localityUpdatedCustomized = new ArrayList<Locality>();
-
-		List<Province> provincesCreatedCustomized = new ArrayList<Province>();
-		List<District> districtsCreatedCustomized = new ArrayList<District>();
-
-		List<Partners> partnersCreatedCustomized = new ArrayList<Partners>();
-		List<Partners> partnersUpdatedCustomized = new ArrayList<Partners>();
 
 		List<Beneficiaries> beneficiariesCreatedCustomized = new ArrayList<Beneficiaries>();
 		List<Beneficiaries> beneficiariesUpdatedCustomized = new ArrayList<Beneficiaries>();
@@ -306,40 +321,24 @@ public class SyncController
 		List<Neighborhood> neighborhoodsCreatedCustomized = new ArrayList<>();
 		List<Neighborhood> neighborhoodUpdatedCustomized = new ArrayList<>();
 
-
 		List<References> referencesCreatedCustomized = new ArrayList<References>();
 		List<References> referencesUpdatedCustomized = new ArrayList<References>();
 
 		List<ReferencesServices> referenceServicesCreatedCustomized = new ArrayList<ReferencesServices>();
 		List<ReferencesServices> referenceServicesUpdatedCustomized = new ArrayList<ReferencesServices>();
 
-
 		beneficiariesCreatedCustomized = userBeneficiariesSync.stream()
-			    .map(UsersBeneficiariesCustomSync::getBeneficiary)
-			    .collect(Collectors.toList());
-		
-		List<Integer> beneficiariesIds = beneficiariesCreatedCustomized.stream().map(Beneficiaries::getId).collect(Collectors.toList());
-		List<Integer> neighborhoodsIds = beneficiariesCreatedCustomized.stream()
-			    .map(beneficiary -> beneficiary.getNeighborhood().getId())
-			    .collect(Collectors.toList());
-		List<Integer> partnersIds = beneficiariesCreatedCustomized.stream()
-			    .map(beneficiary -> beneficiary.getPartners().getId())
-			    .collect(Collectors.toList());
-		List<Integer> districtsIds = beneficiariesCreatedCustomized.stream()
-			    .map(beneficiary -> beneficiary.getDistrict().getId())
-			    .collect(Collectors.toList());
-		List<Integer> provincesIds = beneficiariesCreatedCustomized.stream()
-			    .map(beneficiary -> beneficiary.getDistrict().getProvince().getId())
-			    .collect(Collectors.toList());
-		List<Integer> localitsIds = beneficiariesCreatedCustomized.stream()
-			    .map(beneficiary -> beneficiary.getLocality().getId())
-			    .collect(Collectors.toList());
+				.map(UsersBeneficiariesCustomSync::getBeneficiary).collect(Collectors.toList());
 
-		
+		List<Integer> beneficiariesIds = beneficiariesCreatedCustomized.stream().map(Beneficiaries::getId)
+				.collect(Collectors.toList());
+		List<Integer> neighborhoodsIds = beneficiariesCreatedCustomized.stream()
+				.map(beneficiary -> beneficiary.getNeighborhood().getId()).collect(Collectors.toList());
+
 		if (beneficiariesCreatedCustomized.size() > 0) {
 
-			beneficiariesInterventionsCreatedCustomized = service.GetAllEntityByNamedQuery(
-					"BeneficiaryIntervention.findByBeneficiariesIds", beneficiariesIds);
+			beneficiariesInterventionsCreatedCustomized = service
+					.GetAllEntityByNamedQuery("BeneficiaryIntervention.findByBeneficiariesIds", beneficiariesIds);
 
 			referencesCreatedCustomized = service.GetAllEntityByNamedQuery("References.findByBeneficiariesIds",
 					beneficiariesIds);
@@ -352,45 +351,40 @@ public class SyncController
 
 			neighborhoodsCreatedCustomized = service.GetAllEntityByNamedQuery("Neighborhood.findByIds",
 					neighborhoodsIds);
-
-			partnersCreatedCustomized = service.GetAllEntityByNamedQuery("Partners.findByIds",
-					partnersIds);
-
-			districtsCreatedCustomized = service.GetAllEntityByNamedQuery("District.findByIds",
-					districtsIds);
-
-			provincesCreatedCustomized = service.GetAllEntityByNamedQuery("Province.findByIds",
-					provincesIds);
-
-			localityCreatedCustomized = service.GetAllEntityByNamedQuery("Locality.findByIds",
-					localitsIds);
 		}
-		
+
 		beneficiariesCreated.addAll(beneficiariesCreatedCustomized);
 		beneficiariesUpdated.addAll(beneficiariesUpdatedCustomized);
-		
+
 		referencesCreated.addAll(referencesCreatedCustomized);
 		referencesUpdated.addAll(referencesUpdatedCustomized);
-		
+
+		List<References> uniqueReferencesCreated = referencesCreated.stream().distinct().collect(Collectors.toList());
+		List<References> uniqueReferencesUpdated = referencesUpdated.stream().distinct().collect(Collectors.toList());
+
 		referenceServicesCreated.addAll(referenceServicesCreatedCustomized);
 		referenceServicesUpdated.addAll(referenceServicesUpdatedCustomized);
-		
+
+		List<ReferencesServices> uniqueReferenceServicesCreated = referenceServicesCreated.stream().distinct()
+				.collect(Collectors.toList());
+		List<ReferencesServices> uniqueReferenceServicesUpdated = referenceServicesUpdated.stream().distinct()
+				.collect(Collectors.toList());
+
 		beneficiariesInterventionsCreated.addAll(beneficiariesInterventionsCreatedCustomized);
 		beneficiariesInterventionsUpdated.addAll(beneficiariesInterventionsUpdatedCustomized);
-		
-		provincesCreated.addAll(provincesCreatedCustomized);
 
-		
-		districtsCreated.addAll(districtsCreatedCustomized);
-		
-		localityCreated.addAll(localityCreatedCustomized);
-		localityUpdated.addAll(localityUpdatedCustomized);
-		
+		List<BeneficiariesInterventions> uniqueBeneficiariesIntervetnionsCreated = beneficiariesInterventionsCreated.stream().distinct()
+				.collect(Collectors.toList());
+		List<BeneficiariesInterventions> uniqueBeneficiariesIntervetnionsUpdated = beneficiariesInterventionsUpdated.stream().distinct()
+				.collect(Collectors.toList());
+
 		neighborhoodsCreated.addAll(neighborhoodsCreatedCustomized);
 		neighborhoodsUpdated.addAll(neighborhoodUpdatedCustomized);
-		
-		partnersCreatedCustomized.addAll(partnersCreatedCustomized);
-		partnersUpdatedCustomized.addAll(partnersUpdatedCustomized);
+
+		List<Neighborhood> uniqueNeighborhoodCreated = neighborhoodsCreated.stream().distinct()
+				.collect(Collectors.toList());
+		List<Neighborhood> uniqueNeighborhoodUpdated = neighborhoodsUpdated.stream().distinct()
+				.collect(Collectors.toList());
 
 		try {
 			SyncObject<Users> usersSO = new SyncObject<Users>(usersCreated, usersUpdated, listDeleted);
@@ -405,16 +399,16 @@ public class SyncController
 			SyncObject<Beneficiaries> beneficiarySO = new SyncObject<Beneficiaries>(beneficiariesCreated,
 					beneficiariesUpdated, listDeleted);
 			SyncObject<BeneficiariesInterventions> beneficiaryInterventionSO = new SyncObject<BeneficiariesInterventions>(
-					beneficiariesInterventionsCreated, beneficiariesInterventionsUpdated, listDeleted);
-			SyncObject<Neighborhood> neighborhoodSO = new SyncObject<Neighborhood>(neighborhoodsCreated,
-					neighborhoodsUpdated, listDeleted);
+					uniqueBeneficiariesIntervetnionsCreated, uniqueBeneficiariesIntervetnionsUpdated, listDeleted);
+			SyncObject<Neighborhood> neighborhoodSO = new SyncObject<Neighborhood>(uniqueNeighborhoodCreated,
+					uniqueNeighborhoodUpdated, listDeleted);
 			SyncObject<Services> serviceSO = new SyncObject<Services>(servicesCreated, servicesUpdated, listDeleted);
 			SyncObject<SubServices> subServiceSO = new SyncObject<SubServices>(subServicesCreated, subServicesUpdated,
 					listDeleted);
-			SyncObject<References> referencesSO = new SyncObject<References>(referencesCreated, referencesUpdated,
-					listDeleted);
+			SyncObject<References> referencesSO = new SyncObject<References>(uniqueReferencesCreated,
+					uniqueReferencesUpdated, listDeleted);
 			SyncObject<ReferencesServices> referencesServicesSO = new SyncObject<ReferencesServices>(
-					referenceServicesCreated, referenceServicesUpdated, listDeleted);
+					uniqueReferenceServicesCreated, uniqueReferenceServicesUpdated, listDeleted);
 
 			String object = SyncSerializer.createSyncObject(usersSO, provinceSO, districtSO, localitySO, profilesSO,
 					partnersSO, usSO, beneficiarySO, beneficiaryInterventionSO, neighborhoodSO, serviceSO, subServiceSO,

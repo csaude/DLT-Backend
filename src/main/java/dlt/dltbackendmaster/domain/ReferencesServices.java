@@ -288,4 +288,26 @@ public class ReferencesServices implements java.io.Serializable {
 		this.description = model.getDescription();
 //		this.status = model.getStatus();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id.getReferenceId() + id.getServiceId();
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ReferencesServices other = (ReferencesServices) obj;
+		if (id.getReferenceId() != other.id.getReferenceId() || id.getServiceId() != other.id.getServiceId())
+			return false;
+		return true;
+	}
 }

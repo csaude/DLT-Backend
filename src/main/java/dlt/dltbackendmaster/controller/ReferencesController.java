@@ -91,7 +91,7 @@ public class ReferencesController {
 			Users user = service.find(Users.class, userId);
 
 			List<References> references = null;
-			if (Arrays.asList(MANAGER, MENTOR, NURSE, COUNSELOR).contains(user.getProfiles().getId())) {
+			if (Arrays.asList(MANAGER, MENTOR, NURSE, COUNSELOR).contains(user.getProfiles().getId()) && user.getUs().size() > 0) {
 				List<Integer> ussId = user.getUs().stream().map(Us::getId).collect(Collectors.toList());
 				List<Users> users = service.GetAllEntityByNamedQuery("Users.findByUsId", ussId);
 				List<Integer> usersIds = users.stream().map(Users::getId).collect(Collectors.toList());
@@ -243,7 +243,7 @@ public class ReferencesController {
 
 			Long referencesTotal;
 
-			if (Arrays.asList(MANAGER, MENTOR, NURSE, COUNSELOR).contains(user.getProfiles().getId())) {
+			if (Arrays.asList(MANAGER, MENTOR, NURSE, COUNSELOR).contains(user.getProfiles().getId()) && user.getUs().size() > 0) {
 				List<Integer> ussId = user.getUs().stream().map(Us::getId).collect(Collectors.toList());
 				List<Users> users = service.GetAllEntityByNamedQuery("Users.findByUsId", ussId);
 				List<Integer> usersIds = users.stream().map(Users::getId).collect(Collectors.toList());
