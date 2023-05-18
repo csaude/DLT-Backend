@@ -19,7 +19,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -33,11 +32,11 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 @Table(name = "users_beneficiaries_sync", catalog = "dreams_db", uniqueConstraints = @UniqueConstraint(columnNames = {
 		"user_id", "beneficiary_id" }))
 @NamedQueries({
-		@NamedQuery(name = "UsersBeneficiariesCustomSync.findByUserId", query = "SELECT ub FROM UsersBeneficiariesCustomSync ub "
-				+ " INNER JOIN fetch ub.user u " + " INNER JOIN fetch ub.beneficiary b " + " where u.id = :userId"),
-		@NamedQuery(name = "UsersBeneficiariesCustomSync.findByUserIdAndBeneficiaryId", query = "SELECT ub FROM UsersBeneficiariesCustomSync ub "
-				+ " INNER JOIN fetch ub.user u " + " INNER JOIN fetch ub.beneficiary b " + " where u.id = :userId "
-				+ " and b.id =:beneficiaryId"), })
+	@NamedQuery(name = "UsersBeneficiariesCustomSync.findByUserId", query = "SELECT ub FROM UsersBeneficiariesCustomSync ub "
+			+ " INNER JOIN fetch ub.user u " + " INNER JOIN fetch ub.beneficiary b " + " where u.id = :userId"),
+	@NamedQuery(name = "UsersBeneficiariesCustomSync.findByUserIdAndBeneficiaryId", query = "SELECT ub FROM UsersBeneficiariesCustomSync ub "
+			+ " INNER JOIN fetch ub.user u " + " INNER JOIN fetch ub.beneficiary b " + " where u.id = :userId "
+			+ " and b.id =:beneficiaryId"), })
 public class UsersBeneficiariesCustomSync implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

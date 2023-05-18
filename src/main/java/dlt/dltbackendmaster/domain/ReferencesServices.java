@@ -142,7 +142,7 @@ public class ReferencesServices implements java.io.Serializable {
         this.status = model.getStatus();
         this.offlineId = model.getId();
         this.dateCreated = regDate;
-        this.dateUpdated = regDate;
+//        this.dateUpdated = regDate;
 		this.id = new ReferencesServicesId();
 		this.id.setReferenceId(Integer.valueOf(model.getReference_id()));
 		this.id.setServiceId(model.getService_id());
@@ -293,7 +293,8 @@ public class ReferencesServices implements java.io.Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id.getReferenceId() + id.getServiceId();
+		int id = this.id == null? services.getId() : this.id.getReferenceId() + this.id.getServiceId();
+		result = prime * result + id;
 		return result;
 	}
 

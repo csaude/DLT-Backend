@@ -26,7 +26,7 @@ public class BeneficiarySyncModel extends BasicLifeCycleSyncModel
     private Date date_updated;
     private Integer via;
     private Integer nationality;
-    private Integer partner_id;
+    private String partner_id;
     private String entry_point;
     private Integer neighborhood_id;
     private Integer locality_id;
@@ -165,11 +165,11 @@ public class BeneficiarySyncModel extends BasicLifeCycleSyncModel
         this.via = via;
     }
 
-    public Integer getPartner_id() {
+    public String getPartner_id() {
         return partner_id;
     }
 
-    public void setPartner_id(Integer partner_id) {
+    public void setPartner_id(String partner_id) {
         this.partner_id = partner_id;
     }
 

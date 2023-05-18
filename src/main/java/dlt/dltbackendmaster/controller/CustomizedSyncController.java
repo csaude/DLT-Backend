@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.persistence.EntityExistsException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -125,21 +122,6 @@ public class CustomizedSyncController {
 				refServicesByRef = service.GetAllEntityByNamedQuery("ReferencesServices.findByReference", ref.getId());
 				referenceServicesCreated.addAll(refServicesByRef);
 			}
-
-			neighborhoodsCreated = service.GetAllEntityByNamedQuery("Neighborhood.findById",
-					beneficiariesCreated.get(0).getNeighborhood().getId());
-
-			partnersCreated = service.GetAllEntityByNamedQuery("Partners.findById",
-					beneficiariesCreated.get(0).getPartners().getId());
-
-			districtsCreated = service.GetAllEntityByNamedQuery("District.findById",
-					beneficiariesCreated.get(0).getDistrict().getId());
-			
-			provincesCreated = service.GetAllEntityByNamedQuery("Province.findById",
-					beneficiariesCreated.get(0).getDistrict().getProvince().getId());
-			
-			localityCreated = service.GetAllEntityByNamedQuery("Locality.findById",
-					beneficiariesCreated.get(0).getLocality().getId());
 		}
 
 		try {

@@ -199,6 +199,23 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "left join fetch r.notifyTo "
 																+ "where r.beneficiaries.id in :beneficiariesIds"															 
 																),
+		@NamedQuery(name = "References.findByBeneficiariesIdsAndDateCreated", query = "SELECT distinct r FROM  References r "		
+																+ "left join fetch r.beneficiaries "
+																+ "left join fetch r.referredBy "
+																+ "left join fetch r.us "
+																+ "left join fetch r.notifyTo "
+																+ "where r.beneficiaries.id in (:beneficiariesIds) "
+																+ "and r.dateCreated >= :lastpulledat"
+																),
+		@NamedQuery(name = "References.findByBeneficiariesIdsAndDateUpdated", query = "SELECT distinct r FROM  References r "		
+																+ "left join fetch r.beneficiaries "
+																+ "left join fetch r.referredBy "
+																+ "left join fetch r.us "
+																+ "left join fetch r.notifyTo "
+																+ "where r.beneficiaries.id in (:beneficiariesIds) "
+																+ "and r.dateCreated < :lastpulledat "
+																+ "and r.dateUpdated >= :lastpulledat"
+																),
 		
 })
 public class References implements java.io.Serializable {

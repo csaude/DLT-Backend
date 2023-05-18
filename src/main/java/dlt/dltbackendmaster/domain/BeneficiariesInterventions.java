@@ -65,6 +65,10 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 		query = "SELECT b FROM BeneficiariesInterventions b where b.beneficiaries.id = :beneficiary_id"),
 	@NamedQuery(name = "BeneficiaryIntervention.findByBeneficiariesIds", 
 		query = "SELECT b FROM BeneficiariesInterventions b where b.beneficiaries.id in :beneficiaries_ids"),
+	@NamedQuery(name = "BeneficiaryIntervention.findByBeneficiariesIdsAndDateCreated", 
+		query = "SELECT b FROM BeneficiariesInterventions b where b.beneficiaries.id in :beneficiaries_ids and b.dateCreated >= :lastpulledat "),
+	@NamedQuery(name = "BeneficiaryIntervention.findByBeneficiariesIdsAndDateUpdated", 
+		query = "SELECT b FROM BeneficiariesInterventions b where b.beneficiaries.id in :beneficiaries_ids and b.dateCreated < :lastpulledat and b.dateUpdated >= :lastpulledat "),
 	@NamedQuery(name = "BeneficiaryIntervention.findInterventionsPerBeneficiary", 
 		query = " select count(inter.beneficiaries.id) as interventions, inter.beneficiaries.id as beneficiary_id"
 				+ " from BeneficiariesInterventions inter "
