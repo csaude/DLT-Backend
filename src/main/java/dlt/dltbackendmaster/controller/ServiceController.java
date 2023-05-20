@@ -86,8 +86,8 @@ public class ServiceController {
 			if (beneficiaryAge < 15) {
 
 				if (beneficiaryAge < 14 && serviceType == ServiceType.COMMUNITY) {
-					// Retirar Guião de facilitação
-					services = services.stream().filter(s -> s.getId() != 46 && s.getId() != 49 && s.getId() != 52)
+					// Retirar Guião de facilitação e Literacia Financeira Aflateen
+					services = services.stream().filter(s -> s.getId() != 46 && s.getId() != 49 && s.getId() != 52 && s.getId() != 57)
 							.collect(Collectors.toList());
 				}
 
@@ -117,9 +117,9 @@ public class ServiceController {
 					}
 				}
 			} else if (serviceType == ServiceType.COMMUNITY) {
-				// Retirar AVANTE RAPARIGA e AVANTE ESTUDANTE
+				// Retirar AVANTE RAPARIGA e AVANTE ESTUDANTE e Literacia Financeira Aflatoun
 				services = services.stream().filter(s -> s.getId() != 44 && s.getId() != 45 && s.getId() != 47
-						&& s.getId() != 48 && s.getId() != 50 && s.getId() != 51).collect(Collectors.toList());
+						&& s.getId() != 48 && s.getId() != 50 && s.getId() != 51 && s.getId() != 56).collect(Collectors.toList());
 			}
 
 			return new ResponseEntity<>(services, HttpStatus.OK);

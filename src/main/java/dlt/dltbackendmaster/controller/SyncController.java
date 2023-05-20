@@ -265,6 +265,8 @@ public class SyncController {
 					referenceServicesCreatedCustomized.addAll(refServicesByRef);
 				}
 			}
+			
+			beneficiariesCreated.addAll(beneficiariesCreatedCustomized);
 		} else {
 			Long t = Long.valueOf(lastPulledAt);
 			// validatedDate = new Date(t);
@@ -392,9 +394,9 @@ public class SyncController {
 					referenceServicesUpdatedCustomized.addAll(refServicesByRef);
 				}
 			}
+			
+			beneficiariesUpdated.addAll(beneficiariesUpdatedCustomized);
 		}
-
-		beneficiariesUpdated.addAll(beneficiariesUpdatedCustomized);
 
 		List<Beneficiaries> uniqueBeneficiariesCreated = beneficiariesCreated.stream().distinct()
 				.collect(Collectors.toList());
