@@ -1,5 +1,11 @@
 package dlt.dltbackendmaster.domain.watermelondb;
 
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class BeneficiaryInterventionSyncModel
 {
     private String id;
@@ -12,6 +18,9 @@ public class BeneficiaryInterventionSyncModel
     private Integer activist_id;
     private String entry_point;
     private String provider;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="Africa/Maputo")
+	private Date date_created;
     private String remarks;
     private Integer status;
     private String _status;
@@ -100,7 +109,15 @@ public class BeneficiaryInterventionSyncModel
         this.provider = provider;
     }
 
-    public String getRemarks() {
+    public Date getDate_created() {
+		return date_created;
+	}
+
+	public void setDate_created(Date date_created) {
+		this.date_created = date_created;
+	}
+
+	public String getRemarks() {
         return remarks;
     }
 

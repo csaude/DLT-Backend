@@ -582,9 +582,9 @@ public class SyncController {
 							}
 							intervention.setBeneficiaries(new Beneficiaries(beneficiaryId));
 							intervention.getId().setBeneficiaryId(beneficiaryId);
-							intervention.setDateUpdated(new Date());
 							intervention.setUpdatedBy(user.getId().toString());
 						}
+						intervention.setDateUpdated(new Date());
 						intervention.setCreatedBy(user.getId());
 						service.Save(intervention);
 

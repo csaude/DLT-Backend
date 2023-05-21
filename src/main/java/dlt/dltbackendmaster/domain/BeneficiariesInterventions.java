@@ -1,7 +1,9 @@
 package dlt.dltbackendmaster.domain;
 // Generated Jun 13, 2022, 9:37:47 AM by Hibernate Tools 5.2.12.Final
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -174,8 +176,6 @@ public class BeneficiariesInterventions implements java.io.Serializable {
 		this.id = new BeneficiariesInterventionsId();
 		this.id.setBeneficiaryId(model.getBeneficiary_id());
 		this.id.setSubServiceId(model.getSub_service_id());
-		Long t = Long.valueOf(timestamp);
-        Date regDate = new Date(t);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate date = LocalDate.parse(model.getDate(), dtf);
         this.date = date;
@@ -192,8 +192,7 @@ public class BeneficiariesInterventions implements java.io.Serializable {
         this.remarks = model.getRemarks();
         this.status = model.getStatus();
         this.offlineId = model.getId();
-        this.dateCreated = regDate;
-        this.dateUpdated = regDate;
+        this.dateCreated = model.getDate_created();
     }
 
 	@EmbeddedId
@@ -372,6 +371,7 @@ public class BeneficiariesInterventions implements java.io.Serializable {
        ObjectMapper mapper = new ObjectMapper()
         							.registerModule(new JavaTimeModule())
         							.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         
         ObjectNode beneficiaryIntervention = mapper.createObjectNode();
 
@@ -394,6 +394,7 @@ public class BeneficiariesInterventions implements java.io.Serializable {
             beneficiaryIntervention.put("remarks", remarks);
             beneficiaryIntervention.put("status", status);
             beneficiaryIntervention.put("online_id", id.toString()); // flag to control if entity is synchronized with the backend
+            beneficiaryIntervention.put("date_created", dateFormat.format(dateCreated));
         } else { // ensure online_id is updated first
             beneficiaryIntervention.put("online_id", id.toString());
         }
@@ -418,6 +419,7 @@ public class BeneficiariesInterventions implements java.io.Serializable {
         this.provider = model.getProvider();
         this.remarks = model.getRemarks();
         this.status = model.getStatus();
+		this.dateCreated = model.getDate_created();
     }
 
 	@Override
