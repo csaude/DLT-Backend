@@ -42,7 +42,8 @@ public class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter
 			throws AuthenticationException, IOException, ServletException {
 		
 		String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String[] params = request.getQueryString().split("=");
+        String password = params[params.length -1];
         final UsernamePasswordAuthenticationToken loginToken = new UsernamePasswordAuthenticationToken(username, URLDecoder.decode(password, StandardCharsets.UTF_8.toString()));
         
         try {
