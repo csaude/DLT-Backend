@@ -37,8 +37,8 @@
         <appender-ref ref="Console" />
     </root>
 
-    <!-- LOG "dlt.dltbackendmaster*" at TRACE level -->
-    <logger name="dlt.dltbackendmaster" level="trace" additivity="false">
+    <!-- LOG "dlt.dltbackendmaster*" at WARN level -->
+    <logger name="dlt.dltbackendmaster" level="warn" additivity="false">
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>
