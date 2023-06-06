@@ -30,6 +30,7 @@ import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.domain.Us;
 import dlt.dltbackendmaster.domain.Users;
 import dlt.dltbackendmaster.domain.UsersBeneficiariesCustomSync;
+import dlt.dltbackendmaster.domain.UsersSync;
 import dlt.dltbackendmaster.domain.watermelondb.SyncObject;
 import dlt.dltbackendmaster.serializers.SyncSerializer;
 import dlt.dltbackendmaster.service.DAOService;
@@ -56,8 +57,8 @@ public class CustomizedSyncController {
 			@RequestParam(name = "nui") String nui, @RequestParam(name = "userId") Integer userId)
 			throws ParseException {
 
-		List<Users> usersCreated = new ArrayList<Users>();
-		List<Users> usersUpdated = new ArrayList<Users>();
+		List<UsersSync> usersCreated = new ArrayList<UsersSync>();
+		List<UsersSync> usersUpdated = new ArrayList<UsersSync>();
 		List<Integer> listDeleted;
 
 		List<Locality> localityCreated = new ArrayList<Locality>();
@@ -96,7 +97,7 @@ public class CustomizedSyncController {
 		List<ReferencesServices> referenceServicesCreated = new ArrayList<ReferencesServices>();
 		List<ReferencesServices> referenceServicesUpdated = new ArrayList<ReferencesServices>();
 
-		usersUpdated = new ArrayList<Users>();
+		usersUpdated = new ArrayList<UsersSync>();
 		listDeleted = new ArrayList<Integer>();
 
 		// Beneficiary
@@ -125,7 +126,7 @@ public class CustomizedSyncController {
 		}
 
 		try {
-			SyncObject<Users> usersSO = new SyncObject<Users>(usersCreated, usersUpdated, listDeleted);
+			SyncObject<UsersSync> usersSO = new SyncObject<UsersSync>(usersCreated, usersUpdated, listDeleted);
 			SyncObject<Province> provinceSO = new SyncObject<Province>(provincesCreated, new ArrayList<Province>(),
 					listDeleted);
 			SyncObject<District> districtSO = new SyncObject<District>(districtsCreated, new ArrayList<District>(),

@@ -27,7 +27,7 @@ import dlt.dltbackendmaster.domain.ReferencesServices;
 import dlt.dltbackendmaster.domain.Services;
 import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.domain.Us;
-import dlt.dltbackendmaster.domain.Users;
+import dlt.dltbackendmaster.domain.UsersSync;
 import dlt.dltbackendmaster.domain.watermelondb.BeneficiaryInterventionSyncModel;
 import dlt.dltbackendmaster.domain.watermelondb.BeneficiarySyncModel;
 import dlt.dltbackendmaster.domain.watermelondb.BeneficiaryVulnerabilitySyncModel;
@@ -38,7 +38,7 @@ import dlt.dltbackendmaster.domain.watermelondb.UsersSyncModel;
 
 public class SyncSerializer {
 
-	public static String createSyncObject(SyncObject<Users> users, SyncObject<Province> provinces, SyncObject<District> districts, SyncObject<Locality> localities,
+	public static String createSyncObject(SyncObject<UsersSync> users, SyncObject<Province> provinces, SyncObject<District> districts, SyncObject<Locality> localities,
 			SyncObject<Profiles> profiles, SyncObject<Partners> partners, SyncObject<Us> us,
 			SyncObject<Beneficiaries> beneficiaries, SyncObject<BeneficiariesInterventions> beneficiariesInterventions,
 			SyncObject<Neighborhood> neighborhoods, SyncObject<Services> services, SyncObject<SubServices> subServices,
@@ -69,20 +69,20 @@ public class SyncSerializer {
 		return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(rootNode);
 	}
 
-	public static ObjectNode createUserSyncObject(SyncObject<Users> users, String lastPulledAt)
+	public static ObjectNode createUserSyncObject(SyncObject<UsersSync> users, String lastPulledAt)
 			throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		// created users
-		List<Users> createdUsers = mapper.convertValue(users.getCreated(), new TypeReference<List<Users>>() {
+		List<UsersSync> createdUsers = mapper.convertValue(users.getCreated(), new TypeReference<List<UsersSync>>() {
 		});
-		List<ObjectNode> createdlist = createdUsers.stream().map((Users element) -> element.toObjectNode(lastPulledAt))
+		List<ObjectNode> createdlist = createdUsers.stream().map((UsersSync element) -> element.toObjectNode(lastPulledAt))
 				.collect(Collectors.toList());
 		ArrayNode arrayCreated = mapper.createArrayNode();
 		arrayCreated.addAll(createdlist);
 		// updated users
-		List<Users> updatedUsers = mapper.convertValue(users.getUpdated(), new TypeReference<List<Users>>() {
+		List<UsersSync> updatedUsers = mapper.convertValue(users.getUpdated(), new TypeReference<List<UsersSync>>() {
 		});
-		List<ObjectNode> updatedlist = updatedUsers.stream().map((Users element) -> element.toObjectNode(lastPulledAt))
+		List<ObjectNode> updatedlist = updatedUsers.stream().map((UsersSync element) -> element.toObjectNode(lastPulledAt))
 				.collect(Collectors.toList());
 		ArrayNode arrayUpdated = mapper.createArrayNode();
 		arrayUpdated.addAll(updatedlist);

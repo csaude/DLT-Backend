@@ -47,8 +47,9 @@ import dlt.dltbackendmaster.domain.ReferencesServicesId;
 import dlt.dltbackendmaster.domain.Services;
 import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.domain.Us;
-import dlt.dltbackendmaster.domain.Users;
+import dlt.dltbackendmaster.domain.UsersSync;
 import dlt.dltbackendmaster.domain.UsersBeneficiariesCustomSync;
+import dlt.dltbackendmaster.domain.UsersSync;
 import dlt.dltbackendmaster.domain.watermelondb.BeneficiaryInterventionSyncModel;
 import dlt.dltbackendmaster.domain.watermelondb.BeneficiarySyncModel;
 import dlt.dltbackendmaster.domain.watermelondb.ReferenceServicesSyncModel;
@@ -89,8 +90,8 @@ public class SyncController {
 			@RequestParam(name = "username") String username) throws ParseException {
 
 		Date validatedDate;
-		List<Users> usersCreated;
-		List<Users> usersUpdated;
+		List<UsersSync> usersCreated;
+		List<UsersSync> usersUpdated;
 		List<Integer> listDeleted;
 
 		List<Locality> localityCreated;
@@ -139,7 +140,7 @@ public class SyncController {
 		List<ReferencesServices> referenceServicesCreatedCustomized = new ArrayList<>();
 		List<ReferencesServices> referenceServicesUpdatedCustomized = new ArrayList<>();
 
-		Users user = service.GetUniqueEntityByNamedQuery("Users.findByUsername", username);
+		UsersSync user = service.GetUniqueEntityByNamedQuery("UsersSync.findByUsername", username);
 		defineLevelAndParms(user);
 
 		Set<Integer> localitiesIds = new TreeSet<>();
@@ -216,9 +217,9 @@ public class SyncController {
 			localityUpdated = new ArrayList<Locality>();
 
 			// users
-			usersCreated = service.GetAllEntityByNamedNativeQuery("Users.findByLocalities",
+			usersCreated = service.GetAllEntityByNamedNativeQuery("UsersSync.findByLocalities",
 					Arrays.asList(localitiesIds.toArray()));
-			usersUpdated = new ArrayList<Users>();
+			usersUpdated = new ArrayList<UsersSync>();
 			listDeleted = new ArrayList<Integer>();
 
 			// Us
@@ -301,13 +302,10 @@ public class SyncController {
 			localityUpdated = service.GetAllEntityByNamedQuery("Locality.findByIdsAndDateUpdated",
 					Arrays.asList(localitiesIds.toArray()), validatedDate);
 
-			usersCreated = service.GetAllEntityByNamedQuery("Users.findByDateCreated", validatedDate);
-			usersUpdated = service.GetAllEntityByNamedQuery("Users.findByDateUpdated", validatedDate);
-
 			// users
-			usersCreated = service.GetAllEntityByNamedNativeQuery("Users.findByLocalitiesAndDateCreated",
+			usersCreated = service.GetAllEntityByNamedNativeQuery("UsersSync.findByLocalitiesAndDateCreated",
 					Arrays.asList(localitiesIds.toArray()), validatedDate);
-			usersUpdated = service.GetAllEntityByNamedNativeQuery("Users.findByLocalitiesAndDateUpdated",
+			usersUpdated = service.GetAllEntityByNamedNativeQuery("UsersSync.findByLocalitiesAndDateUpdated",
 					Arrays.asList(localitiesIds.toArray()), validatedDate);
 			listDeleted = new ArrayList<Integer>();
 			// partners
@@ -426,7 +424,7 @@ public class SyncController {
 				.stream().distinct().collect(Collectors.toList());
 
 		try {
-			SyncObject<Users> usersSO = new SyncObject<Users>(usersCreated, usersUpdated, listDeleted);
+			SyncObject<UsersSync> usersSO = new SyncObject<UsersSync>(usersCreated, usersUpdated, listDeleted);
 			SyncObject<Province> provinceSO = new SyncObject<Province>(provincesCreated, new ArrayList<Province>(),
 					listDeleted);
 			SyncObject<District> districtSO = new SyncObject<District>(districtsCreated, new ArrayList<District>(),
@@ -488,7 +486,7 @@ public class SyncController {
 		// System.out.println("PUSHING " + changes);
 		Map<String, Integer> beneficiariesIds = new HashMap<>();
 
-		Users user = (Users) service.GetAllEntityByNamedQuery("Users.findByUsername", username).get(0);
+		UsersSync user = (UsersSync) service.GetAllEntityByNamedQuery("UsersSync.findByUsername", username).get(0);
 
 		ObjectMapper mapper = new ObjectMapper();
 		SyncObject<UsersSyncModel> users;
@@ -514,7 +512,7 @@ public class SyncController {
 				for (UsersSyncModel created : createdList) {
 
 					if (created.getOnline_id() == null) {
-						Users newUser = new Users(created, lastPulledAt);
+						UsersSync newUser = new UsersSync(created, lastPulledAt);
 						newUser.setCreatedBy(user.getId());
 						service.Save(newUser);
 					}
@@ -660,12 +658,12 @@ public class SyncController {
 				for (UsersSyncModel updated : updatedList) {
 
 					if (updated.getOnline_id() == null) {
-						Users newUser = new Users(updated, lastPulledAt);
+						UsersSync newUser = new UsersSync(updated, lastPulledAt);
 						newUser.setCreatedBy(user.getId());
 						service.Save(newUser);
 
 					} else {
-						Users updatedUser = service.find(Users.class, updated.getOnline_id());
+						UsersSync updatedUser = service.find(UsersSync.class, updated.getOnline_id());
 						updatedUser.update(updated, lastPulledAt);
 						updatedUser.setUpdatedBy(user.getId());
 						service.update(updatedUser);
@@ -787,7 +785,7 @@ public class SyncController {
 		}
 	}
 
-	private void defineLevelAndParms(Users user) {
+	private void defineLevelAndParms(UsersSync user) {
 		if (user.getProvinces().isEmpty()) {
 			this.level = "CENTRAL";
 			this.params = new Integer[0];
