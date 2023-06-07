@@ -189,6 +189,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join  b.us "
 																+ " where b.status = 1 "
 										                        + " and (b.createdBy = :userId "
+										                        + " and b.dateCreated >= :lastpulledat"	
 																+ " or   b.id in "
 																+ "	("
 																+ "		SELECT r.beneficiaries.id from References r"
@@ -196,7 +197,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 												                + " 	and r.notifyTo.id = :userId"
 												                + " 	and r.dateCreated >= :lastpulledat"
 												                + "	))"
-										                        + " and b.dateCreated >= :lastpulledat"	
+										                        
 												                ),
 				@NamedQuery(name = "Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedByAndDateUpdated", query = "SELECT  b FROM  Beneficiaries b "
 																+ " left join  b.neighborhood nb "
@@ -1094,6 +1095,7 @@ public class Beneficiaries implements java.io.Serializable
        
             beneficiary.put("references_a", Arrays.toString(ids));
             beneficiary.put("online_id", id); // flag to control if entity is synchronized with the backend
+            beneficiary.put("offline_id", offlineId);
         } else { // ensure online_id is updated first
             beneficiary.put("online_id", id);
         }

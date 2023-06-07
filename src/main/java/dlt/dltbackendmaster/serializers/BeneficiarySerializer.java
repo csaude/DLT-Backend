@@ -61,6 +61,7 @@ public class BeneficiarySerializer extends JsonSerializer<Beneficiaries>
         beneficiary.setDateCreated(value.getDateCreated());
         beneficiary.setUpdatedBy(value.getUpdatedBy());
         beneficiary.setDateUpdated(value.getDateUpdated());
+        beneficiary.setOfflineId(value.getOfflineId());
         gen.writeObject(beneficiary);
 
     }

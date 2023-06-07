@@ -62,6 +62,7 @@ public class BeneficiarySyncModel extends BasicLifeCycleSyncModel
     private Byte vblt_sex_worker;
     private Byte vblt_house_sustainer;
     private String references_a;
+    private String offline_id;
 
     public BeneficiarySyncModel() {}
 
@@ -463,6 +464,14 @@ public class BeneficiarySyncModel extends BasicLifeCycleSyncModel
 
 	public void setReferences_a(String references_a) {
 		this.references_a = references_a;
+	}
+
+	public String getOffline_id() {
+		return offline_id;
+	}
+
+	public void setOffline_id(String offline_id) {
+		this.offline_id = offline_id;
 	}
 
 }
