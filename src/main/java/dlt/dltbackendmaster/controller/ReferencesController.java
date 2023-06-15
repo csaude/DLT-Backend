@@ -81,7 +81,10 @@ public class ReferencesController {
 	@GetMapping(path = "/byUser/{userId}", produces = "application/json")
 	public ResponseEntity<List<References>> getAllByUser(@PathVariable Integer userId,
 			@RequestParam(name = "pageIndex") int pageIndex, @RequestParam(name = "pageSize") int pageSize,
-			@RequestParam(name = "searchNui", required = false) @Nullable String searchNui) {
+			@RequestParam(name = "searchNui", required = false) @Nullable String searchNui,
+			@RequestParam(name = "searchUserCreator", required = false) @Nullable Integer searchUserCreator,
+    		@RequestParam(name = "searchDistrict", required = false) @Nullable Integer searchDistrict
+			) {
 
 		if (userId == null) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -98,13 +101,13 @@ public class ReferencesController {
 				List<String> strUsersIds = usersIds.stream().map(String::valueOf).collect(Collectors.toList());
 
 				references = service.GetAllPagedEntityByNamedQuery("References.findAllByUserPermission", pageIndex,
-						pageSize, searchNui, strUsersIds, ussId, usersIds);
+						pageSize, searchNui,searchUserCreator, searchDistrict, strUsersIds, ussId, usersIds);
 			} else if (user.getLocalities().size() > 0) {
 				List<Integer> localitiesId = user.getLocalities().stream().map(Locality::getId)
 						.collect(Collectors.toList());
 
 				references = service.GetAllPagedEntityByNamedQuery("References.findByLocalities", pageIndex, pageSize,
-						searchNui, localitiesId);
+						searchNui,searchUserCreator, searchDistrict, localitiesId);
 
 			} else if (user.getDistricts().size() > 0) {
 
@@ -112,7 +115,7 @@ public class ReferencesController {
 						.collect(Collectors.toList());
 
 				references = service.GetAllPagedEntityByNamedQuery("References.findByDistricts", pageIndex, pageSize,
-						searchNui, districtsId);
+						searchNui,searchUserCreator, searchDistrict, districtsId);
 
 			} else if (user.getProvinces().size() > 0) {
 
@@ -120,11 +123,11 @@ public class ReferencesController {
 						.collect(Collectors.toList());
 
 				references = service.GetAllPagedEntityByNamedQuery("References.findByProvinces", pageIndex, pageSize,
-						searchNui, provincesId);
+						searchNui,searchUserCreator, searchDistrict, provincesId);
 
 			} else {
 				references = service.GetAllPagedEntityByNamedQuery("References.findAll", pageIndex, pageSize,
-						searchNui);
+						searchNui,searchUserCreator, searchDistrict);
 			}
 
 			return new ResponseEntity<>(references, HttpStatus.OK);

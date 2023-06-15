@@ -49,20 +49,22 @@ public class BeneficiaryController
     		@RequestParam(name = "params",required = false) @Nullable Integer[] params,
     		@RequestParam(name = "pageIndex") int pageIndex,
     		@RequestParam(name = "pageSize") int pageSize,
-    		@RequestParam(name = "searchNui", required = false) @Nullable String searchNui
+    		@RequestParam(name = "searchNui", required = false) @Nullable String searchNui,
+    		@RequestParam(name = "searchUserCreator", required = false) @Nullable Integer searchUserCreator,
+    		@RequestParam(name = "searchDistrict", required = false) @Nullable Integer searchDistrict
     		) {
 
         try {
             List<Beneficiaries> beneficiaries = null;
 
             if (level.equals("CENTRAL")) {
-                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findAll", pageIndex, pageSize, searchNui);
+                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findAll", pageIndex, pageSize, searchNui, searchUserCreator, searchDistrict);
             } else if (level.equals("PROVINCIAL")) {
-                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByProvinces", pageIndex, pageSize, searchNui, Arrays.asList(params));
+                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByProvinces", pageIndex, pageSize, searchNui, searchUserCreator, searchDistrict, Arrays.asList(params));
             } else if (level.equals("DISTRITAL")) {
-                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByDistricts", pageIndex, pageSize, searchNui, Arrays.asList(params));
+                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByDistricts", pageIndex, pageSize, searchNui, searchUserCreator, searchDistrict, Arrays.asList(params));
             } else {
-                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByLocalitiesOrReferenceNotifyTo", pageIndex, pageSize, searchNui, Arrays.asList(params), userId);
+                beneficiaries = service.GetAllPagedEntityByNamedQuery("Beneficiary.findByLocalitiesOrReferenceNotifyTo", pageIndex, pageSize, searchNui,  searchUserCreator, searchDistrict, Arrays.asList(params), userId);
             }
 
             return new ResponseEntity<List<Beneficiaries>>(beneficiaries, HttpStatus.OK);

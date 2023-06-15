@@ -37,11 +37,13 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 @Table(name = "references", catalog = "dreams_db")
 @NamedQueries({ @NamedQuery(name = "References.findAll", query = "SELECT r FROM References r "
 																+ "left join fetch r.beneficiaries b "
-																+ "left join fetch r.referredBy "
+																+ "left join fetch r.referredBy rb "
 																+ "left join fetch r.us "
-																+ "left join fetch r.notifyTo "
+																+ "left join fetch r.notifyTo u "
 																+ "where r.status <> 3 "
 																+ "and b.nui like :searchNui "
+																+ " AND (:searchUserCreator IS NULL OR rb.id = :searchUserCreator OR u.id =:searchUserCreator) "
+												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "	
 																+ "order by r.id desc "),
 		@NamedQuery(name = "References.findAllByUser", query = "SELECT r FROM References r "
 																+ "left join fetch r.beneficiaries "
@@ -53,11 +55,13 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "order by r.id desc "),
 		@NamedQuery(name = "References.findAllByUserPermission", query = "SELECT r FROM References r "
 																+ "left join fetch r.beneficiaries b "
-																+ "left join fetch r.referredBy "
+																+ "left join fetch r.referredBy rb "
 																+ "left join fetch r.us "
-																+ "left join fetch r.notifyTo "
+																+ "left join fetch r.notifyTo u "
 																+ "where r.status <> 3 "
 																+ "and b.nui like :searchNui "
+																+ " AND (:searchUserCreator IS NULL OR rb.id = :searchUserCreator OR u.id =:searchUserCreator) "
+												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
 																+ "and (r.userCreated in (:strUsersIds) "
 																+ "or r.notifyTo.id in (:usersIds) "
 																+ "or r.referredBy.id in (:usersIds) "
@@ -65,9 +69,9 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "order by r.id desc "),
 		@NamedQuery(name = "References.findAllByNotifyTo", query = "SELECT r FROM References r "
 																+ "left join fetch r.beneficiaries "
-																+ "left join fetch r.referredBy "
+																+ "left join fetch r.referredBy rb "
 																+ "left join fetch r.us "
-																+ "left join fetch r.notifyTo "
+																+ "left join fetch r.notifyTo u "
 																+ "where r.status = 0 "
 																+ "and r.notifyTo.id = : userId "
 																+ "order by r.id desc"),
@@ -102,6 +106,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "left join fetch r.beneficiaries b "
 																+ "where b.locality.id in (:localities) "
 																+ "and b.nui like :searchNui "
+																+ " AND (:searchUserCreator IS NULL OR rb.id = :searchUserCreator OR u.id =:searchUserCreator) "
+												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
 																+ "and r.status <> 3 "
 																+ "order by r.id desc"
 																),
@@ -112,6 +118,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "left join fetch r.beneficiaries b "
 																+ "where b.district.id in (:districts) "
 																+ "and b.nui like :searchNui "
+																+ " AND (:searchUserCreator IS NULL OR rb.id = :searchUserCreator OR u.id =:searchUserCreator) "
+												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
 																+ "and r.status <> 3 "
 																+ "order by r.id desc"
 																),
@@ -122,6 +130,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "left join fetch r.beneficiaries b "
 																+ "where b.district.province.id in (:provinces) "
 																+ "and b.nui like :searchNui "
+																+ " AND (:searchUserCreator IS NULL OR rb.id = :searchUserCreator OR u.id =:searchUserCreator) "
+												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
 																+ "and r.status <> 3 "
 																+ "order by r.id desc"
 																),
