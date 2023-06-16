@@ -238,7 +238,7 @@ public class ServicesConstants
 
     public static final Integer COMUNICACAO_PARA_PROTECCAO = 208;
 
-    public static final Integer ESTUDANTES_MODULO_3 = 212;
+    public static final Integer ESTUDANTES_MODULO_3 = 209;
 
     // GUIA DE FACILITAÇÃO PARA CLUBES DE JOVENS SOBRE A PREVENÇÃO DO HIV/VIOLÊNCIA - PREVENÇÃO DE VIOLÊNCIA - RAMJ FORA & NA ESCOLA 15+ ANOS
     public static final Integer CASAMENTOS_PREMATUROS = 210;

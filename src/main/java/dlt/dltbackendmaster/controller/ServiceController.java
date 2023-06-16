@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dlt.dltbackendmaster.domain.Beneficiaries;
+import dlt.dltbackendmaster.domain.BeneficiariesInterventions;
 import dlt.dltbackendmaster.domain.ServiceType;
 import dlt.dltbackendmaster.domain.Services;
+import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.service.DAOService;
+import dlt.dltbackendmaster.util.ServiceCompletionRules;
 import dlt.dltbackendmaster.util.Utility;
 
 @RestController
@@ -82,10 +85,21 @@ public class ServiceController {
 			List<Services> services = service.GetAllEntityByNamedQuery("Service.findByServiceType",
 					String.valueOf(serviceType.ordinal() + 1));
 			int beneficiaryAge = Utility.calculateAge(beneficiary.getDateOfBirth());
+			
+			boolean is15AndStartedAvante = false;
+			
+			if (beneficiaryAge == 15) {
+				// Check if beneficiary received avante package
+				List<Integer> subServices = beneficiary.getBeneficiariesInterventionses().stream().map(BeneficiariesInterventions::getSubServices)
+						.collect(Collectors.toList()).stream().map(SubServices::getId).collect(Collectors.toList());
+				if (ServiceCompletionRules.startedAvanteEstudante(subServices) || ServiceCompletionRules.startedAvanteRapariga(subServices)) {
+					is15AndStartedAvante = true;
+				}
+			}
 
-			if (beneficiaryAge < 15) {
+			if (beneficiaryAge < 15 || is15AndStartedAvante) {
 
-				if (beneficiaryAge < 14 && serviceType == ServiceType.COMMUNITY) {
+				if ((beneficiaryAge < 14 || is15AndStartedAvante) && serviceType == ServiceType.COMMUNITY) {
 					// Retirar Guião de facilitação e Literacia Financeira Aflateen
 					services = services.stream().filter(s -> s.getId() != 46 && s.getId() != 49 && s.getId() != 52 && s.getId() != 57)
 							.collect(Collectors.toList());
