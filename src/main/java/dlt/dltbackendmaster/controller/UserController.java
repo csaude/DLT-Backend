@@ -144,7 +144,9 @@ public class UserController {
 		}
 
 		try {
+			Users u = service.find(Users.class, user.getId());
 			user.setDateUpdated(new Date());
+			user.setPassword(u.getPassword());
 			Users updatedUser = service.update(user);
 			logger.warn("User " + user.getUsername() + " updated the user information ");
 			return new ResponseEntity<>(updatedUser, HttpStatus.OK);
