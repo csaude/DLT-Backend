@@ -92,8 +92,8 @@ public class BeneficiariyInterventionServiceImpl implements BeneficiariyInterven
 	}
 	
 	@Override
-	public List<BeneficiariesInterventions> findByBeneficiariesIds(int pageIndex, int pageSize, Integer[] params) {	
-        List<BeneficiariesInterventions> beneficiariesInterventions = daoService.GetByParamsPagedEntityByNamedQuery("BeneficiaryIntervention.findInterventionsByBeneficiariesIds", pageIndex, pageSize, Arrays.asList(params));
+	public List<BeneficiariesInterventions> findByBeneficiariesIds(Integer[] params) {	
+        List<BeneficiariesInterventions> beneficiariesInterventions = daoService.GetAllEntityByNamedQuery("BeneficiaryIntervention.findInterventionsByBeneficiariesIds", Arrays.asList(params));
 
 		return beneficiariesInterventions;
 	}

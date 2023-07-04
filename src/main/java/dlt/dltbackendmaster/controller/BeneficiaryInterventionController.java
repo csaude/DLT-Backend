@@ -207,12 +207,10 @@ public class BeneficiaryInterventionController {
 		
 	@GetMapping(path = "/byBeneficiariesIds", produces = "application/json")
 	public ResponseEntity<List<BeneficiariesInterventions>> getByBeneficiariesIds(
-			@RequestParam(name = "pageIndex") int pageIndex,
-    		@RequestParam(name = "pageSize") int pageSize,
 			@RequestParam(name = "params") Integer[] params) {
 		try {
 			List<BeneficiariesInterventions> interventions = beneficiariyInterventionService
-					.findByBeneficiariesIds(pageIndex, pageSize,params);
+					.findByBeneficiariesIds(params);
 			 
 			return new ResponseEntity<>(interventions, HttpStatus.OK);
 		} catch (Exception e) {

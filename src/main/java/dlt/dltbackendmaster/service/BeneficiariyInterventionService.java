@@ -20,5 +20,5 @@ public interface BeneficiariyInterventionService {
 
 	List<CountIntervention> findInterventionsPerBeneficiary();
 	
-	List<BeneficiariesInterventions> findByBeneficiariesIds(int pageIndex, int pageSize, Integer[] params);
+	List<BeneficiariesInterventions> findByBeneficiariesIds(Integer[] params);
 }
