@@ -214,8 +214,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join  b.partners "
 																+ " left join  b.locality "
 																+ " left join  b.us "
-																+ " where b.status = 1 "
-										                        + " and (b.createdBy = :userId "
+																+ " where (b.createdBy = :userId "
 																+ " or   b.id in "
 																+ " ("
 																+ "		SELECT r.beneficiaries.id from References r"
@@ -234,6 +233,15 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " where b.nui =:nui "
 																+ " and b.locality.id in :localitiesIds "												         											     
 												                ),
+				@NamedQuery(name = "Beneficiary.findByIds", query = "SELECT b FROM Beneficiaries b "
+																+ " left join fetch b.neighborhood "
+																+ " left join fetch b.partners "
+																+ " left join fetch b.locality "
+																+ " left join fetch b.us "
+																+ " where b.status = 1 "
+																+ " and b.id in :ids "
+																+ " order by b.id desc"
+																+ ""),
 })
 public class Beneficiaries implements java.io.Serializable
 {

@@ -50,4 +50,6 @@ public interface DAOService {
 	<T> List<T> findByJPQueryFilter(String hql, Map<String, Object> namedParams, int f, int m);
 	
 	<T> ReferencesServicesObject registerServiceCompletionStatus(BeneficiariesInterventions intervention);
+
+	<T> List<T> GetByParamsPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, Object... params);
 }

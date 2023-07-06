@@ -187,4 +187,26 @@ public class BeneficiaryController
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@GetMapping(path = "ids", produces = "application/json")
+    public ResponseEntity<List<Beneficiaries>> getByIds(
+    		@RequestParam(name = "pageIndex") int pageIndex,
+    		@RequestParam(name = "pageSize") int pageSize,
+    		@RequestParam(name = "params") Integer[] params
+    		) {
+
+        if (params.length < 1) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            List<Beneficiaries> beneficiaries = service.GetByParamsPagedEntityByNamedQuery("Beneficiary.findByIds", pageIndex, pageSize, Arrays.asList(params));
+    
+            return new ResponseEntity<List<Beneficiaries>>(beneficiaries, HttpStatus.OK);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

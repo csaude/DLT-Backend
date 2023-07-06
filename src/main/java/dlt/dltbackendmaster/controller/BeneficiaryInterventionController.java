@@ -1,6 +1,7 @@
 package dlt.dltbackendmaster.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dlt.dltbackendmaster.domain.Beneficiaries;
@@ -197,6 +199,19 @@ public class BeneficiaryInterventionController {
 	public ResponseEntity<List<CountIntervention>> countByBeneficiary() {
 		try {
 			List<CountIntervention> interventions = beneficiariyInterventionService.findInterventionsPerBeneficiary();
+			return new ResponseEntity<>(interventions, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+		
+	@GetMapping(path = "/byBeneficiariesIds", produces = "application/json")
+	public ResponseEntity<List<BeneficiariesInterventions>> getByBeneficiariesIds(
+			@RequestParam(name = "params") Integer[] params) {
+		try {
+			List<BeneficiariesInterventions> interventions = beneficiariyInterventionService
+					.findByBeneficiariesIds(params);
+			 
 			return new ResponseEntity<>(interventions, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

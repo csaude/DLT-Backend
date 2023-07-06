@@ -19,4 +19,6 @@ public interface BeneficiariyInterventionService {
 	List<BeneficiariesInterventions> findByBeneficiaryId(Integer beneficiaryId);
 
 	List<CountIntervention> findInterventionsPerBeneficiary();
+	
+	List<BeneficiariesInterventions> findByBeneficiariesIds(Integer[] params);
 }
