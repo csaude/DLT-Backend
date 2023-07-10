@@ -108,7 +108,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 												            + " and bi.dateUpdated >= :lastpulledat"
 												            ),
 	@NamedQuery(name = "BeneficiaryIntervention.findAllByBeneficiaryAndDate", 
-		query = "select b from BeneficiariesInterventions b where b.beneficiaries.id = :beneficiaryId and b.id.date > :date"),
+		query = "select b from BeneficiariesInterventions b where b.beneficiaries.id = :beneficiaryId and b.id.date >= :date"),
 	@NamedQuery(name = "BeneficiaryIntervention.findInterventionsByBeneficiariesIds", 
 																query = " SELECT bi "
 																		+ "FROM BeneficiariesInterventions bi "

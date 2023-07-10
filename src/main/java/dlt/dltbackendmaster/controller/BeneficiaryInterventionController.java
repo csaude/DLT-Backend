@@ -1,7 +1,6 @@
 package dlt.dltbackendmaster.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -19,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dlt.dltbackendmaster.domain.Beneficiaries;
 import dlt.dltbackendmaster.domain.BeneficiariesInterventions;
+import dlt.dltbackendmaster.domain.CountIntervention;
 import dlt.dltbackendmaster.domain.References;
 import dlt.dltbackendmaster.domain.ReferencesServices;
 import dlt.dltbackendmaster.domain.ReferencesServicesObject;
 import dlt.dltbackendmaster.domain.SubServices;
-import dlt.dltbackendmaster.domain.CountIntervention;
 import dlt.dltbackendmaster.domain.Us;
 import dlt.dltbackendmaster.service.BeneficiariyInterventionService;
 import dlt.dltbackendmaster.service.DAOService;
@@ -61,7 +60,10 @@ public class BeneficiaryInterventionController {
 
 		try {
 			Us us = service.find(Us.class, intervention.getUs().getId());
+			//FIXME: Remover esta gambiária após resolver o issue
+			Beneficiaries beneficiary = service.find(Beneficiaries.class, intervention.getId().getBeneficiaryId());
 			intervention.setUs(us);
+			intervention.setBeneficiaries(beneficiary);
 			intervention.setDateCreated(new Date());
 			service.Save(intervention);
 
@@ -69,7 +71,6 @@ public class BeneficiaryInterventionController {
 			intervention.setSubServices(subService);
 
 			// Actualizar o status dos serviços solicitados
-			Beneficiaries beneficiary = service.find(Beneficiaries.class, intervention.getBeneficiaries().getId());
 			Integer serviceId = subService.getServices().getId();
 			List<ReferencesServices> referencesServices = service.GetAllEntityByNamedQuery(
 					"ReferencesServices.findByBeneficiaryAndService", beneficiary.getId(), serviceId);
@@ -129,20 +130,22 @@ public class BeneficiaryInterventionController {
 			}
 
 			// if key was updated, entry should be disabled and a new one added
-			if (intervention.getId().getBeneficiaryId() != intervention.getBeneficiaries().getId()
-					|| intervention.getId().getSubServiceId() != intervention.getSubServices().getId()
+			if (intervention.getId().getSubServiceId() != intervention.getSubServices().getId()
 					|| !intervention.getId().getDate().equals(intervention.getDate())) {
 
 				currentIntervention.setStatus(0);
 				currentIntervention.setDateUpdated(new Date());
 				service.delete(currentIntervention); // Must remove to allow new additions with this key afterwards
+				
+				//FIXME: Remover esta gambiária após resolver o issue
+				Beneficiaries beneficiary = service.find(Beneficiaries.class, intervention.getId().getBeneficiaryId());
 
 				BeneficiariesInterventions newInterv = new BeneficiariesInterventions();
-				newInterv.getId().setBeneficiaryId(intervention.getBeneficiaries().getId());
+				newInterv.getId().setBeneficiaryId(beneficiary.getId());
 				newInterv.getId().setSubServiceId(intervention.getSubServices().getId());
 				newInterv.getId().setDate(intervention.getDate());
 				newInterv.setSubServices(intervention.getSubServices());
-				newInterv.setBeneficiaries(intervention.getBeneficiaries());
+				newInterv.setBeneficiaries(beneficiary);
 				newInterv.setRemarks(intervention.getRemarks());
 				newInterv.setEntryPoint(intervention.getEntryPoint());
 				newInterv.setResult(intervention.getResult());
