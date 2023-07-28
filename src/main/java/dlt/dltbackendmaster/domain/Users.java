@@ -69,6 +69,8 @@ import dlt.dltbackendmaster.serializers.UssSerializer;
 				+ "where up.province_id in (:provinces)", resultClass = Users.class), })
 
 @NamedQueries({ @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
+		@NamedQuery(name = "Users.findByAlocatProvinces", query = "SELECT u.id as id, u.username as username FROM Users u INNER JOIN u.provinces p where p.id in (:provinces)"),
+		@NamedQuery(name = "Users.findByAlocatDistricts", query = "SELECT u.id as id, u.username as username FROM Users u INNER JOIN u.districts d where d.id in (:districts)"),
 		@NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u where u.username = :username"),
 		@NamedQuery(name = "Users.findByUsId", query = "SELECT u FROM Users u INNER JOIN u.us us where us.id in (:us) and u.status = 1"),
 		@NamedQuery(name = "Users.findByResetPasswordToken", query = "SELECT u FROM Users u where u.recoverPasswordToken = :recoverPasswordToken"),

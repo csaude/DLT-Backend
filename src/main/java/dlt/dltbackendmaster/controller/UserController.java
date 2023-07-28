@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dlt.dltbackendmaster.domain.Locality;
@@ -273,5 +274,31 @@ public class UserController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	@GetMapping("/provinces")
+	public ResponseEntity<List<Users>> getUsersPrv(@RequestParam("provinces") List<String> provinces){
+		try {
+			List<Integer> provIds = provinces.stream().map(Integer::parseInt).collect(Collectors.toList());
+			
+			List<Users> user = service.GetAllEntityByNamedQuery("Users.findByAlocatProvinces", provIds);
+			return ResponseEntity.ok(user);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
+	}
+
+	@GetMapping("/districts")
+	public ResponseEntity<List<Users>> getUsers(@RequestParam("districts") List<String> districts){
+		try {
+			List<Integer> distIds = districts.stream().map(Integer::parseInt).collect(Collectors.toList());
+			
+			List<Users> user = service.GetAllEntityByNamedQuery("Users.findByAlocatDistricts", distIds);
+			return ResponseEntity.ok(user);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
+	}	
 
 }
