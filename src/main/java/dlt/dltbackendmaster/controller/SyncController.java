@@ -47,7 +47,6 @@ import dlt.dltbackendmaster.domain.ReferencesServicesId;
 import dlt.dltbackendmaster.domain.Services;
 import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.domain.Us;
-import dlt.dltbackendmaster.domain.UsersSync;
 import dlt.dltbackendmaster.domain.UsersBeneficiariesCustomSync;
 import dlt.dltbackendmaster.domain.UsersSync;
 import dlt.dltbackendmaster.domain.watermelondb.BeneficiaryInterventionSyncModel;
@@ -266,7 +265,7 @@ public class SyncController {
 					referenceServicesCreatedCustomized.addAll(refServicesByRef);
 				}
 			}
-			
+
 			beneficiariesCreated.addAll(beneficiariesCreatedCustomized);
 		} else {
 			Long t = Long.valueOf(lastPulledAt);
@@ -392,7 +391,7 @@ public class SyncController {
 					referenceServicesUpdatedCustomized.addAll(refServicesByRef);
 				}
 			}
-			
+
 			beneficiariesUpdated.addAll(beneficiariesUpdatedCustomized);
 		}
 
@@ -697,13 +696,29 @@ public class SyncController {
 
 					} else {
 						String[] keys = updated.getOnline_id().split(",");
-						BeneficiariesInterventionsId bId = new BeneficiariesInterventionsId(Integer.valueOf(keys[0]),
-								Integer.valueOf(keys[1]), LocalDate.parse(keys[2]));
+						Integer beneficiaryId = Integer.valueOf(keys[0]);
+						Integer subServiceId = Integer.valueOf(keys[1]);
+						LocalDate interventionDate = LocalDate.parse(keys[2]);
+						BeneficiariesInterventionsId bId = new BeneficiariesInterventionsId(beneficiaryId, subServiceId,
+								interventionDate);
 						BeneficiariesInterventions intervention = service.find(BeneficiariesInterventions.class, bId);
 						if (intervention != null) {
+							intervention.setDateUpdated(new Date());
 							intervention.setUpdatedBy(String.valueOf(user.getId()));
 							intervention.update(updated, lastPulledAt);
 							service.update(intervention);
+
+							// If there was an update on the key, intervention must be deleted
+							if (updated.getSub_service_id() != subServiceId || !updated.getDate().equals(keys[2])) {
+
+								BeneficiariesInterventionsId bId1 = new BeneficiariesInterventionsId(beneficiaryId,
+										subServiceId, interventionDate);
+								BeneficiariesInterventions intervToDelete = service
+										.find(BeneficiariesInterventions.class, bId1);
+
+								service.delete(intervToDelete);
+
+							}
 						}
 					}
 				}

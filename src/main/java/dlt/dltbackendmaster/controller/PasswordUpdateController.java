@@ -1,5 +1,7 @@
 package dlt.dltbackendmaster.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,10 @@ public class PasswordUpdateController {
             user.setRecoverPassword(passwordEncoder.encode(users.getRecoverPassword()));
             user.setNewPassword(0);
             user.setIsEnabled(Byte.valueOf("0"));
+            user.setUpdatedBy(user.getId());
+            Date today = new Date();
+			user.setDateUpdated(today);
+            user.setPasswordLastChangeDate(today);
             user.setRecoverPasswordOrigin(validatedOriginUrl);
 
             user.setRecoverPasswordToken(token);

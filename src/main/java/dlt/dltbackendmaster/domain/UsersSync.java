@@ -584,6 +584,7 @@ public class UsersSync implements java.io.Serializable {
 			user.put("organization_name", partners == null ? null : partners.getName());
 
 			user.put("password_last_change_date", dateString);
+			user.put("is_awaiting_sync", 0); // flag to control if reference is synced in mobile
 
 
 		} else { // ensure online_id is updated first
