@@ -1065,7 +1065,6 @@ public class Beneficiaries implements java.io.Serializable
 				beneficiary.put("locality_name", "");
 			} else {
 				beneficiary.put("neighborhood_id", neighborhood.getId());
-				Locality locality = neighborhood.getLocality();
 				if (locality == null) {
 					beneficiary.put("locality_id", "");
 					beneficiary.put("locality_name", "");
