@@ -58,6 +58,7 @@ import dlt.dltbackendmaster.domain.watermelondb.UsersSyncModel;
 import dlt.dltbackendmaster.serializers.SyncSerializer;
 import dlt.dltbackendmaster.service.DAOService;
 import dlt.dltbackendmaster.service.SequenceGenerator;
+import dlt.dltbackendmaster.service.UserLastSyncService;
 import dlt.dltbackendmaster.service.UsersBeneficiariesCustomSyncService;
 import dlt.dltbackendmaster.service.VulnerabilityHistoryService;
 import dlt.dltbackendmaster.util.ServiceCompletionRules;
@@ -76,6 +77,9 @@ public class SyncController {
 
 	@Autowired
 	private VulnerabilityHistoryService vulnerabilityHistoryService;
+	
+	@Autowired
+	private UserLastSyncService userLastSyncService;
 
 	@Autowired
 	public SyncController(DAOService service) {
@@ -449,6 +453,8 @@ public class SyncController {
 			String object = SyncSerializer.createSyncObject(usersSO, provinceSO, districtSO, localitySO, profilesSO,
 					partnersSO, usSO, beneficiarySO, beneficiaryInterventionSO, neighborhoodSO, serviceSO, subServiceSO,
 					referencesSO, referencesServicesSO, lastPulledAt);
+			
+			userLastSyncService.saveLastSyncDate(username);
 
 			return new ResponseEntity<>(object, HttpStatus.OK);
 		} catch (Exception e) {
@@ -779,6 +785,8 @@ public class SyncController {
 					}
 				}
 			}
+			
+			userLastSyncService.saveLastSyncDate(username);
 
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
