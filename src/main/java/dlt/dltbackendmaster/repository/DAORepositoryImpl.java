@@ -99,6 +99,32 @@ public class DAORepositoryImpl implements DAORepository {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> T GetUniqueEntityByNamedQuery(String query, String searchNui, Integer searchUserCreator, Integer searchDistrict, Object... params) {
+		Query q = getCurrentSession().getNamedQuery(query);
+		
+		int i = 0;
+		for (Parameter param : q.getParameters()) {
+			if(!"searchNui".equals(param.getName()) && !"searchUserCreator".equals(param.getName()) && !"searchDistrict".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			}else {
+				q.setParameter("searchNui", "%"+searchNui+"%");
+				q.setParameter("searchUserCreator",searchUserCreator); 
+				q.setParameter("searchDistrict", searchDistrict); 
+			}	
+		}
+
+		List<T> results = q.list();
+
+		T foundentity = null;
+		if (!results.isEmpty()) {
+			// ignores multiple results
+			foundentity = results.get(0);
+		}
+		return foundentity;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public <T> List<T> GetAllEntityByNamedQuery(String query, Object... params) {
 		Query q = getCurrentSession().getNamedQuery(query);
 		int i = 0;

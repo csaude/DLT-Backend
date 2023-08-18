@@ -161,10 +161,16 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " or b.id in (SELECT r.beneficiaries.id from References r "
 																+ "				where r.notifyTo.id = :userId)) "
 																+ " and b.status = 1 "
+																+ " and b.nui like :searchNui "
+                												+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
+												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
 																+ ""),
                 @NamedQuery(name = "Beneficiary.findCountByDistricts", query = "SELECT count(b.id) as total FROM Beneficiaries b "
 																+ " where b.district.id in (:districts)"
 																+ " and b.status = 1 "
+																+ " and b.nui like :searchNui "
+                												+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
+												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
 																+ ""),
                 @NamedQuery(name = "Beneficiary.findCountByDistrictAndGender", query = "SELECT count(b.id) as total FROM Beneficiaries b "
 																+ " where b.district.id = :district "
@@ -174,9 +180,15 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 				@NamedQuery(name = "Beneficiary.findCountByProvinces", query = "SELECT count(b.id) as total FROM Beneficiaries b "
 																+ " where b.district.province.id in (:provinces) "
 																+ " and b.status = 1 "
+																+ " and b.nui like :searchNui "
+                												+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
+												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
 																+ ""),
 				@NamedQuery(name = "Beneficiary.findCountAll", query = "SELECT count(b.id) as total FROM Beneficiaries b "
 																+ " where b.status = 1 "
+																+ " and b.nui like :searchNui "
+                												+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
+												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
 																+ ""),
 				@NamedQuery(name = "Beneficiary.findByReferenceNotifyToOrBeneficiaryCreatedBy", query = "SELECT  b FROM  Beneficiaries b "
 																+ " left join  b.neighborhood nb "

@@ -208,7 +208,10 @@ public class SyncController {
 			beneficiariesCreated.addAll(refBeneficiaries);
 
 			for (Beneficiaries beneficiary : beneficiariesCreated) {
-				if (beneficiary.getLocality() != null) {
+				if (beneficiary.getLocality() != null 
+						&& !user.getProfiles().getName().equals("MENTORA") 
+						&& !user.getProfiles().getName().equals("ENFERMEIRA") 
+						&& !user.getProfiles().getName().equals("CONSELHEIRA")) {
 					localitiesIds.add(beneficiary.getLocality().getId());
 				}
 				beneficiariesInterventionsCreated.addAll(beneficiary.getBeneficiariesInterventionses());

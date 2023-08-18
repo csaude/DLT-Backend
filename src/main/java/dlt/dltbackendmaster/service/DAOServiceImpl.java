@@ -79,6 +79,11 @@ public class DAOServiceImpl implements DAOService {
 	}
 
 	@Transactional
+	public <T> T GetUniqueEntityByNamedQuery(String query, String searchNui, Integer searchUserCreator, Integer searchDistrict, Object... params) {
+		return repository.GetUniqueEntityByNamedQuery(query, searchNui, searchUserCreator, searchDistrict, params);
+	}
+	
+	@Transactional
 	public <T> List<T> GetAllEntityByNamedQuery(String query, Object... params) {
 		return repository.GetAllEntityByNamedQuery(query, params);
 	}

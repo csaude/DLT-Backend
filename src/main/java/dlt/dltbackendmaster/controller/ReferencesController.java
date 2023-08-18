@@ -234,8 +234,13 @@ public class ReferencesController {
 
 	}
 
-	@GetMapping(path = "/byUser/{userId}/count", produces = "application/json")
-	public ResponseEntity<Long> getCountByUserPermission(@PathVariable Integer userId) {
+	@GetMapping(path = "/byUser/{userId}/countByFilters", produces = "application/json")
+	public ResponseEntity<Long> getCountByUserPermission(
+		@PathVariable Integer userId,
+		@RequestParam(name = "searchNui", required = false) @Nullable String searchNui,
+    	@RequestParam(name = "searchUserCreator", required = false) @Nullable Integer searchUserCreator,
+    	@RequestParam(name = "searchDistrict", required = false) @Nullable Integer searchDistrict
+		) {
 
 		if (userId == null) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -252,30 +257,30 @@ public class ReferencesController {
 				List<Integer> usersIds = users.stream().map(Users::getId).collect(Collectors.toList());
 				List<String> strUsersIds = usersIds.stream().map(String::valueOf).collect(Collectors.toList());
 
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByUserPermission",
-						strUsersIds, ussId, usersIds);
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByUserPermission",searchNui, searchUserCreator, searchDistrict
+						,strUsersIds, ussId, usersIds);
 			} else if (user.getLocalities().size() > 0) {
 				List<Integer> localitiesId = user.getLocalities().stream().map(Locality::getId)
 						.collect(Collectors.toList());
 
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByLocalities", localitiesId);
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByLocalities",searchNui, searchUserCreator, searchDistrict, localitiesId);
 
 			} else if (user.getDistricts().size() > 0) {
 
 				List<Integer> districtsId = user.getDistricts().stream().map(District::getId)
 						.collect(Collectors.toList());
 
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByDistricts", districtsId);
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByDistricts",searchNui, searchUserCreator, searchDistrict, districtsId);
 
 			} else if (user.getProvinces().size() > 0) {
 
 				List<Integer> provincesId = user.getProvinces().stream().map(Province::getId)
 						.collect(Collectors.toList());
 
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByProvinces", provincesId);
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountByProvinces",searchNui, searchUserCreator, searchDistrict, provincesId);
 
 			} else {
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountAll");
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountAll",searchNui, searchUserCreator, searchDistrict);
 			}
 
 			return new ResponseEntity<>(referencesTotal, HttpStatus.OK);

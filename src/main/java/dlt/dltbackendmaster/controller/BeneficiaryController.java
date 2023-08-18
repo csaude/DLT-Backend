@@ -148,20 +148,26 @@ public class BeneficiaryController
 		}
 	}
 
-	@GetMapping(path = "/count", produces = "application/json")
-	public ResponseEntity<Long> countByBeneficiary(@RequestParam(name = "userId") Integer userId, @RequestParam(name = "level") String level, @RequestParam(name = "params",
-            required = false) @Nullable Integer[] params) {
+	@GetMapping(path = "/countByFilters", produces = "application/json")
+	public ResponseEntity<Long> countByBeneficiary(
+			@RequestParam(name = "userId") Integer userId, 
+			@RequestParam(name = "level") String level, 
+			@RequestParam(name = "params", required = false) @Nullable Integer[] params,
+			@RequestParam(name = "searchNui", required = false) @Nullable String searchNui,
+    		@RequestParam(name = "searchUserCreator", required = false) @Nullable Integer searchUserCreator,
+    		@RequestParam(name = "searchDistrict", required = false) @Nullable Integer searchDistrict
+			) {
 		try {
 			Long beneficiariesTotal;
 			
 			if (level.equals("CENTRAL")) {
-				beneficiariesTotal = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountAll");
+				beneficiariesTotal = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountAll",searchNui, searchUserCreator, searchDistrict);
             } else if (level.equals("PROVINCIAL")) {
-            	beneficiariesTotal = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByProvinces", Arrays.asList(params));
+            	beneficiariesTotal = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByProvinces", searchNui, searchUserCreator, searchDistrict, Arrays.asList(params));
             } else if (level.equals("DISTRITAL")) {
-            	beneficiariesTotal = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByDistricts", Arrays.asList(params));
+            	beneficiariesTotal = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByDistricts", searchNui, searchUserCreator, searchDistrict, Arrays.asList(params));
             } else {
-            	beneficiariesTotal = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByLocalitiesOrReferenceNotifyTo", Arrays.asList(params), userId);
+            	beneficiariesTotal = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByLocalitiesOrReferenceNotifyTo", searchNui, searchUserCreator, searchDistrict, Arrays.asList(params), userId);
             }
 		
 			return new ResponseEntity<>(beneficiariesTotal, HttpStatus.OK);
