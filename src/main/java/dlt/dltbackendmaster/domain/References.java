@@ -55,14 +55,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ " AND (:searchUserCreator IS NULL OR rb.id = :searchUserCreator OR u.id =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "	
 																+ "order by r.id desc "),
-		@NamedQuery(name = "References.findAllByUser", query = "SELECT r FROM References r "
-																+ "left join fetch r.beneficiaries "
-																+ "left join fetch r.referredBy "
-																+ "left join fetch r.us "
-																+ "left join fetch r.notifyTo "
-																+ "where r.status <> 3 "
-																+ "and r.userCreated like :userCreated "
-																+ "order by r.id desc "),
+		@NamedQuery(name = "References.findCountByUser", query = "SELECT count(r.id) FROM References r "
+																+ "where r.userCreated like :userCreated"),
 		@NamedQuery(name = "References.findAllByUserPermission", query = "SELECT r FROM References r "
 																+ "left join fetch r.beneficiaries b "
 																+ "left join fetch r.referredBy rb "

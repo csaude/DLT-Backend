@@ -293,7 +293,10 @@ public class ReferencesServices implements java.io.Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		int id = this.id == null? services.getId() : this.id.getReferenceId() + this.id.getServiceId();
+		int id = 0;
+		if (this.id != null || services != null) {
+			id = this.id == null? services.getId() : this.id.getReferenceId() + this.id.getServiceId();
+		}
 		result = prime * result + id;
 		return result;
 	}
@@ -305,6 +308,8 @@ public class ReferencesServices implements java.io.Serializable {
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
+			return false;
+		if (id == null)
 			return false;
 		ReferencesServices other = (ReferencesServices) obj;
 		if (id.getReferenceId() != other.id.getReferenceId() || id.getServiceId() != other.id.getServiceId())
