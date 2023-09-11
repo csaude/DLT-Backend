@@ -558,7 +558,10 @@ public class AgywPrevReport {
 		Map<String, Long> districtSummary = new HashMap<>();
 
 		try {
-			Long totalBeneficiaries = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByDistricts",
+			String searchNui = null;
+			Integer searchUserCreator = null;
+			Integer searchDistrict = null;
+			Long totalBeneficiaries = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByDistricts", searchNui, searchUserCreator, searchDistrict,
 					Arrays.asList(district));
 			Long maleBeneficiaries = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByDistrictAndGender",
 					'1', district);
