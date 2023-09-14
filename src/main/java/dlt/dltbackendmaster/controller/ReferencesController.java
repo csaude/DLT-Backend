@@ -31,6 +31,7 @@ import dlt.dltbackendmaster.domain.District;
 import dlt.dltbackendmaster.domain.Locality;
 import dlt.dltbackendmaster.domain.Province;
 import dlt.dltbackendmaster.domain.References;
+import dlt.dltbackendmaster.domain.ReferencesCancel;
 import dlt.dltbackendmaster.domain.ReferencesServices;
 import dlt.dltbackendmaster.domain.ReferencesServicesId;
 import dlt.dltbackendmaster.domain.Us;
@@ -430,6 +431,33 @@ public class ReferencesController {
 				}
 			}
 			return new ResponseEntity<>(references, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@PutMapping(path = "/bulkCancel", consumes = "application/json")
+	public ResponseEntity<ReferencesCancel> bulkCancel(@RequestBody  ReferencesCancel referencesCancel) {
+
+		if (referencesCancel == null) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
+
+		try {
+			for(int referenceID : referencesCancel.gitIds()){
+
+				References references = this.service.find(References.class, referenceID);
+
+				references.setStatus(referencesCancel.getStatus());
+				references.setCancelReason(referencesCancel.getCancelReason());
+				references.setOtherReason(referencesCancel.getOtherReason());
+				references.setUpdatedBy(referencesCancel.getUpdatedBy());
+				references.setDateUpdated(new Date());
+
+				service.update(references);
+			}
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
