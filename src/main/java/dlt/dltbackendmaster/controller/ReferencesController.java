@@ -141,8 +141,8 @@ public class ReferencesController {
 	@GetMapping(path = "/pendingByUser/{userId}", produces = "application/json")
 	public ResponseEntity<List<References>> getAllPendingByUser(@PathVariable Integer userId,
 			@RequestParam(name = "pageIndex") int pageIndex, @RequestParam(name = "pageSize") int pageSize,
-			@RequestParam(name = "searchNui", required = false) @Nullable String searchNui,
-			@RequestParam(name = "searchUserCreator", required = false) @Nullable Integer searchUserCreator,
+			@RequestParam(name = "searchStartDate", required = false) @Nullable String searchStartDate,
+			@RequestParam(name = "searchEndDate", required = false) @Nullable Integer searchEndDate,
     		@RequestParam(name = "searchDistrict", required = false) @Nullable Integer searchDistrict
 			) {
 
@@ -161,13 +161,13 @@ public class ReferencesController {
 				List<String> strUsersIds = usersIds.stream().map(String::valueOf).collect(Collectors.toList());
 
 				references = service.GetAllPagedEntityByNamedQuery("References.findAllPendingByUserPermission", pageIndex,
-						pageSize, searchNui,searchUserCreator, searchDistrict, strUsersIds, ussId, usersIds);
+						pageSize, searchStartDate,searchEndDate, searchDistrict, strUsersIds, ussId, usersIds);
 			} else if (user.getLocalities().size() > 0) {
 				List<Integer> localitiesId = user.getLocalities().stream().map(Locality::getId)
 						.collect(Collectors.toList());
 
 				references = service.GetAllPagedEntityByNamedQuery("References.findPendingByLocalities", pageIndex, pageSize,
-						searchNui,searchUserCreator, searchDistrict, localitiesId);
+						searchStartDate,searchEndDate, searchDistrict, localitiesId);
 
 			} else if (user.getDistricts().size() > 0) {
 
@@ -175,7 +175,7 @@ public class ReferencesController {
 						.collect(Collectors.toList());
 
 				references = service.GetAllPagedEntityByNamedQuery("References.findPendingByDistricts", pageIndex, pageSize,
-						searchNui,searchUserCreator, searchDistrict, districtsId);
+						searchStartDate,searchEndDate, searchDistrict, districtsId);
 
 			} else if (user.getProvinces().size() > 0) {
 
@@ -183,11 +183,11 @@ public class ReferencesController {
 						.collect(Collectors.toList());
 
 				references = service.GetAllPagedEntityByNamedQuery("References.findPendingByProvinces", pageIndex, pageSize,
-						searchNui,searchUserCreator, searchDistrict, provincesId);
+						searchStartDate,searchEndDate, searchDistrict, provincesId);
 
 			} else {
 				references = service.GetAllPagedEntityByNamedQuery("References.findAllPending", pageIndex, pageSize,
-						searchNui,searchUserCreator, searchDistrict);
+						searchStartDate,searchEndDate, searchDistrict);
 			}
 
 			return new ResponseEntity<>(references, HttpStatus.OK);
@@ -353,8 +353,8 @@ public class ReferencesController {
 	@GetMapping(path = "/byPeddingUser/{userId}/countByFilters", produces = "application/json")
 	public ResponseEntity<Long> getCountPendingByUserPermission(
 		@PathVariable Integer userId,
-		@RequestParam(name = "searchNui", required = false) @Nullable String searchNui,
-    	@RequestParam(name = "searchUserCreator", required = false) @Nullable Integer searchUserCreator,
+		@RequestParam(name = "searchStartDate", required = false) @Nullable String searchStartDate,
+    	@RequestParam(name = "searchEndDate", required = false) @Nullable Integer searchEndDate,
     	@RequestParam(name = "searchDistrict", required = false) @Nullable Integer searchDistrict
 		) {
 
@@ -373,30 +373,30 @@ public class ReferencesController {
 				List<Integer> usersIds = users.stream().map(Users::getId).collect(Collectors.toList());
 				List<String> strUsersIds = usersIds.stream().map(String::valueOf).collect(Collectors.toList());
 
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountPendingByUserPermission",searchNui, searchUserCreator, searchDistrict
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountPendingByUserPermission",searchStartDate, searchEndDate, searchDistrict
 						,strUsersIds, ussId, usersIds);
 			} else if (user.getLocalities().size() > 0) {
 				List<Integer> localitiesId = user.getLocalities().stream().map(Locality::getId)
 						.collect(Collectors.toList());
 
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountPendingByLocalities",searchNui, searchUserCreator, searchDistrict, localitiesId);
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountPendingByLocalities",searchStartDate, searchEndDate, searchDistrict, localitiesId);
 
 			} else if (user.getDistricts().size() > 0) {
 
 				List<Integer> districtsId = user.getDistricts().stream().map(District::getId)
 						.collect(Collectors.toList());
 
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountPendingByDistricts",searchNui, searchUserCreator, searchDistrict, districtsId);
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountPendingByDistricts",searchStartDate, searchEndDate, searchDistrict, districtsId);
 
 			} else if (user.getProvinces().size() > 0) {
 
 				List<Integer> provincesId = user.getProvinces().stream().map(Province::getId)
 						.collect(Collectors.toList());
 
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountPendingByProvinces",searchNui, searchUserCreator, searchDistrict, provincesId);
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountPendingByProvinces",searchStartDate, searchEndDate, searchDistrict, provincesId);
 
 			} else {
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountAllPending",searchNui, searchUserCreator, searchDistrict);
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountAllPending",searchStartDate, searchEndDate, searchDistrict);
 			}
 
 			return new ResponseEntity<>(referencesTotal, HttpStatus.OK);
