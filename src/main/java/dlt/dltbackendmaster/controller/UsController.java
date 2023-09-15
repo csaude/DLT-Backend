@@ -96,15 +96,15 @@ public class UsController {
 		}
 	}
 	
-	@GetMapping(path = "/type/{typeId}/{localityId}", produces = "application/json")
-	public ResponseEntity<List<Us>> getByUsType(@PathVariable Integer typeId, @PathVariable Integer localityId){
+	@GetMapping(path = "/type/{typeId}/{localitiesIds}", produces = "application/json")
+	public ResponseEntity<List<Us>> getByUsType(@PathVariable Integer typeId, @PathVariable List<Integer> localitiesIds){
 		
-		if(typeId == null || localityId == null) {
+		if(typeId == null || localitiesIds.isEmpty()) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		}	
 		
 		try {
-			List<Us> uss = service.GetAllEntityByNamedQuery("Us.findByType", localityId, String.valueOf(typeId));
+			List<Us> uss = service.GetAllEntityByNamedQuery("Us.findByType", localitiesIds, String.valueOf(typeId));
 			
 			return new ResponseEntity<>(uss, HttpStatus.OK);
 		} catch (Exception e) {
