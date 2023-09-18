@@ -3,6 +3,7 @@ package dlt.dltbackendmaster.repository;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 /**
  * This interface represents the integrated Repository for all domains 
@@ -28,9 +29,13 @@ public interface DAORepository {
 
 	<T> T GetUniqueEntityByNamedQuery(String query,String searchNui, Integer searchUserCreator, Integer searchDistrict, Object... params);
 
+	// <T> T GetUniqueEntityByNamedQuery(String query,String searchStartDate, String searchEndDate, Object... params);
+
 	<T> List<T> GetAllEntityByNamedQuery(String query, Object... params);
 	
 	<T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize,String searchNui, Integer searchUserCreator, Integer searchDistrict , Object... params);
+
+    <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, Date searchStartDate, Date searchEndDate , Object... params);
 	
 	<T> List<T> GetByParamsPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, Object... params);
 	

@@ -2,6 +2,7 @@ package dlt.dltbackendmaster.repository;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -162,6 +163,29 @@ public class DAORepositoryImpl implements DAORepository {
 		return results;
 	}
 
+    @Override
+    public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, Date searchStartDate,
+            Date searchEndDate, Object... params) {
+        Query q = getCurrentSession().getNamedQuery(query);
+        int i = 0;
+        
+        for (Parameter param : q.getParameters()) {
+            if(!"searchEndDate".equals(param.getName()) && !"searchStartDate".equals(param.getName())) {
+                q.setParameter(param, params[i]);
+                i++;
+            }else {
+                q.setParameter("searchStartDate", searchStartDate);
+                q.setParameter("searchEndDate", searchEndDate); 
+            }   
+        }
+        List<T> results = q
+                .setFirstResult(pageIndex*pageSize)
+                .setMaxResults(pageSize)
+                .getResultList();
+
+        return results;
+    }
+    
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public <T> List<T> GetAllEntityByNamedNativeQuery(String query, Object... params) {
         Query q = getCurrentSession().getNamedNativeQuery(query);
@@ -310,4 +334,5 @@ public class DAORepositoryImpl implements DAORepository {
 
 		return results;
 	}
+
 }
