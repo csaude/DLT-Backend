@@ -7,6 +7,7 @@ import static dlt.dltbackendmaster.util.ProfilesConstants.NURSE;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -212,7 +213,7 @@ public class ReferencesController {
 
 			List<BeneficiariesInterventions> beneficiaryInterventions = service.GetAllEntityByNamedQuery(
 					"BeneficiaryIntervention.findAllByBeneficiaryAndDate",
-					reference.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+					Instant.ofEpochMilli(reference.getDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate(),
 					reference.getBeneficiaries().getId());
 			Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference, beneficiaryInterventions);
 			reference.setStatus(referenceStatus);
@@ -414,8 +415,10 @@ public class ReferencesController {
 
 		try {
 			for (References reference : references) {
-				Set<BeneficiariesInterventions> interventions = reference.getBeneficiaries()
-						.getBeneficiariesInterventionses();
+				List<BeneficiariesInterventions> interventions = service.GetAllEntityByNamedQuery(
+						"BeneficiaryIntervention.findAllByBeneficiaryAndDate",
+						Instant.ofEpochMilli(reference.getDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate(),
+						reference.getBeneficiaries().getId());
 				for (ReferencesServices referenceService : reference.getReferencesServiceses()) {
 
 					Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(interventions,

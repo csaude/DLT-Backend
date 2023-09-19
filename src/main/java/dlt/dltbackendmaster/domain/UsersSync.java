@@ -48,23 +48,23 @@ import dlt.dltbackendmaster.serializers.UssSerializer;
 @Entity
 @Table(name = "users", catalog = "dreams_db")
 @NamedNativeQueries({
-		@NamedNativeQuery(name = "UsersSync.findByLocalities", query = "SELECT u.* FROM users u "
+		@NamedNativeQuery(name = "UsersSync.findByLocalities", query = "SELECT distinct u.* FROM users u "
 				+ "LEFT JOIN users_localities ul on ul.user_id = u.id "
 				+ "where ul.locality_id in (:localities)", resultClass = UsersSync.class),
-		@NamedNativeQuery(name = "UsersSync.findByLocalitiesAndDateCreated", query = "SELECT u.* FROM users u "
+		@NamedNativeQuery(name = "UsersSync.findByLocalitiesAndDateCreated", query = "SELECT distinct u.* FROM users u "
 				+ "LEFT JOIN users_localities ul on ul.user_id = u.id "
 				+ "where ul.locality_id in (:localities) "
 				+ "and u.date_created >= :lastpulledat", resultClass = UsersSync.class),
-		@NamedNativeQuery(name = "UsersSync.findByLocalitiesAndDateUpdated", query = "SELECT u.* FROM users u "
+		@NamedNativeQuery(name = "UsersSync.findByLocalitiesAndDateUpdated", query = "SELECT distinct u.* FROM users u "
 				+ "LEFT JOIN users_localities ul on ul.user_id = u.id "
 				+ "where ul.locality_id in (:localities) "
 				+ "and u.date_created < :lastpulledat "
 				+ "and u.date_updated >= :lastpulledat", resultClass = UsersSync.class),
 
-		@NamedNativeQuery(name = "UsersSync.findByDistricts", query = "SELECT u.* FROM users u  "
+		@NamedNativeQuery(name = "UsersSync.findByDistricts", query = "SELECT distinct u.* FROM users u  "
 				+ "LEFT JOIN users_districts ud on ud.user_id = u.id "
 				+ "where ud.district_id in (:districts)", resultClass = UsersSync.class),
-		@NamedNativeQuery(name = "UsersSync.findByProvinces", query = "SELECT u.* FROM users u "
+		@NamedNativeQuery(name = "UsersSync.findByProvinces", query = "SELECT distinct u.* FROM users u "
 				+ "left join fetch u.users_provinces up on up.user_id = u.id "
 				+ "where up.province_id in (:provinces)", resultClass = UsersSync.class), })
 
