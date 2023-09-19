@@ -151,14 +151,11 @@ public class ReferencesController {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		}
 
-//		SimpleDateFormat sdf =  new SimpleDateFormat("yyyy-MM-dd");
-//		 String formattedStartDate = sdf.format(searchStartDate);
-//         String formattedEndDate = sdf.format(searchEndDate);
 		try {
 			Users user = service.find(Users.class, userId);
 
 			List<References> references = null;
-//			if (!Arrays.asList(MANAGER, MENTOR, NURSE, COUNSELOR).contains(user.getProfiles().getId()) && user.getUs().size() > 0) {
+			if (Arrays.asList(MANAGER, MENTOR, NURSE, COUNSELOR).contains(user.getProfiles().getId()) && user.getUs().size() > 0) {
 				List<Integer> ussId = user.getUs().stream().map(Us::getId).collect(Collectors.toList());
 				
 				List<Users> users = service.GetAllEntityByNamedQuery("Users.findByUsId", ussId);
@@ -167,33 +164,33 @@ public class ReferencesController {
 
 				references = service.GetAllPagedEntityByNamedQuery("References.findAllPendingByUserPermission", pageIndex,
 						pageSize, new Date(searchStartDate * 1000L), new Date(searchEndDate * 1000L), strUsersIds, ussId, usersIds);
-//			} else if (user.getLocalities().size() > 0) {
-//				List<Integer> localitiesId = user.getLocalities().stream().map(Locality::getId)
-//						.collect(Collectors.toList());
-//
-//				references = service.GetAllPagedEntityByNamedQuery("References.findPendingByLocalities", pageIndex, pageSize,
-//						searchStartDate,searchEndDate, searchDistrict, localitiesId);
+			} else if (user.getLocalities().size() > 0) {
+				List<Integer> localitiesId = user.getLocalities().stream().map(Locality::getId)
+						.collect(Collectors.toList());
 
-//			} else if (user.getDistricts().size() > 0) {
+				references = service.GetAllPagedEntityByNamedQuery("References.findPendingByLocalities", pageIndex, pageSize,
+						new Date(searchStartDate * 1000L), new Date(searchEndDate * 1000L), localitiesId);
 
-//				List<Integer> districtsId = user.getDistricts().stream().map(District::getId)
-//						.collect(Collectors.toList());
-//
-//				references = service.GetAllPagedEntityByNamedQuery("References.findPendingByDistricts", pageIndex, pageSize,
-//						searchStartDate,searchEndDate, searchDistrict, districtsId);
+			} else if (user.getDistricts().size() > 0) {
 
-//			} else if (user.getProvinces().size() > 0) {
+				List<Integer> districtsId = user.getDistricts().stream().map(District::getId)
+						.collect(Collectors.toList());
 
-//				List<Integer> provincesId = user.getProvinces().stream().map(Province::getId)
-//						.collect(Collectors.toList());
-//
-//				references = service.GetAllPagedEntityByNamedQuery("References.findPendingByProvinces", pageIndex, pageSize,
-//						searchStartDate,searchEndDate, searchDistrict, provincesId);
+				references = service.GetAllPagedEntityByNamedQuery("References.findPendingByDistricts", pageIndex, pageSize,
+						new Date(searchStartDate * 1000L), new Date(searchEndDate * 1000L), districtsId);
 
-//			} else {
-//				references = service.GetAllPagedEntityByNamedQuery("References.findAllPending", pageIndex, pageSize,
-//						searchStartDate,searchEndDate, searchDistrict);
-//			}
+			} else if (user.getProvinces().size() > 0) {
+
+				List<Integer> provincesId = user.getProvinces().stream().map(Province::getId)
+						.collect(Collectors.toList());
+
+				references = service.GetAllPagedEntityByNamedQuery("References.findPendingByProvinces", pageIndex, pageSize,
+						new Date(searchStartDate * 1000L), new Date(searchEndDate * 1000L), provincesId);
+
+			} else {
+				references = service.GetAllPagedEntityByNamedQuery("References.findAllPending", pageIndex, pageSize,
+						 new Date(searchStartDate * 1000L), new Date(searchEndDate * 1000L));
+			}
 
 			return new ResponseEntity<>(references, HttpStatus.OK);
 
