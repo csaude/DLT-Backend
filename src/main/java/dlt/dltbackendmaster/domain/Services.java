@@ -29,10 +29,16 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @NamedQueries({ 
 	@NamedQuery(name = "Service.findAll", 
 				query = "SELECT s FROM Services s WHERE s.status=1"),
+	@NamedQuery(name = "Service.findAny", 
+				query = "SELECT s FROM Services s "),
     @NamedQuery(name = "Service.findByDateCreated",
                 query = "SELECT s FROM Services s WHERE s.dateCreated >= :lastpulledat AND s.status=1"),
+    @NamedQuery(name = "Service.findAnyByDateCreated",
+    			query = "SELECT s FROM Services s WHERE s.dateCreated >= :lastpulledat "),
     @NamedQuery(name = "Service.findByDateUpdated",
                 query = "SELECT s FROM Services s WHERE s.dateCreated < :lastpulledat and s.dateUpdated >= :lastpulledat  AND s.status=1"),
+    @NamedQuery(name = "Service.findAnyByDateUpdated",
+    			query = "SELECT s FROM Services s WHERE s.dateCreated < :lastpulledat and s.dateUpdated >= :lastpulledat "),
     @NamedQuery(name = "Service.findByServiceType",
                 query = "SELECT s FROM Services s WHERE s.serviceType = :serviceType AND s.status=1") })
 public class Services implements java.io.Serializable {

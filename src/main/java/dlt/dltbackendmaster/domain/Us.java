@@ -59,7 +59,8 @@ import dlt.dltbackendmaster.serializers.UsTypeSerializer;
     @NamedQuery(name = "Us.findByLocalities", query = "SELECT u FROM Us u where u.locality.id in (:localities) and u.status=1"),
     @NamedQuery(name = "Us.findByType", query = "SELECT u FROM Us u "
 									    	  + "where u.usType.entryPoint = :ustype "
-									    	  + "and u.locality.id in :localities"),
+									    	  + "and u.locality.id in :localities "
+									    	  + "and u.status = 1"),
     @NamedQuery(name = "Us.findByDateCreated", query = "SELECT c FROM Us c WHERE c.dateCreated = :lastpulledat"),
     @NamedQuery(name = "Us.findByDateUpdated", query = "SELECT c FROM Us c WHERE c.dateUpdated = :lastpulledat"),
 

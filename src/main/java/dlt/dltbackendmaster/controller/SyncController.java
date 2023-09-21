@@ -240,10 +240,10 @@ public class SyncController {
 					Arrays.asList(localitiesIds.toArray()));
 			neighborhoodsUpdated = new ArrayList<Neighborhood>();
 
-			servicesCreated = service.GetAllEntityByNamedQuery("Service.findAll");
+			servicesCreated = service.GetAllEntityByNamedQuery("Service.findAny");
 			servicesUpdated = new ArrayList<Services>();
 
-			subServicesCreated = service.GetAllEntityByNamedQuery("SubService.findAll");
+			subServicesCreated = service.GetAllEntityByNamedQuery("SubService.findAny");
 			subServicesUpdated = new ArrayList<SubServices>();
 
 			// ReferencesServices
@@ -338,11 +338,11 @@ public class SyncController {
 			neighborhoodsCreated = service.GetAllEntityByNamedQuery("Neighborhood.findByDateCreated", validatedDate);
 			neighborhoodsUpdated = service.GetAllEntityByNamedQuery("Neighborhood.findByDateUpdated", validatedDate);
 
-			servicesCreated = service.GetAllEntityByNamedQuery("Service.findByDateCreated", validatedDate);
-			servicesUpdated = service.GetAllEntityByNamedQuery("Service.findByDateUpdated", validatedDate);
+			servicesCreated = service.GetAllEntityByNamedQuery("Service.findAnyByDateCreated", validatedDate);
+			servicesUpdated = service.GetAllEntityByNamedQuery("Service.findAnyByDateUpdated", validatedDate);
 
-			subServicesCreated = service.GetAllEntityByNamedQuery("SubService.findByDateCreated", validatedDate);
-			subServicesUpdated = service.GetAllEntityByNamedQuery("SubService.findByDateUpdated", validatedDate);
+			subServicesCreated = service.GetAllEntityByNamedQuery("SubService.findAnyByDateCreated", validatedDate);
+			subServicesUpdated = service.GetAllEntityByNamedQuery("SubService.findAnyByDateUpdated", validatedDate);
 
 			referencesCreated = service.GetAllEntityByNamedQuery(
 					"References.findByReferenceNotifyToOrReferredByAndDateCreated", user.getId(), validatedDate);

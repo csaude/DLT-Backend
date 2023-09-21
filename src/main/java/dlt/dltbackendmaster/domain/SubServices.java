@@ -35,10 +35,16 @@ import dlt.dltbackendmaster.serializers.ServiceSerializer;
 @NamedQueries({ 
 	@NamedQuery(name = "SubService.findAll", 
 				query = "SELECT ss FROM SubServices ss WHERE ss.status=1"),
+	@NamedQuery(name = "SubService.findAny", 
+				query = "SELECT ss FROM SubServices ss "),
     @NamedQuery(name = "SubService.findByDateCreated",
                 query = "SELECT ss FROM SubServices ss WHERE ss.dateCreated >= :lastpulledat AND ss.status=1"),
+    @NamedQuery(name = "SubService.findAnyByDateCreated",
+    			query = "SELECT ss FROM SubServices ss WHERE ss.dateCreated >= :lastpulledat "),
     @NamedQuery(name = "SubService.findByDateUpdated",
                 query = "SELECT ss FROM SubServices ss WHERE ss.dateCreated < :lastpulledat and ss.dateUpdated >= :lastpulledat AND ss.status=1"),
+    @NamedQuery(name = "SubService.findAnyByDateUpdated",
+    			query = "SELECT ss FROM SubServices ss WHERE ss.dateCreated < :lastpulledat and ss.dateUpdated >= :lastpulledat "),
     @NamedQuery(name = "SubService.findByService",
                 query = "SELECT ss FROM SubServices ss WHERE ss.services.id = :serviceId AND ss.status=1") })
 public class SubServices implements java.io.Serializable {
