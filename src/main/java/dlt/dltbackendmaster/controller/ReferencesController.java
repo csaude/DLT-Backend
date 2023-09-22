@@ -144,8 +144,8 @@ public class ReferencesController {
 	@GetMapping(path = "/pendingByUser/{userId}", produces = "application/json")
 	public ResponseEntity<List<References>> getAllPendingByUser(@PathVariable Integer userId,
 			@RequestParam(name = "pageIndex") int pageIndex, @RequestParam(name = "pageSize") int pageSize,
-			@RequestParam(name = "searchStartDate", required = false) @Nullable long searchStartDate,
-			@RequestParam(name = "searchEndDate", required = false) @Nullable long searchEndDate
+			@RequestParam(name = "searchStartDate", required = false) @Nullable Long searchStartDate,
+			@RequestParam(name = "searchEndDate", required = false) @Nullable Long searchEndDate
 			) {
 
 		if (userId == null) {
@@ -356,8 +356,8 @@ public class ReferencesController {
 	@GetMapping(path = "/byPeddingUser/{userId}/countByFilters", produces = "application/json")
 	public ResponseEntity<Long> getCountPendingByUserPermission(
 		@PathVariable Integer userId,
-		@RequestParam(name = "searchStartDate", required = false) @Nullable long searchStartDate,
-    	@RequestParam(name = "searchEndDate", required = false) @Nullable long searchEndDate
+		@RequestParam(name = "searchStartDate", required = false) long searchStartDate,
+    	@RequestParam(name = "searchEndDate", required = false) long searchEndDate
 		) {
 
 		if (userId == null) {

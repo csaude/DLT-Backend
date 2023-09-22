@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.security.auth.login.AccountLockedException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -108,6 +110,17 @@ public class DistrictController {
 			e.printStackTrace();
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}		
+	}
+	
+	@GetMapping(path = "/districts/get-districts", produces = "application/json")
+	public ResponseEntity<List<District>>  getNames() throws AccountLockedException {
+		try {
+			List<District> user = service.GetAllEntityByNamedQuery("District.findDistricts");
+
+			return new ResponseEntity<>(user, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 }

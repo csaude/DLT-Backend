@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,6 +67,28 @@ public class UserController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@GetMapping(path = "/paged", produces = "application/json")
+    public ResponseEntity<List<Users>> get(
+    		@RequestParam(name = "userId") Integer userId, 
+    		@RequestParam(name = "level") String level, 
+    		@RequestParam(name = "params",required = false) @Nullable Integer[] params,
+    		@RequestParam(name = "pageIndex") int pageIndex,
+    		@RequestParam(name = "pageSize") int pageSize,
+    		@RequestParam(name = "searchUsername", required = false) @Nullable String searchUsername,
+    		@RequestParam(name = "searchUserCreator", required = false) @Nullable Integer searchUserCreator
+    		) {
+
+        try {
+            List<Users> users = service.GetAllPagedEntityByNamedQuery("Users.findAll", pageIndex, pageSize, searchUsername, searchUserCreator);
+
+            return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 	@GetMapping(path = "/{Id}", produces = "application/json")
 	public ResponseEntity<Users> get(@PathVariable Integer Id) {
@@ -316,5 +339,5 @@ public class UserController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}		
 	}	
-
+	
 }

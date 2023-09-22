@@ -2,6 +2,8 @@ package dlt.dltbackendmaster.controller;
 
 import java.util.List;
 
+import javax.security.auth.login.AccountLockedException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +47,17 @@ public class ProfilesController {
 			Profiles profile = service.find(Profiles.class, id);
 
 			return new ResponseEntity<>(profile, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping(path = "/get-profiles", produces = "application/json")
+	public ResponseEntity<List<Profiles>>  getNames() throws AccountLockedException {
+		try {
+			List<Profiles> user = service.GetAllEntityByNamedQuery("Profiles.findProfiles");
+
+			return new ResponseEntity<>(user, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

@@ -162,6 +162,30 @@ public class DAORepositoryImpl implements DAORepository {
 
 		return results;
 	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchUsername, Integer searchUserCreator, Object... params) {
+		Query q = getCurrentSession().getNamedQuery(query);
+		int i = 0;
+		
+
+		for (Parameter param : q.getParameters()) {
+			if(!"searchUsername".equals(param.getName()) && !"searchUserCreator".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			}else {
+				q.setParameter("searchUsername", "%"+searchUsername+"%");
+				q.setParameter("searchUserCreator", searchUserCreator); 
+			}	
+		}
+
+		List<T> results = q
+				.setFirstResult(pageIndex*pageSize)
+				.setMaxResults(pageSize)
+				.getResultList();
+
+		return results;
+	}
 
     @Override
     public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, Date searchStartDate,
