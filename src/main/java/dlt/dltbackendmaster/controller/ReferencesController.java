@@ -375,7 +375,7 @@ public class ReferencesController {
 				List<Integer> usersIds = users.stream().map(Users::getId).collect(Collectors.toList());
 				List<String> strUsersIds = usersIds.stream().map(String::valueOf).collect(Collectors.toList());
 
-				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountPendingByUserPermission",new Date(searchStartDate * 1000L), new Date(searchEndDate * 1000L), 
+				referencesTotal = service.GetUniqueEntityByNamedQuery("References.findCountPendingByUserPermission",new Date(searchStartDate * 1000L), new Date(searchEndDate * 1000L),
 						strUsersIds, ussId, usersIds);
 			} else if (user.getLocalities().size() > 0) {
 				List<Integer> localitiesId = user.getLocalities().stream().map(Locality::getId)

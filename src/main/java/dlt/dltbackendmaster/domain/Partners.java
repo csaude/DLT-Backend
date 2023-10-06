@@ -61,7 +61,7 @@ import dlt.dltbackendmaster.serializers.DistrictSerializer;
 		@NamedQuery(name = "Partners.findByDistricts", query = "SELECT c FROM Partners c WHERE c.district.id in (:districtsIds)"),
 		@NamedQuery(name = "Partners.findById", query = "SELECT p FROM  Partners p where p.id =:id"),
 		@NamedQuery(name = "Partners.findByIds", query = "SELECT p FROM  Partners p where p.id in :ids"),
-	    @NamedQuery(name = "Partners.findPartners", query = "SELECT p.id as id, p.name as name FROM Partners p"), 
+	    @NamedQuery(name = "Partners.findPartners", query = "SELECT p.id as id, p.name as name FROM Partners p"),
 })
 public class Partners implements java.io.Serializable {
 

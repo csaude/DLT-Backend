@@ -76,11 +76,12 @@ public class UserController {
     		@RequestParam(name = "pageIndex") int pageIndex,
     		@RequestParam(name = "pageSize") int pageSize,
     		@RequestParam(name = "searchUsername", required = false) @Nullable String searchUsername,
-    		@RequestParam(name = "searchUserCreator", required = false) @Nullable Integer searchUserCreator
+    		@RequestParam(name = "searchUserCreator", required = false) @Nullable Integer searchUserCreator,
+    		@RequestParam(name = "searchDistrict", required = false) @Nullable Integer searchDistrict
     		) {
 
         try {
-            List<Users> users = service.GetAllPagedEntityByNamedQuery("Users.findAll", pageIndex, pageSize, searchUsername, searchUserCreator);
+            List<Users> users = service.GetAllPagedUserEntityByNamedQuery("Users.findAll", pageIndex, pageSize, searchUsername, searchUserCreator, searchDistrict);
 
             return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
         } catch (Exception e) {
@@ -123,7 +124,6 @@ public class UserController {
 						+ HttpStatus.FORBIDDEN);
 				return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 			}
-
 		} catch (Exception e) {
 			logger.warn("User " + user.getUsername()
 					+ " tried to register, but the system had unkown error, check error code returned "
@@ -197,6 +197,8 @@ public class UserController {
 		try {
 			user.setNewPassword(0);
 			user.setPassword(passwordEncoder.encode(users.getRecoverPassword()));
+			user.setUpdatedBy(user.getId());
+			user.setDateUpdated(new Date());
 			user.setPasswordLastChangeDate(new Date());
 			Users updatedUser = service.update(user);
 			logger.warn("User " + user.getUsername() + " changed password ");
@@ -338,6 +340,5 @@ public class UserController {
 			e.printStackTrace();
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}		
-	}	
-	
+	}
 }

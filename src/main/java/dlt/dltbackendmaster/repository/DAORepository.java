@@ -35,7 +35,7 @@ public interface DAORepository {
 	
 	<T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize,String searchNui, Integer searchUserCreator, Integer searchDistrict , Object... params);
 
-	<T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize,String searchUsername, Integer searchUserCreator , Object... params);
+	<T> List<T> GetAllPagedUserEntityByNamedQuery(String query, int pageIndex, int pageSize,String searchUsername, Integer searchUserCreator, Integer searchDistrict, Object... params);
 
     <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, Date searchStartDate, Date searchEndDate , Object... params);
 	

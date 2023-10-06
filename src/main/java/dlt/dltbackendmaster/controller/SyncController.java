@@ -272,7 +272,6 @@ public class SyncController {
 					referenceServicesCreatedCustomized.addAll(refServicesByRef);
 				}
 			}
-
 			beneficiariesCreated.addAll(beneficiariesCreatedCustomized);
 		} else {
 			Long t = Long.valueOf(lastPulledAt);
@@ -398,7 +397,6 @@ public class SyncController {
 					referenceServicesUpdatedCustomized.addAll(refServicesByRef);
 				}
 			}
-
 			beneficiariesUpdated.addAll(beneficiariesUpdatedCustomized);
 		}
 

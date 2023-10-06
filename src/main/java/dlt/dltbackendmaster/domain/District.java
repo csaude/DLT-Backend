@@ -40,7 +40,7 @@ import dlt.dltbackendmaster.serializers.ProvinceSerializer;
                             query = "SELECT d FROM District d WHERE d.province.id in (:provinces) and d.status=1"),
                 @NamedQuery(name = "District.findById",  query = "SELECT d FROM District d WHERE d.id =:id and d.status=1"),
                 @NamedQuery(name = "District.findByIds", query = "SELECT d FROM District d WHERE d.id in :ids and d.status=1"), 
-                @NamedQuery(name = "District.findDistricts", query = "SELECT d.id as id, d.name as name, d.code as code FROM District d"), 
+                @NamedQuery(name = "District.findDistricts", query = "SELECT d.id as id, d.name as name, d.code as code FROM District d"),
 })
 public class District implements java.io.Serializable
 {

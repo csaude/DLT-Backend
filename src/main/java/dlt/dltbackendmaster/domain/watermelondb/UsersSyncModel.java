@@ -23,7 +23,7 @@ public class UsersSyncModel {
 
 	public UsersSyncModel() {
 	}
-
+	
 	public String getId() {
 		return id;
 	}
@@ -195,5 +195,4 @@ public class UsersSyncModel {
 	public void setIs_awaiting_sync(Integer is_awaiting_sync) {
 		this.is_awaiting_sync = is_awaiting_sync;
 	}
-
 }
