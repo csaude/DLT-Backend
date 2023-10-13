@@ -100,7 +100,9 @@ public class PasswordUpdateController {
 		Users user = service.GetUniqueEntityByNamedQuery("Users.findByResetPasswordToken", token);
 
 		if (token == null || user == null) {
-			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(
+					"A confirmação da alteração da password falhou!<br>\n Por favor verifique o seu e-mail para solicitação mais recente.",
+					HttpStatus.BAD_REQUEST);
 		}
 
 		try {
@@ -110,7 +112,7 @@ public class PasswordUpdateController {
 			user.setRecoverPasswordToken(null);
 			Users updatedUser = service.update(user);
 			return new ResponseEntity<>(
-					"Confirmada a alteração da password do Utilizador " + updatedUser.getName() + " "
+					"Confirmada a alteração da password do utilizador " + updatedUser.getName() + " "
 							+ user.getSurname() + "!, " + " <a href=\"" + user.getRecoverPasswordOrigin() + "/dreams#/login\">Login</a>",
 					HttpStatus.OK);
 		} catch (Exception e) {

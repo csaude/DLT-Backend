@@ -43,7 +43,8 @@ import dlt.dltbackendmaster.serializers.DistrictSerializer;
     @NamedQuery(name = "Locality.findById", query = "SELECT c FROM Locality c WHERE c.id = :id"),
     @NamedQuery(name = "Locality.findByIds", query = "SELECT c FROM Locality c WHERE c.id in (:id)"),
     @NamedQuery(name = "Locality.findByIdsAndDateCreated", query = "SELECT c FROM Locality c WHERE c.id in (:id) and c.dateCreated >= :lastpulledat"),
-    @NamedQuery(name = "Locality.findByIdsAndDateUpdated", query = "SELECT c FROM Locality c WHERE c.id in (:id)and c.dateCreated < :lastpulledat and c.dateUpdated >= :lastpulledat")
+    @NamedQuery(name = "Locality.findByIdsAndDateUpdated", query = "SELECT c FROM Locality c WHERE c.id in (:id)and c.dateCreated < :lastpulledat and c.dateUpdated >= :lastpulledat"), 
+    @NamedQuery(name = "Locality.findLocalities", query = "SELECT l.id as id, l.name as name FROM Locality l")
 
 })
 public class Locality implements java.io.Serializable {

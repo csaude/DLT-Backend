@@ -69,7 +69,7 @@ import dlt.dltbackendmaster.serializers.UssSerializer;
 				+ "where up.province_id in (:provinces)", resultClass = Users.class), })
 
 @NamedQueries({ @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u "
-															+ " INNER JOIN u.districts d "
+															+ " LEFT JOIN u.districts d "
 															+ " Where u.username like :searchUsername "
 															+ " AND (:searchUserCreator IS NULL OR u.createdBy = :searchUserCreator OR u.updatedBy =:searchUserCreator) "
 											                + " AND (:searchDistrict IS NULL OR d.id = :searchDistrict) "

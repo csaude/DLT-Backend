@@ -3,6 +3,8 @@ package dlt.dltbackendmaster.controller;
 import java.util.Date;
 import java.util.List;
 
+import javax.security.auth.login.AccountLockedException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -89,4 +91,15 @@ public class LocalityController {
         }
 
     }
+	
+	@GetMapping(path = "/get-localities", produces = "application/json")
+	public ResponseEntity<List<Locality>>  getNames() throws AccountLockedException {
+		try {
+			List<Locality> locality = service.GetAllEntityByNamedQuery("Locality.findLocalities");
+
+			return new ResponseEntity<>(locality, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
