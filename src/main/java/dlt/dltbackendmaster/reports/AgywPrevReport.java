@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -215,8 +216,8 @@ public class AgywPrevReport {
 				}
 				if (completedSocialAssetsOldCurriculum(agywPrev) || completedSAAJEducationSessions(agywPrev)
 						|| (agywPrev.getVblt_sexually_active() != null && agywPrev.getVblt_sexually_active() == 1
-										&& completedHIVTestingServices(agywPrev)
-										&& completedCondomsPromotionOrProvision(agywPrev))) {
+								&& completedHIVTestingServices(agywPrev)
+								&& completedCondomsPromotionOrProvision(agywPrev))) {
 					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
 							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
 							COMPLETED_PRIMARY_SERVICE, agywPrev.getBeneficiary_id());
@@ -559,10 +560,11 @@ public class AgywPrevReport {
 
 		try {
 			String searchNui = null;
+			String searchName = null;
 			Integer searchUserCreator = null;
 			Integer searchDistrict = null;
-			Long totalBeneficiaries = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByDistricts", searchNui, searchUserCreator, searchDistrict,
-					Arrays.asList(district));
+			Long totalBeneficiaries = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByDistricts", searchNui,
+					searchName, searchUserCreator, searchDistrict, Arrays.asList(district));
 			Long maleBeneficiaries = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByDistrictAndGender",
 					'1', district);
 			Long femaleBeneficiaries = service.GetUniqueEntityByNamedQuery("Beneficiary.findCountByDistrictAndGender",
@@ -603,5 +605,21 @@ public class AgywPrevReport {
 		ro.setTotals(null);
 
 		return ro;
+	}
+
+	public List<Object> countNewlyEnrolledAgywAndServices(Integer[] districts, Date startDate, Date endDate) {
+		List<Object> total = service.GetByNamedNativeQuery("AgywPrev.countNewlyEnrolledAgywAndServices", Arrays.asList(districts), startDate, endDate);
+	    return total;
+	}
+	
+	public List<Object>  getNewlyEnrolledAgywAndServices(Integer[] districts, Date startDate,	Date endDate, int pageIndex, int pageSize) {
+		List<Object> dataObjs = service.GetAllPagedEntityByNamedNativeQuery("AgywPrev.findByNewlyEnrolledAgywAndServices", pageIndex,  pageSize, startDate, endDate,  Arrays.asList(districts));
+
+	return dataObjs;
+	}
+	public List<Object>  getNewlyEnrolledAgywAndServicesSummary(Integer[] districts, Date startDate,	Date endDate) {
+		List<Object> dataObjs = service.GetByNamedNativeQuery("AgywPrev.findByNewlyEnrolledAgywAndServicesSummary", Arrays.asList(districts), startDate, endDate);
+
+	return dataObjs;
 	}
 }

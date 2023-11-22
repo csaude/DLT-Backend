@@ -53,6 +53,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.us "
 																+ " where b.status = 1 "
 																+ " and b.nui like :searchNui "
+																+ " and concat(b.name, \' \' ,b.surname) like concat('%',:searchName,'%') "
 																+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
 																+ " order by b.id desc"
@@ -85,6 +86,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.us "
                 												+ " where b.locality.id in (:localities) "
                 												+ " and b.nui like :searchNui "
+																+ " and concat(b.name, \' \' ,b.surname) like concat('%',:searchName,'%') "
                 												+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
                 												+ " and b.status = 1 "
@@ -99,6 +101,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " or b.id in (SELECT r.beneficiaries.id from References r "
 																+ "				where r.notifyTo.id = :userId)) "
 																+ " and b.nui like :searchNui "
+																+ " and concat(b.name, \' \' ,b.surname) like concat('%',:searchName,'%') "
 																+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
 																+ " and b.status = 1 "
@@ -111,6 +114,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.us "
                 												+ " where b.district.id in (:districts) "
                 												+ " and b.nui like :searchNui "
+																+ " and concat(b.name, \' \' ,b.surname) like concat('%',:searchName,'%') "
                 												+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
                 												+ " and b.status = 1 "
@@ -123,6 +127,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " left join fetch b.us "
                 												+ " where b.district.province.id in (:provinces) "
                 												+ " and b.nui like :searchNui "
+																+ " and concat(b.name, \' \' ,b.surname) like concat('%',:searchName,'%') "
                 												+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
                 												+ " and b.status = 1 "
@@ -162,6 +167,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ "				where r.notifyTo.id = :userId)) "
 																+ " and b.status = 1 "
 																+ " and b.nui like :searchNui "
+																+ " and concat(b.name, \' \' ,b.surname) like concat('%',:searchName,'%') "
                 												+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
 																+ ""),
@@ -169,6 +175,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " where b.district.id in (:districts)"
 																+ " and b.status = 1 "
 																+ " and b.nui like :searchNui "
+																+ " and concat(b.name, \' \' ,b.surname) like concat('%',:searchName,'%') "
                 												+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
 																+ ""),
@@ -181,12 +188,14 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " where b.district.province.id in (:provinces) "
 																+ " and b.status = 1 "
 																+ " and b.nui like :searchNui "
+																+ " and concat(b.name, \' \' ,b.surname) like concat('%',:searchName,'%') "
                 												+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
 																+ ""),
 				@NamedQuery(name = "Beneficiary.findCountAll", query = "SELECT count(b.id) as total FROM Beneficiaries b "
 																+ " where b.status = 1 "
 																+ " and b.nui like :searchNui "
+																+ " and concat(b.name, \' \' ,b.surname) like concat('%',:searchName,'%') "
                 												+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
 																+ ""),
@@ -615,7 +624,7 @@ public class Beneficiaries implements java.io.Serializable
     }
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "date_of_birth", nullable = false, length = 10)
+    @Column(name = "date_of_birth", nullable = true, length = 10)
     public Date getDateOfBirth() {
         return this.dateOfBirth;
     }
@@ -1137,7 +1146,7 @@ public class Beneficiaries implements java.io.Serializable
         this.name = model.getName();
         this.surname = model.getSurname();
         this.nickName = model.getNick_name();
-        this.partners.setId(model.getOrganization_id());
+        this.partners = model.getOrganization_id() == 0 ? null : new Partners(model.getOrganization_id());
         this.dateOfBirth = model.getDate_of_birth();
         this.dateCreated = model.getDate_created();
         this.dateUpdated = model.getDate_updated();
@@ -1149,7 +1158,7 @@ public class Beneficiaries implements java.io.Serializable
         this.via = model.getVia();
         this.nationality = model.getNationality();
         this.entryPoint = model.getEntry_point();
-        this.neighborhood = model.getNeighborhood_id() == 0? null : new Neighborhood(model.getNeighborhood_id());
+        this.neighborhood = model.getNeighborhood_id() == 0 ? null : new Neighborhood(model.getNeighborhood_id());
         this.us = model.getUs_id() == 0? null : new Us(model.getUs_id());
         this.status = Integer.valueOf(model.getStatus());
         this.vbltLivesWith = model.getVblt_lives_with();

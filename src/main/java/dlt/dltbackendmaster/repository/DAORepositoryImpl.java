@@ -100,6 +100,33 @@ public class DAORepositoryImpl implements DAORepository {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> T GetUniqueEntityByNamedQuery(String query, String searchNui, String searchName, Integer searchUserCreator, Integer searchDistrict, Object... params) {
+		Query q = getCurrentSession().getNamedQuery(query);
+		
+		int i = 0;
+		for (Parameter param : q.getParameters()) {
+			if(!"searchNui".equals(param.getName()) && !"searchName".equals(param.getName()) && !"searchUserCreator".equals(param.getName()) && !"searchDistrict".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			}else {
+				q.setParameter("searchNui", "%"+searchNui+"%");
+				q.setParameter("searchName", "%"+searchName+"%");
+				q.setParameter("searchUserCreator",searchUserCreator); 
+				q.setParameter("searchDistrict", searchDistrict); 
+			}	
+		}
+
+		List<T> results = q.list();
+
+		T foundentity = null;
+		if (!results.isEmpty()) {
+			// ignores multiple results
+			foundentity = results.get(0);
+		}
+		return foundentity;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public <T> T GetUniqueEntityByNamedQuery(String query, String searchNui, Integer searchUserCreator, Integer searchDistrict, Object... params) {
 		Query q = getCurrentSession().getNamedQuery(query);
 		
@@ -150,6 +177,32 @@ public class DAORepositoryImpl implements DAORepository {
 				i++;
 			}else {
 				q.setParameter("searchNui", "%"+searchNui+"%");
+				q.setParameter("searchUserCreator",searchUserCreator); 
+				q.setParameter("searchDistrict", searchDistrict); 
+			}	
+		}
+
+		List<T> results = q
+				.setFirstResult(pageIndex*pageSize)
+				.setMaxResults(pageSize)
+				.getResultList();
+
+		return results;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchNui, String searchName, Integer searchUserCreator, Integer searchDistrict, Object... params) {
+		Query q = getCurrentSession().getNamedQuery(query);
+		int i = 0;
+		
+
+		for (Parameter param : q.getParameters()) {
+			if(!"searchNui".equals(param.getName()) && !"searchName".equals(param.getName()) && !"searchUserCreator".equals(param.getName()) && !"searchDistrict".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			}else {
+				q.setParameter("searchNui", "%"+searchNui+"%");
+				q.setParameter("searchName", "%"+searchName+"%");
 				q.setParameter("searchUserCreator",searchUserCreator); 
 				q.setParameter("searchDistrict", searchDistrict); 
 			}	
@@ -220,6 +273,51 @@ public class DAORepositoryImpl implements DAORepository {
         }
 
         List<T> results = q.getResultList();
+
+        return results;
+    }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public <T> List<T> GetByNamedNativeQuery(String query, List<Integer> districts, Date startDate, Date endDate, Object... params) {
+        Query q = getCurrentSession().getNamedNativeQuery(query);
+        int i = 0;
+   
+        for (Parameter param : q.getParameters()) {
+			if(!"districts".equals(param.getName()) && !"startDate".equals(param.getName()) && !"endDate".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			}else {
+				q.setParameter("districts", districts);
+				q.setParameter("startDate", startDate);
+				q.setParameter("endDate", endDate); 
+			}	
+		}
+
+        List<T> results = q.getResultList();
+
+        return results;
+    }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public <T> List<T> GetAllPagedEntityByNamedNativeQuery(String query, int pageIndex, int pageSize, Date startDate, Date endDate,  List<Integer>districts, Object... params) {
+        Query q = getCurrentSession().getNamedNativeQuery(query);
+        int i = 0;
+      
+        for (Parameter param : q.getParameters()) {
+			if(!"districts".equals(param.getName()) && !"startDate".equals(param.getName()) && !"endDate".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			}else {
+				q.setParameter("districts", districts);
+				q.setParameter("startDate", startDate);
+				q.setParameter("endDate", endDate); 
+			}	
+		}
+
+        List<T> results = q
+                .setFirstResult(pageIndex*pageSize)
+                .setMaxResults(pageSize)
+                .getResultList();
 
         return results;
     }

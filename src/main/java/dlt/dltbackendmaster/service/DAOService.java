@@ -34,11 +34,15 @@ public interface DAOService {
 
 	<T> T GetUniqueEntityByNamedQuery(String query, Object... params);
 
+	<T> T GetUniqueEntityByNamedQuery(String query, String searchNui, String searchName, Integer searchUserCreator, Integer searchDistrict, Object... params);
+
 	<T> T GetUniqueEntityByNamedQuery(String query, String searchNui, Integer searchUserCreator, Integer searchDistrict, Object... params);
 
 	<T> T GetUniqueEntityByNamedQuery(String query, String searchStartDate, String searchEndDate, Object... params);
 
 	<T> List<T> GetAllEntityByNamedQuery(String query, Object... params);
+	
+	<T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchNui, String searchName, Integer searchUserCreator, Integer searchDistrict, Object... params);
 	
 	<T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchNui, Integer searchUserCreator, Integer searchDistrict, Object... params);
 	
@@ -47,6 +51,10 @@ public interface DAOService {
     <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, Date searchStartDate, Date searchEndDate, Object... params);
 
     <T> List<T> GetAllEntityByNamedNativeQuery(String query, Object... params);
+    
+    <T> List<T> GetByNamedNativeQuery(String query, List<Integer> districts, Date startDate, Date endDate, Object... params);
+    
+    <T> List<T> GetAllPagedEntityByNamedNativeQuery(String query, int pageIndex, int pageSize, Date startDate, Date endDate, List<Integer> districts, Object... params);
 	
 	<T> T find(Class<T> klass, Object id);
 

@@ -79,6 +79,11 @@ public class DAOServiceImpl implements DAOService {
 	}
 
 	@Transactional
+	public <T> T GetUniqueEntityByNamedQuery(String query, String searchNui, String searchName, Integer searchUserCreator, Integer searchDistrict, Object... params) {
+		return repository.GetUniqueEntityByNamedQuery(query, searchNui, searchName, searchUserCreator, searchDistrict, params);
+	}
+
+	@Transactional
 	public <T> T GetUniqueEntityByNamedQuery(String query, String searchNui, Integer searchUserCreator, Integer searchDistrict, Object... params) {
 		return repository.GetUniqueEntityByNamedQuery(query, searchNui, searchUserCreator, searchDistrict, params);
 	}
@@ -91,6 +96,12 @@ public class DAOServiceImpl implements DAOService {
 	@Transactional
 	public <T> List<T> GetAllEntityByNamedQuery(String query, Object... params) {
 		return repository.GetAllEntityByNamedQuery(query, params);
+	}
+
+	@Transactional
+	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchNui, String searchName, Integer searchUserCreator, Integer searchDistrict,
+			Object... params) {
+		return repository.GetAllPagedEntityByNamedQuery(query, pageIndex, pageSize, searchNui, searchName, searchUserCreator, searchDistrict, params);
 	}
 
 	@Transactional
@@ -120,6 +131,15 @@ public class DAOServiceImpl implements DAOService {
 	@Transactional
 	public <T> List<T> GetAllEntityByNamedNativeQuery(String query, Object... params) {
 		return repository.GetAllEntityByNamedNativeQuery(query, params);
+	}
+	
+	@Transactional
+	public <T> List<T> GetByNamedNativeQuery(String query,  List<Integer> districts, Date startDate, Date endDate, Object... params) {
+		return repository.GetByNamedNativeQuery(query, districts,  startDate,  endDate, params);
+	}
+	@Transactional
+	public <T> List<T> GetAllPagedEntityByNamedNativeQuery(String query, int pageIndex, int pageSize, Date startDate, Date endDate, List<Integer> districts, Object... params) {
+		return repository.GetAllPagedEntityByNamedNativeQuery(query, pageIndex, pageSize, startDate, endDate, districts, params);
 	}
 
 	@Override

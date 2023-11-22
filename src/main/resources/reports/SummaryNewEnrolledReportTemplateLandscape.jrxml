@@ -1,0 +1,883 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LISTA DE RAMJ" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="3054277f-e571-4287-b139-b4d6bcbb3bd0">
+	<parameter name="date_start" class="java.lang.String"/>
+	<parameter name="date_end" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="provincia" class="java.lang.String"/>
+	<field name="distrito" class="java.lang.String"/>
+	<field name="data_ultima_sessao_outros_servicos_saaj" class="java.lang.String"/>
+	<field name="data_ultima_sessao_cuidados_pos_violencia_comunitarios" class="java.lang.String"/>
+	<field name="cuidados_pos_violencia_clinicos" class="java.lang.String"/>
+	<field name="data_ultima_sessao_promocao_provisao_contracepcao" class="java.lang.String"/>
+	<field name="cuidados_pos_violencia_comunitarios" class="java.lang.String"/>
+	<field name="abordagens_socio_economicas_combinadas" class="java.lang.String"/>
+	<field name="data_ultima_sessao_cuidados_pos_violencia_clinicos" class="java.lang.String"/>
+	<field name="data_ultima_sessao_abordagens_socio_economicas_combinadas" class="java.lang.String"/>
+	<field name="data_ultima_sessao_ats" class="java.lang.String"/>
+	<field name="data_ultima_sessao_promocao_provisao_preservativos" class="java.lang.String"/>
+	<field name="data_ultima_sessao_prep" class="java.lang.String"/>
+	<field name="promocao_provisao_contracepcao" class="java.lang.String"/>
+	<field name="sessoes_educativas_incl_ssr_na_saaj" class="java.lang.String"/>
+	<field name="data_ultima_sessao_subsidio_escolar" class="java.lang.String"/>
+	<field name="promocao_provisao_preservativos" class="java.lang.String"/>
+	<field name="aconselhamento_testagem_saude" class="java.lang.String"/>
+	<field name="subsidio_escolar" class="java.lang.String"/>
+	<field name="data_ultima_sessao_hiv" class="java.lang.String"/>
+	<field name="data_ultima_sessao_saaj" class="java.lang.String"/>
+	<field name="data_ultima_sessao_literacia_financeira" class="java.lang.String"/>
+	<field name="nui" class="java.lang.String"/>
+	<field name="idade_actual" class="java.lang.String"/>
+	<field name="agyw_prev" class="java.lang.String"/>
+	<field name="referencias_clinicas_nao_atendidas" class="java.lang.String"/>
+	<field name="sessoes_prevencao_hiv" class="java.lang.String"/>
+	<field name="sessoes_prevencao_vbg" class="java.lang.String"/>
+	<field name="data_ultima_sessao_recursos_sociais" class="java.lang.String"/>
+	<field name="sessoes_literacia_financeira" class="java.lang.String"/>
+	<field name="outros_servicos_saaj" class="java.lang.String"/>
+	<field name="referencias_comunitarias_nao_atendidas" class="java.lang.String"/>
+	<field name="numero_vulnerabilidades" class="java.lang.String"/>
+	<field name="prep" class="java.lang.String"/>
+	<field name="index" class="java.lang.String"/>
+	<field name="faixa_etaria_actual" class="java.lang.String"/>
+	<field name="sessoes_recursos_sociais" class="java.lang.String"/>
+	<field name="data_ultima_sessao_vbg" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="137" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="760" height="30" isPrintWhenDetailOverflows="true" uuid="105d3169-044f-4298-8b1b-f8745c90c82b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["RELATÓRIO RESUMO DE RAMJ REGISTADAS NO DLT NO PERÍODO EM CONSIDERAÇÃO, SUAS VULNERABILIDADES E SERVIÇOS RECEBIDOS "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="44" width="90" height="18" uuid="6d9de0d6-87f0-4bf3-8585-e4830fa2ee0a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data de Inicio:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="62" width="90" height="18" uuid="cde60775-dc77-4f05-810e-218dba17d411"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data de Fim:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="44" width="100" height="18" uuid="3baee868-4aef-40f3-b1dd-479f495b3f36"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{date_start}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="90" y="62" width="100" height="18" uuid="fbda0d26-7321-47aa-bae3-b5476e484d3d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{date_end}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="480" y="80" width="280" height="28" isPrintWhenDetailOverflows="true" uuid="82bcae70-c306-4a66-b045-2aa89e10ce5e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Serviços Secundários"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="200" y="80" width="280" height="28" isPrintWhenDetailOverflows="true" uuid="25cc726d-3b30-4201-a397-f953044e6c11"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Serviços Primários"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="0" y="80" width="200" height="28" isPrintWhenDetailOverflows="true" uuid="387340a9-b156-4ca3-b5e3-580dfd076566"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Dados da Beneficiária"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="420" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="dc4dbcf3-b842-43d7-81ef-6e493d948a23"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data da Última Sessão: ATS"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="440" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="26b92b9c-7099-479e-a395-c85b0f8758aa"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Promoção e Provisão de Preservativos Primário para: 15+ ou Sexualmente Activas"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="460" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="9a4bc7db-13a2-4fff-9617-50f284e298d9"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data da Última Sessão: Promoção e Provisão de Preservativos"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="500" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="d815f3c3-0bae-4374-8867-0f41a4622cb2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data da Última Sessão: Promoção e Provisão de Contracepção"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="520" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="1a499ed2-537b-4092-9068-9a50cbbf8c92"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Abordagens Sócio Económicas Combinadas"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="540" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="d2aefd54-43c5-48e4-9d0c-16e720c43a47"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data da Última Sessão: Abordagens Sócio Económicas Combinadas"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="560" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="8250ccc0-f33a-42d2-8701-0b6a471ae3d0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Subsídio Escolar"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="580" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="85eec89f-a978-4f53-ae90-6d36c7121b0f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data da Última Sessão: Subsídio Escolar"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="600" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="8a423d25-4965-4263-bcd6-e32aa818fb00"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Cuidados Pós Violência (Comunitários)"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="620" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="d7c87301-b0dd-4dc7-a6dc-a6496e9dc063"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data da Última Sessão: Cuidados Pós Violência (Comunitários)"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="640" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="0c5a1833-3dc3-4e1a-91b1-859683b21b4e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Cuidados Pós Violência (Clinicos)"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="660" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="3d89af3e-7177-49e7-830c-47b26f0f1425"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data da Última Sessão: Cuidados Pós Violência (Clinicos)"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="680" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="02b7463d-8b83-45c1-b023-98d23db65c01"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Outros Serviços do SAAJ"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="700" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="6b8bb140-809d-429c-84dd-e91b3ed967b8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data da Última Sessão: Outros Serviços do SAAJ"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="720" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="b8a96961-ce6c-4e8f-a4a7-bd81003f5178"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PrEP"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="740" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="92d04ee6-cdec-4276-a556-d0bdf2a2710d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data da Última Sessão: PrEP"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="20" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="3b32bdc5-9104-42f6-b165-3918437edfe8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Província"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="40" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="76b744b5-a450-4f4b-9655-31627c1f31e8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Distrito"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="60" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="326264d9-a014-449e-97fa-4205e889b77e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["NUI"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="80" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="4e20bbed-8435-46b1-8daf-bc4fb5863fe3"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Idade Actual"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="100" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="e174bcad-f08d-4784-a185-a7e8065242a6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Faixa Etária Actual"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="120" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="f587e66f-1058-47d5-8c5d-7f496d69c055"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Número de Vulnerabilidades"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="140" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="7d262669-0f7e-4624-9ecb-d3f442ee87ef"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Incluida no Indicador AGYW_PREV / Beneficiaria DREAMS ?"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="160" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="3bb898b1-a680-4511-afa5-89abf9553df2"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Referências Clinicas não atendidas"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="180" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="cba44552-d2d6-418b-9807-d5852c294fbd"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Referências Comunitárias não atendidas"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="200" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="3c059afa-4716-4807-8488-c36d76d7a0f8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" Sessões de Recursos Sociais"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="220" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="d084b3f3-f446-4ea7-91c5-395c3ec29d28"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data da Última Sessão: Recursos Sociais"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="240" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="89d404c2-9d94-45c2-88f6-ec2b8c5ac72c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" Sessões de Prevenção do HIV"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="260" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="ae2c1f66-30a1-42fa-a6f6-8a521a1fe489"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data da Última Sessão: HIV"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="280" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="1acde190-27c1-42e6-9fce-cd1ae77bba67"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Sessões de Prevenção do VBG"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="300" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="82006223-e41b-4177-8bfb-a1ba707f1a5b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data da Última Sessão: VBG"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="320" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="f836f216-5ea9-4a96-8f8a-7ae349d514ff"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Sessões Educativas Incluindo SSR (No SAAJ) Primário para: 10-14"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="340" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="2d09d4c0-4d57-4300-8e43-392331b79a32"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data da Última Sessão: SAAJ"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="360" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="ffc8dbf4-b7a4-48c1-b205-52fe2e0c1af7"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Sessões de Literacia Financeira"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="380" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="04e4f7dc-5f6c-462d-a96c-cd2a397bfe24"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data da Última Sessão: Literacia Financeira"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="400" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="b5bee4e5-6553-4f0d-8ac7-7a7c360fa263"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Aconselhamento e Testagem em Saúde Primário para: 15+ ou Sexualmente Activas"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="0" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="f90d4245-0b13-4435-b859-79eb17f82c14"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["#"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="480" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="89a63424-1cc2-4de9-9472-1a614077d89c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Promoção e Provisão de Contracepção"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="32" splitType="Stretch">
+			<textField textAdjust="ScaleFont">
+				<reportElement x="20" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="1475a74f-f501-4abf-8c53-0e6aa843d7c9"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{provincia}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="40" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="2b0ffe5a-7ad8-4c18-a827-956fa368ad0e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{distrito}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="60" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="8822287a-f73a-4ad9-b4a1-d4546643bfac"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nui}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="80" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="b0dbdb6f-c7f2-471b-8a31-dbdf01878373"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idade_actual}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="100" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="15e9a3cc-b26f-41dc-a5a7-4625fd2fa83c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{faixa_etaria_actual}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="120" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="31f9e80c-2b47-4ea0-857a-8c33d5c76d1d"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero_vulnerabilidades}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="140" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="7b23d7e6-0ccf-462b-b4a8-e3b239bdd780"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{agyw_prev}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="160" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="769edd9a-8c07-4fd4-8bf6-8794ebfa3e12"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{referencias_clinicas_nao_atendidas}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="180" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="dc78c1da-6b68-46c9-a006-58ed477a7ebd"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{referencias_comunitarias_nao_atendidas}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="200" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="8f3add31-184c-41fe-beeb-09e3e9d3d752"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sessoes_recursos_sociais}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="220" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="8cfa5956-8a66-43b0-aa14-8e703d13b90f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_ultima_sessao_recursos_sociais}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="240" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="bfb5304a-851b-4459-a77e-b81baf6066f8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sessoes_prevencao_hiv}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="260" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="6d75e00e-a800-41be-bc76-61b36389c072"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_ultima_sessao_hiv}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="280" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="9f4dd95b-25f6-4b70-b674-7848713fc43b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sessoes_prevencao_vbg}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="300" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="012c1f74-dab1-4a0e-a7b7-e7442ccbb94a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_ultima_sessao_vbg}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="320" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="89d46c91-c8b4-4338-9988-c343e871070f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sessoes_educativas_incl_ssr_na_saaj}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="340" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="5ef1c7c2-1b62-4795-8b72-3ea1c50fe398"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_ultima_sessao_saaj}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="360" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="dbb98c00-0b6a-4a34-85cc-3eb4ecdd5093"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sessoes_literacia_financeira}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="380" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="e4079db5-d91a-43d5-8233-dcbbc323e74f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_ultima_sessao_literacia_financeira}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="400" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="7a5793a2-ef26-4622-a489-678581beafcc"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{aconselhamento_testagem_saude}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="420" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="331168ab-33bb-4eb3-9ef3-0021cc19a095"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_ultima_sessao_ats}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="440" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="f980b954-708b-4c6f-a91a-f5f1b354337f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{promocao_provisao_preservativos}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="460" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="055036cb-dc03-4436-a11b-b078589079e0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_ultima_sessao_promocao_provisao_preservativos}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="480" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="797908b0-dd5d-4ef4-903f-cadb4cb29a9c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{promocao_provisao_contracepcao}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="500" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="a35ff99f-9535-4f06-a468-d5a9459a434a"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_ultima_sessao_promocao_provisao_contracepcao}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="520" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="cf869a4c-93c8-425e-b83d-62794931163c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{abordagens_socio_economicas_combinadas}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="540" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="789b0f66-c678-490b-b301-e600e6fab320"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_ultima_sessao_abordagens_socio_economicas_combinadas}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="560" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="1ba24507-7eb5-4d6f-b30d-3ab94ede9d58"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{subsidio_escolar}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="580" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="a63c9016-4110-4714-b25b-49cf579e3aba"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_ultima_sessao_subsidio_escolar}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="600" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="d03503b5-3db8-4a43-a5c2-27ecf413c9c5"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cuidados_pos_violencia_comunitarios}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="620" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="f63e4a94-99bc-4ef0-8a1b-323c202167f7"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_ultima_sessao_cuidados_pos_violencia_comunitarios}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="640" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="628203ef-35c6-4f53-ba2d-eaab8270329b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cuidados_pos_violencia_clinicos}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="660" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="a5c9b0b6-7f7f-4e60-b3b4-c1232d12ac45"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_ultima_sessao_cuidados_pos_violencia_clinicos}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="680" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="8b440cf7-6124-412c-936c-0beafbe041a8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{outros_servicos_saaj}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="700" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="75516144-24df-46e8-9959-6bbd4eedc8c6"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_ultima_sessao_outros_servicos_saaj}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="720" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="e24fb6a0-1ce0-4b98-86f1-fd8d462c84b7"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prep}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="740" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="3ef296e0-4041-4c9e-8df0-7bb65d906f53"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_ultima_sessao_prep}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="0" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="4b56ef91-8bc5-4f7f-a858-4d3e4467f71f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{index}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
