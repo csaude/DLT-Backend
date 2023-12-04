@@ -21,7 +21,8 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "users_last_sync", catalog = "dreams_db")
 @NamedQueries({
-		@NamedQuery(name = "UserLastSync.findByUsername", query = "SELECT a FROM UserLastSync a WHERE a.username =:username"), })
+		@NamedQuery(name = "UserLastSync.findByUsername", query = "SELECT a FROM UserLastSync a WHERE a.username =:username"), 		
+		@NamedQuery(name = "UserLastSync.findAll", query = "SELECT a FROM UserLastSync a"), })
 public class UserLastSync implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

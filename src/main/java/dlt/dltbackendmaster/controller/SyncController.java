@@ -47,6 +47,7 @@ import dlt.dltbackendmaster.domain.ReferencesServicesId;
 import dlt.dltbackendmaster.domain.Services;
 import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.domain.Us;
+import dlt.dltbackendmaster.domain.UserLastSync;
 import dlt.dltbackendmaster.domain.UsersBeneficiariesCustomSync;
 import dlt.dltbackendmaster.domain.UsersSync;
 import dlt.dltbackendmaster.domain.watermelondb.BeneficiaryInterventionSyncModel;
@@ -827,4 +828,16 @@ public class SyncController {
 					.toArray(Integer[]::new);
 		}
 	}
+	
+	@GetMapping(path = "/usersLastSync", produces = "application/json")
+	public ResponseEntity <List<UserLastSync>> getUsersLastSync() throws ParseException {
+		try {	
+			List<UserLastSync> usersLastSync = service.GetAllEntityByNamedQuery("UserLastSync.findAll");
+			return ResponseEntity.ok(usersLastSync);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }
