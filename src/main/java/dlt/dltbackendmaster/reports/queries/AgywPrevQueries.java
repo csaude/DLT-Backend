@@ -758,7 +758,7 @@ public class AgywPrevQueries {
 			+ "	where v.intervention_date <= :endDate\n"
 			+ "	-- and v.vulneravel=1\n"
 			+ "	-- and pr.id in (2,8)\n"
-			+ "	and dt.id in (30)\n"
+			+ "	and dt.id in (:districts)\n"
 			+ "	order by pr.name, dt.name, nui\n"
 			+ ") a";
 	public static final String VULNERABILITIES_AND_SERVICES_SUMMARY=""

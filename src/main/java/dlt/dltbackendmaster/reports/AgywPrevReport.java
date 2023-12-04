@@ -639,7 +639,7 @@ public class AgywPrevReport {
 	public List<Object> getBeneficiariesVulnerabilitiesAndServices(Integer[] districts, Date startDate, Date endDate,
 			int pageIndex, int pageSize) {
 		List<Object> dataObjs = service.GetAllPagedEntityByNamedNativeQuery(
-				"AgywPrev.findBeneficiariesVulnerabilitiesAndServices", pageIndex, pageSize, startDate, endDate,
+				"AgywPrev.findByBeneficiariesVulnerabilitiesAndServices", pageIndex, pageSize, startDate, endDate,
 				Arrays.asList(districts));
 
 		return dataObjs;
