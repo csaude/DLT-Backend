@@ -15,7 +15,10 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -67,6 +70,7 @@ import dlt.dltbackendmaster.util.ServiceCompletionRules;
 @RestController
 @RequestMapping("/sync")
 public class SyncController {
+	Logger logger = LoggerFactory.getLogger(SyncController.class);
 
 	private final DAOService service;
 	private SequenceGenerator generator;
@@ -78,7 +82,7 @@ public class SyncController {
 
 	@Autowired
 	private VulnerabilityHistoryService vulnerabilityHistoryService;
-	
+
 	@Autowired
 	private UserLastSyncService userLastSyncService;
 
@@ -209,9 +213,8 @@ public class SyncController {
 			beneficiariesCreated.addAll(refBeneficiaries);
 
 			for (Beneficiaries beneficiary : beneficiariesCreated) {
-				if (beneficiary.getLocality() != null 
-						&& !user.getProfiles().getName().equals("MENTORA") 
-						&& !user.getProfiles().getName().equals("ENFERMEIRA") 
+				if (beneficiary.getLocality() != null && !user.getProfiles().getName().equals("MENTORA")
+						&& !user.getProfiles().getName().equals("ENFERMEIRA")
 						&& !user.getProfiles().getName().equals("CONSELHEIRA")) {
 					localitiesIds.add(beneficiary.getLocality().getId());
 				}
@@ -455,7 +458,7 @@ public class SyncController {
 			String object = SyncSerializer.createSyncObject(usersSO, provinceSO, districtSO, localitySO, profilesSO,
 					partnersSO, usSO, beneficiarySO, beneficiaryInterventionSO, neighborhoodSO, serviceSO, subServiceSO,
 					referencesSO, referencesServicesSO, lastPulledAt);
-			
+
 			userLastSyncService.saveLastSyncDate(username);
 
 			return new ResponseEntity<>(object, HttpStatus.OK);
@@ -787,13 +790,15 @@ public class SyncController {
 					}
 				}
 			}
-			
+
 			userLastSyncService.saveLastSyncDate(username);
 
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new ResponseEntity<>("Json Processing Error!", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (DataIntegrityViolationException e) {
+			logger.warn(e.getRootCause().getMessage());
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

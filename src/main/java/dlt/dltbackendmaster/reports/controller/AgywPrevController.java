@@ -405,8 +405,8 @@ public class AgywPrevController {
 
 		List<NewlyEnrolledAgywAndServices> rows = new ArrayList<>();
 
-		List<Object> reportObjectList = report.getBeneficiariesVulnerabilitiesAndServices(districts,
-				new Date(startDate), new Date(endDate), pageIndex, pageSize);
+		List<Object> reportObjectList = report.getBeneficiariesVulnerabilitiesAndServices(districts, new Date(startDate),
+				new Date(endDate), pageIndex, pageSize);
 		Object[][] reportObjectArray = reportObjectList.toArray(new Object[0][0]);
 
 		int i = 1;
