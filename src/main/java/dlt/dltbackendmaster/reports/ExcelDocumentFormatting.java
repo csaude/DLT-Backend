@@ -8,7 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- * Classe responsável pela formatacao de documentos excel gerados nos relatorios diversos
+ * Classe responsável pela formatacao de documentos excel gerados nos relatorios
+ * diversos
  * 
  * @author Francisco da Conceicao Alberto Macuacua
  *
@@ -27,7 +28,7 @@ public class ExcelDocumentFormatting {
 
 			Font font = workbook.createFont();
 			font.setFontName("Arial");
-			font.setFontHeightInPoints((short) 12);
+			font.setFontHeightInPoints((short) 10);
 			CellStyle style = workbook.createCellStyle();
 			style.setFont(font);
 
@@ -39,12 +40,11 @@ public class ExcelDocumentFormatting {
 			}
 
 			// Centralize and format second and sixth rows
-			formatRow(sheet, 0, HorizontalAlignment.CENTER, true);
-			formatRow(sheet, 3, HorizontalAlignment.CENTER, true);
-
-			// Bold and format fourth and fifth rows
+			formatRow(sheet, 0, HorizontalAlignment.LEFT, true);
 			formatRow(sheet, 1, HorizontalAlignment.LEFT, true);
 			formatRow(sheet, 2, HorizontalAlignment.LEFT, true);
+			formatRow(sheet, 3, HorizontalAlignment.CENTER, true);
+			formatRow(sheet, 4, HorizontalAlignment.LEFT, true);
 
 			try (FileOutputStream fileOut = new FileOutputStream(documentPath)) {
 				workbook.write(fileOut);

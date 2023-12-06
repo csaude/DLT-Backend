@@ -156,7 +156,7 @@ public class AgywPrevController {
 						String.valueOf(obj[30]), String.valueOf(obj[31]), String.valueOf(obj[32]),
 						String.valueOf(obj[33]), String.valueOf(obj[34]), String.valueOf(obj[35]),
 						String.valueOf(obj[36] != null ? obj[36] : ""), String.valueOf(obj[37] != null ? obj[37] : ""),
-						String.valueOf(obj[38])));
+						String.valueOf(obj[38]),String.valueOf(obj[39])));
 				i++;
 			}
 
@@ -171,6 +171,8 @@ public class AgywPrevController {
 			Map<String, Object> parameters = new HashMap<>();
 			parameters.put("date_start", formattedInitialDate);
 			parameters.put("date_end", formattedFinalDate);
+			parameters.put("slab", "Data de Início:");
+			parameters.put("elab", "Data de Fim:");
 
 			// Generate the report
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
@@ -329,6 +331,8 @@ public class AgywPrevController {
 				Map<String, Object> parameters = new HashMap<>();
 				parameters.put("date_start", formattedInitialDate);
 				parameters.put("date_end", formattedFinalDate);
+				parameters.put("slab", "Data de Início:");
+				parameters.put("elab", "Data de Fim:");
 
 				// Generate the report
 				JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
@@ -425,7 +429,7 @@ public class AgywPrevController {
 						String.valueOf(obj[30]), String.valueOf(obj[31]), String.valueOf(obj[32]),
 						String.valueOf(obj[33]), String.valueOf(obj[34]), String.valueOf(obj[35]),
 						String.valueOf(obj[36] != null ? obj[36] : ""), String.valueOf(obj[37] != null ? obj[37] : ""),
-						String.valueOf(obj[38])));
+						String.valueOf(obj[38]),String.valueOf(obj[39])));
 				i++;
 			}
 
@@ -441,6 +445,8 @@ public class AgywPrevController {
 			Map<String, Object> parameters = new HashMap<>();
 			parameters.put("date_start", formattedInitialDate);
 			parameters.put("date_end", formattedFinalDate);
+			parameters.put("slab", "Data de Início:");
+			parameters.put("elab", "Data de Fim:");
 
 			// Generate the report
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
@@ -537,6 +543,8 @@ public class AgywPrevController {
 				Map<String, Object> parameters = new HashMap<>();
 				parameters.put("date_start", formattedInitialDate);
 				parameters.put("date_end", formattedFinalDate);
+				parameters.put("slab", "Data de Início:");
+				parameters.put("elab", "Data de Fim:");
 
 				// Generate the report
 				JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
