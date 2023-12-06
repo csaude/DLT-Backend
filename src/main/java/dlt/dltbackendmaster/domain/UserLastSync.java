@@ -25,9 +25,9 @@ import javax.persistence.TemporalType;
 @Table(name = "users_last_sync", catalog = "dreams_db")
 @NamedQueries({
 		@NamedQuery(name = "UserLastSync.findByUsername", query = "SELECT a FROM UserLastSync a WHERE a.username =:username"),
-		@NamedQuery(name = "UserLastSync.findAll", query = "SELECT u FROM UserLastSync u "
+		@NamedQuery(name = "UserLastSync.findAll", query = "SELECT distinct u FROM UserLastSync u "
 														+ " LEFT JOIN u.user.districts d "
-														+ " Where u.user.username like :searchUsername "
+														+ " Where u.username like :searchUsername "
 														+ " AND (:searchUserCreator IS NULL OR u.user.createdBy = :searchUserCreator OR u.user.updatedBy =:searchUserCreator) "
 										                + " AND (:searchDistrict IS NULL OR d.id = :searchDistrict) "
 				+ ""), })
