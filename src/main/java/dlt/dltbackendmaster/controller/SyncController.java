@@ -51,6 +51,7 @@ import dlt.dltbackendmaster.domain.Services;
 import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.domain.Us;
 import dlt.dltbackendmaster.domain.UserLastSync;
+import dlt.dltbackendmaster.domain.Users;
 import dlt.dltbackendmaster.domain.UsersBeneficiariesCustomSync;
 import dlt.dltbackendmaster.domain.UsersSync;
 import dlt.dltbackendmaster.domain.watermelondb.BeneficiaryInterventionSyncModel;
@@ -844,5 +845,29 @@ public class SyncController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@GetMapping(path = "/usersLastSync/paged", produces = "application/json")
+    public ResponseEntity<List<Users>> get(
+    		@RequestParam(name = "userId") Integer userId, 
+    		@RequestParam(name = "level") String level, 
+    		@RequestParam(name = "params",required = false) @Nullable Integer[] params,
+    		@RequestParam(name = "pageIndex") int pageIndex,
+    		@RequestParam(name = "pageSize") int pageSize,
+    		@RequestParam(name = "searchUsername", required = false) @Nullable String searchUsername,
+    		@RequestParam(name = "searchUserCreator", required = false) @Nullable Integer searchUserCreator,
+    		@RequestParam(name = "searchDistrict", required = false) @Nullable Integer searchDistrict
+    		) {
+
+        try {
+            List<Users> users = service.GetAllPagedUserEntityByNamedQuery("UserLastSync.findAll", pageIndex, pageSize, searchUsername, searchUserCreator, searchDistrict);
+
+            return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }
