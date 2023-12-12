@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LISTA DE RAMJ" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="3054277f-e571-4287-b139-b4d6bcbb3bd0">
+	<parameter name="slab" class="java.lang.String"/>
 	<parameter name="date_start" class="java.lang.String"/>
 	<parameter name="date_end" class="java.lang.String"/>
+	<parameter name="elab" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -46,48 +48,35 @@
 	<field name="observacoes" class="java.lang.String"/>
 	<field name="servico_status" class="java.lang.String"/>
 	<field name="index" class="java.lang.String"/>
+	<field name="data_inscricao" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="137" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="800" height="30" isPrintWhenDetailOverflows="true" uuid="105d3169-044f-4298-8b1b-f8745c90c82b"/>
+				<reportElement x="0" y="0" width="820" height="30" isPrintWhenDetailOverflows="true" uuid="105d3169-044f-4298-8b1b-f8745c90c82b"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["LISTA DE RAMJ REGISTADAS NO DLT NO PERÍODO EM CONSIDERAÇÃO, SUAS VULNERABILIDADES E SERVIÇOS RECEBIDOS "]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="0" y="44" width="90" height="18" uuid="6d9de0d6-87f0-4bf3-8585-e4830fa2ee0a"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Data de Inicio:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="62" width="90" height="18" uuid="cde60775-dc77-4f05-810e-218dba17d411"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Data de Fim:]]></text>
-			</staticText>
 			<textField>
-				<reportElement x="90" y="44" width="90" height="18" uuid="3baee868-4aef-40f3-b1dd-479f495b3f36"/>
+				<reportElement x="90" y="44" width="70" height="18" uuid="3baee868-4aef-40f3-b1dd-479f495b3f36"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{date_start}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="90" y="62" width="90" height="18" uuid="fbda0d26-7321-47aa-bae3-b5476e484d3d"/>
+				<reportElement x="90" y="62" width="70" height="18" uuid="fbda0d26-7321-47aa-bae3-b5476e484d3d"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{date_end}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="600" y="80" width="200" height="28" isPrintWhenDetailOverflows="true" uuid="82bcae70-c306-4a66-b045-2aa89e10ce5e"/>
+				<reportElement x="620" y="80" width="200" height="28" isPrintWhenDetailOverflows="true" uuid="82bcae70-c306-4a66-b045-2aa89e10ce5e"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -97,7 +86,7 @@
 				<textFieldExpression><![CDATA["Serviços e Sub-Serviços"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="340" y="80" width="260" height="28" isPrintWhenDetailOverflows="true" uuid="25cc726d-3b30-4201-a397-f953044e6c11"/>
+				<reportElement x="360" y="80" width="260" height="28" isPrintWhenDetailOverflows="true" uuid="25cc726d-3b30-4201-a397-f953044e6c11"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -107,7 +96,7 @@
 				<textFieldExpression><![CDATA["Vulnerabilidades Gerais"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="0" y="80" width="340" height="28" isPrintWhenDetailOverflows="true" uuid="387340a9-b156-4ca3-b5e3-580dfd076566"/>
+				<reportElement x="0" y="80" width="360" height="28" isPrintWhenDetailOverflows="true" uuid="387340a9-b156-4ca3-b5e3-580dfd076566"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -117,7 +106,7 @@
 				<textFieldExpression><![CDATA["Informação Demográfica"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="420" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="dc4dbcf3-b842-43d7-81ef-6e493d948a23"/>
+				<reportElement x="440" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="dc4dbcf3-b842-43d7-81ef-6e493d948a23"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -127,7 +116,7 @@
 				<textFieldExpression><![CDATA["Vai à escola"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="440" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="26b92b9c-7099-479e-a395-c85b0f8758aa"/>
+				<reportElement x="460" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="26b92b9c-7099-479e-a395-c85b0f8758aa"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -137,7 +126,7 @@
 				<textFieldExpression><![CDATA["Tem Deficiência"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="460" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="9a4bc7db-13a2-4fff-9617-50f284e298d9"/>
+				<reportElement x="480" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="9a4bc7db-13a2-4fff-9617-50f284e298d9"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -147,7 +136,7 @@
 				<textFieldExpression><![CDATA["Tipo de Deficiência"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="480" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="e9a69a52-fa3f-4f31-a60d-6b0cce74f879"/>
+				<reportElement x="500" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="e9a69a52-fa3f-4f31-a60d-6b0cce74f879"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -157,7 +146,7 @@
 				<textFieldExpression><![CDATA["Já foi casada"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="500" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="d815f3c3-0bae-4374-8867-0f41a4622cb2"/>
+				<reportElement x="520" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="d815f3c3-0bae-4374-8867-0f41a4622cb2"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -167,7 +156,7 @@
 				<textFieldExpression><![CDATA["Já esteve grávida"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="520" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="1a499ed2-537b-4092-9068-9a50cbbf8c92"/>
+				<reportElement x="540" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="1a499ed2-537b-4092-9068-9a50cbbf8c92"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -177,7 +166,7 @@
 				<textFieldExpression><![CDATA["Tem filhos"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="540" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="d2aefd54-43c5-48e4-9d0c-16e720c43a47"/>
+				<reportElement x="560" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="d2aefd54-43c5-48e4-9d0c-16e720c43a47"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -187,7 +176,7 @@
 				<textFieldExpression><![CDATA["Está Grávida ou a Amamentar"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="560" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="8250ccc0-f33a-42d2-8701-0b6a471ae3d0"/>
+				<reportElement x="580" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="8250ccc0-f33a-42d2-8701-0b6a471ae3d0"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -197,7 +186,7 @@
 				<textFieldExpression><![CDATA["Trabalha"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="580" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="85eec89f-a978-4f53-ae90-6d36c7121b0f"/>
+				<reportElement x="600" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="85eec89f-a978-4f53-ae90-6d36c7121b0f"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -207,7 +196,7 @@
 				<textFieldExpression><![CDATA["Já fez teste de HIV"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="600" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="8a423d25-4965-4263-bcd6-e32aa818fb00"/>
+				<reportElement x="620" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="8a423d25-4965-4263-bcd6-e32aa818fb00"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -217,7 +206,7 @@
 				<textFieldExpression><![CDATA["Área de Serviço"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="620" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="d7c87301-b0dd-4dc7-a6dc-a6496e9dc063"/>
+				<reportElement x="640" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="d7c87301-b0dd-4dc7-a6dc-a6496e9dc063"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -227,7 +216,7 @@
 				<textFieldExpression><![CDATA["Serviço"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="640" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="0c5a1833-3dc3-4e1a-91b1-859683b21b4e"/>
+				<reportElement x="660" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="0c5a1833-3dc3-4e1a-91b1-859683b21b4e"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -237,7 +226,7 @@
 				<textFieldExpression><![CDATA["Sub-Serviço"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="660" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="3d89af3e-7177-49e7-830c-47b26f0f1425"/>
+				<reportElement x="680" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="3d89af3e-7177-49e7-830c-47b26f0f1425"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -247,7 +236,7 @@
 				<textFieldExpression><![CDATA["Pacote de Serviço"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="680" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="02b7463d-8b83-45c1-b023-98d23db65c01"/>
+				<reportElement x="700" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="02b7463d-8b83-45c1-b023-98d23db65c01"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -257,7 +246,7 @@
 				<textFieldExpression><![CDATA["Ponto de Entrada de Serviço"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="700" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="6b8bb140-809d-429c-84dd-e91b3ed967b8"/>
+				<reportElement x="720" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="6b8bb140-809d-429c-84dd-e91b3ed967b8"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -267,7 +256,7 @@
 				<textFieldExpression><![CDATA["Localização do Serviço"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="720" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="b8a96961-ce6c-4e8f-a4a7-bd81003f5178"/>
+				<reportElement x="740" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="b8a96961-ce6c-4e8f-a4a7-bd81003f5178"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -277,7 +266,7 @@
 				<textFieldExpression><![CDATA["Data do Serviço"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="740" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="92d04ee6-cdec-4276-a556-d0bdf2a2710d"/>
+				<reportElement x="760" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="92d04ee6-cdec-4276-a556-d0bdf2a2710d"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -287,7 +276,7 @@
 				<textFieldExpression><![CDATA["Provedor do Serviço"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="760" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="e0993060-9228-402d-9bc7-3f5b235fb255"/>
+				<reportElement x="780" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="e0993060-9228-402d-9bc7-3f5b235fb255"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -297,7 +286,7 @@
 				<textFieldExpression><![CDATA["Outras Observações"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="780" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="9aee7ddb-2971-4ee7-87b5-3a914ce08b0a"/>
+				<reportElement x="800" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="9aee7ddb-2971-4ee7-87b5-3a914ce08b0a"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -357,7 +346,7 @@
 				<textFieldExpression><![CDATA["Organização"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="120" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="f587e66f-1058-47d5-8c5d-7f496d69c055"/>
+				<reportElement x="140" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="f587e66f-1058-47d5-8c5d-7f496d69c055"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -367,7 +356,7 @@
 				<textFieldExpression><![CDATA["Data de Registo"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="140" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="7d262669-0f7e-4624-9ecb-d3f442ee87ef"/>
+				<reportElement x="160" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="7d262669-0f7e-4624-9ecb-d3f442ee87ef"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -377,7 +366,7 @@
 				<textFieldExpression><![CDATA["Registado Por"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="160" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="3bb898b1-a680-4511-afa5-89abf9553df2"/>
+				<reportElement x="180" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="3bb898b1-a680-4511-afa5-89abf9553df2"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -387,7 +376,7 @@
 				<textFieldExpression><![CDATA["Data da Última Actualização"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="180" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="cba44552-d2d6-418b-9807-d5852c294fbd"/>
+				<reportElement x="200" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="cba44552-d2d6-418b-9807-d5852c294fbd"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -397,7 +386,7 @@
 				<textFieldExpression><![CDATA["Actualizado Por"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="200" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="3c059afa-4716-4807-8488-c36d76d7a0f8"/>
+				<reportElement x="220" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="3c059afa-4716-4807-8488-c36d76d7a0f8"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -407,7 +396,7 @@
 				<textFieldExpression><![CDATA["NUI"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="220" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="d084b3f3-f446-4ea7-91c5-395c3ec29d28"/>
+				<reportElement x="240" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="d084b3f3-f446-4ea7-91c5-395c3ec29d28"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -417,7 +406,7 @@
 				<textFieldExpression><![CDATA["Sexo"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="240" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="89d404c2-9d94-45c2-88f6-ec2b8c5ac72c"/>
+				<reportElement x="260" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="89d404c2-9d94-45c2-88f6-ec2b8c5ac72c"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -427,7 +416,7 @@
 				<textFieldExpression><![CDATA["Idade (Registo)"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="260" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="ae2c1f66-30a1-42fa-a6f6-8a521a1fe489"/>
+				<reportElement x="280" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="ae2c1f66-30a1-42fa-a6f6-8a521a1fe489"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -437,7 +426,7 @@
 				<textFieldExpression><![CDATA["Idade (Actual)"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="280" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="1acde190-27c1-42e6-9fce-cd1ae77bba67"/>
+				<reportElement x="300" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="1acde190-27c1-42e6-9fce-cd1ae77bba67"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -447,7 +436,7 @@
 				<textFieldExpression><![CDATA["Faixa Etária (Registo)"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="300" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="82006223-e41b-4177-8bfb-a1ba707f1a5b"/>
+				<reportElement x="320" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="82006223-e41b-4177-8bfb-a1ba707f1a5b"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -457,7 +446,7 @@
 				<textFieldExpression><![CDATA["Faixa Etária (Actual)"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="320" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="f836f216-5ea9-4a96-8f8a-7ae349d514ff"/>
+				<reportElement x="340" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="f836f216-5ea9-4a96-8f8a-7ae349d514ff"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -467,7 +456,7 @@
 				<textFieldExpression><![CDATA["Data de Nascimento"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="340" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="2d09d4c0-4d57-4300-8e43-392331b79a32"/>
+				<reportElement x="360" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="2d09d4c0-4d57-4300-8e43-392331b79a32"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -477,7 +466,7 @@
 				<textFieldExpression><![CDATA["Incluida no Indicador AGYW_PREV / Beneficiaria DREAMS ?"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="360" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="ffc8dbf4-b7a4-48c1-b205-52fe2e0c1af7"/>
+				<reportElement x="380" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="ffc8dbf4-b7a4-48c1-b205-52fe2e0c1af7"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -487,7 +476,7 @@
 				<textFieldExpression><![CDATA["Com Quem Mora"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="380" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="04e4f7dc-5f6c-462d-a96c-cd2a397bfe24"/>
+				<reportElement x="400" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="04e4f7dc-5f6c-462d-a96c-cd2a397bfe24"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -497,7 +486,7 @@
 				<textFieldExpression><![CDATA["Sustenta a Casa"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="400" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="b5bee4e5-6553-4f0d-8ac7-7a7c360fa263"/>
+				<reportElement x="420" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="b5bee4e5-6553-4f0d-8ac7-7a7c360fa263"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -515,6 +504,30 @@
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["#"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="120" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="cf7e960b-8ba9-4590-af45-d5ec193a822c"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data de Inscrição"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="44" width="90" height="18" uuid="fb311e9c-036c-4108-9658-2c7fea43a5cb"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{slab}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="62" width="90" height="18" uuid="0e61ab69-e952-45d8-b1b4-01d0411e943d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{elab}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -571,7 +584,7 @@
 				<textFieldExpression><![CDATA[$F{organizacao}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="120" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="31f9e80c-2b47-4ea0-857a-8c33d5c76d1d"/>
+				<reportElement x="140" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="31f9e80c-2b47-4ea0-857a-8c33d5c76d1d"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -581,7 +594,7 @@
 				<textFieldExpression><![CDATA[$F{data_registo}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="140" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="7b23d7e6-0ccf-462b-b4a8-e3b239bdd780"/>
+				<reportElement x="160" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="7b23d7e6-0ccf-462b-b4a8-e3b239bdd780"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -591,7 +604,7 @@
 				<textFieldExpression><![CDATA[$F{registado_por}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="160" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="769edd9a-8c07-4fd4-8bf6-8794ebfa3e12"/>
+				<reportElement x="180" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="769edd9a-8c07-4fd4-8bf6-8794ebfa3e12"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -601,7 +614,7 @@
 				<textFieldExpression><![CDATA[$F{data_actualizacao}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="180" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="dc78c1da-6b68-46c9-a006-58ed477a7ebd"/>
+				<reportElement x="200" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="dc78c1da-6b68-46c9-a006-58ed477a7ebd"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -611,7 +624,7 @@
 				<textFieldExpression><![CDATA[$F{actualizado_por}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="200" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="8f3add31-184c-41fe-beeb-09e3e9d3d752"/>
+				<reportElement x="220" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="8f3add31-184c-41fe-beeb-09e3e9d3d752"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -621,7 +634,7 @@
 				<textFieldExpression><![CDATA[$F{nui}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="220" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="8cfa5956-8a66-43b0-aa14-8e703d13b90f"/>
+				<reportElement x="240" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="8cfa5956-8a66-43b0-aa14-8e703d13b90f"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -631,7 +644,7 @@
 				<textFieldExpression><![CDATA[$F{sexo}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="240" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="bfb5304a-851b-4459-a77e-b81baf6066f8"/>
+				<reportElement x="260" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="bfb5304a-851b-4459-a77e-b81baf6066f8"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -641,7 +654,7 @@
 				<textFieldExpression><![CDATA[$F{idade_registo}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="260" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="6d75e00e-a800-41be-bc76-61b36389c072"/>
+				<reportElement x="280" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="6d75e00e-a800-41be-bc76-61b36389c072"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -651,7 +664,7 @@
 				<textFieldExpression><![CDATA[$F{idade_actual}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="280" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="9f4dd95b-25f6-4b70-b674-7848713fc43b"/>
+				<reportElement x="300" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="9f4dd95b-25f6-4b70-b674-7848713fc43b"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -661,7 +674,7 @@
 				<textFieldExpression><![CDATA[$F{faixa_registo}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="300" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="012c1f74-dab1-4a0e-a7b7-e7442ccbb94a"/>
+				<reportElement x="320" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="012c1f74-dab1-4a0e-a7b7-e7442ccbb94a"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -671,7 +684,7 @@
 				<textFieldExpression><![CDATA[$F{faixa_actual}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="320" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="89d46c91-c8b4-4338-9988-c343e871070f"/>
+				<reportElement x="340" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="89d46c91-c8b4-4338-9988-c343e871070f"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -681,7 +694,7 @@
 				<textFieldExpression><![CDATA[$F{data_nascimento}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="340" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="5ef1c7c2-1b62-4795-8b72-3ea1c50fe398"/>
+				<reportElement x="360" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="5ef1c7c2-1b62-4795-8b72-3ea1c50fe398"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -691,7 +704,7 @@
 				<textFieldExpression><![CDATA[$F{agyw_prev}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="360" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="dbb98c00-0b6a-4a34-85cc-3eb4ecdd5093"/>
+				<reportElement x="380" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="dbb98c00-0b6a-4a34-85cc-3eb4ecdd5093"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -701,7 +714,7 @@
 				<textFieldExpression><![CDATA[$F{com_quem_mora}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="380" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="e4079db5-d91a-43d5-8233-dcbbc323e74f"/>
+				<reportElement x="400" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="e4079db5-d91a-43d5-8233-dcbbc323e74f"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -711,7 +724,7 @@
 				<textFieldExpression><![CDATA[$F{sustenta_casa}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="400" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="7a5793a2-ef26-4622-a489-678581beafcc"/>
+				<reportElement x="420" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="7a5793a2-ef26-4622-a489-678581beafcc"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -721,7 +734,7 @@
 				<textFieldExpression><![CDATA[$F{e_orfa}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="420" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="331168ab-33bb-4eb3-9ef3-0021cc19a095"/>
+				<reportElement x="440" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="331168ab-33bb-4eb3-9ef3-0021cc19a095"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -731,7 +744,7 @@
 				<textFieldExpression><![CDATA[$F{vai_escola}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="440" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="f980b954-708b-4c6f-a91a-f5f1b354337f"/>
+				<reportElement x="460" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="f980b954-708b-4c6f-a91a-f5f1b354337f"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -741,7 +754,7 @@
 				<textFieldExpression><![CDATA[$F{tem_deficiencia}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="460" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="055036cb-dc03-4436-a11b-b078589079e0"/>
+				<reportElement x="480" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="055036cb-dc03-4436-a11b-b078589079e0"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -751,7 +764,7 @@
 				<textFieldExpression><![CDATA[$F{tipo_deficiencia}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="480" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="797908b0-dd5d-4ef4-903f-cadb4cb29a9c"/>
+				<reportElement x="500" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="797908b0-dd5d-4ef4-903f-cadb4cb29a9c"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -761,7 +774,7 @@
 				<textFieldExpression><![CDATA[$F{foi_casada}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="500" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="a35ff99f-9535-4f06-a468-d5a9459a434a"/>
+				<reportElement x="520" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="a35ff99f-9535-4f06-a468-d5a9459a434a"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -771,7 +784,7 @@
 				<textFieldExpression><![CDATA[$F{esteve_gravida}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="520" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="cf869a4c-93c8-425e-b83d-62794931163c"/>
+				<reportElement x="540" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="cf869a4c-93c8-425e-b83d-62794931163c"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -781,7 +794,7 @@
 				<textFieldExpression><![CDATA[$F{tem_filhos}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="540" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="789b0f66-c678-490b-b301-e600e6fab320"/>
+				<reportElement x="560" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="789b0f66-c678-490b-b301-e600e6fab320"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -791,7 +804,7 @@
 				<textFieldExpression><![CDATA[$F{gravida_amamentar}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="560" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="1ba24507-7eb5-4d6f-b30d-3ab94ede9d58"/>
+				<reportElement x="580" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="1ba24507-7eb5-4d6f-b30d-3ab94ede9d58"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -801,7 +814,7 @@
 				<textFieldExpression><![CDATA[$F{trabalha}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="580" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="a63c9016-4110-4714-b25b-49cf579e3aba"/>
+				<reportElement x="600" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="a63c9016-4110-4714-b25b-49cf579e3aba"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -811,7 +824,7 @@
 				<textFieldExpression><![CDATA[$F{teste_hiv}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="600" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="d03503b5-3db8-4a43-a5c2-27ecf413c9c5"/>
+				<reportElement x="620" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="d03503b5-3db8-4a43-a5c2-27ecf413c9c5"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -821,7 +834,7 @@
 				<textFieldExpression><![CDATA[$F{area_servico}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="620" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="f63e4a94-99bc-4ef0-8a1b-323c202167f7"/>
+				<reportElement x="640" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="f63e4a94-99bc-4ef0-8a1b-323c202167f7"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -831,7 +844,7 @@
 				<textFieldExpression><![CDATA[$F{a_servico}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="640" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="628203ef-35c6-4f53-ba2d-eaab8270329b"/>
+				<reportElement x="660" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="628203ef-35c6-4f53-ba2d-eaab8270329b"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -841,7 +854,7 @@
 				<textFieldExpression><![CDATA[$F{sub_servico}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="660" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="a5c9b0b6-7f7f-4e60-b3b4-c1232d12ac45"/>
+				<reportElement x="680" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="a5c9b0b6-7f7f-4e60-b3b4-c1232d12ac45"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -851,7 +864,7 @@
 				<textFieldExpression><![CDATA[$F{pacote_servico}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="680" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="8b440cf7-6124-412c-936c-0beafbe041a8"/>
+				<reportElement x="700" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="8b440cf7-6124-412c-936c-0beafbe041a8"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -861,7 +874,7 @@
 				<textFieldExpression><![CDATA[$F{ponto_entrada_servico}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="700" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="75516144-24df-46e8-9959-6bbd4eedc8c6"/>
+				<reportElement x="720" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="75516144-24df-46e8-9959-6bbd4eedc8c6"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -871,7 +884,7 @@
 				<textFieldExpression><![CDATA[$F{localizacao}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="720" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="e24fb6a0-1ce0-4b98-86f1-fd8d462c84b7"/>
+				<reportElement x="740" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="e24fb6a0-1ce0-4b98-86f1-fd8d462c84b7"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -881,7 +894,7 @@
 				<textFieldExpression><![CDATA[$F{data_servico}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="740" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="3ef296e0-4041-4c9e-8df0-7bb65d906f53"/>
+				<reportElement x="760" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="3ef296e0-4041-4c9e-8df0-7bb65d906f53"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -891,7 +904,7 @@
 				<textFieldExpression><![CDATA[$F{provedor}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="760" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="97471de2-2a6c-4479-b574-e8fd5353b189"/>
+				<reportElement x="780" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="97471de2-2a6c-4479-b574-e8fd5353b189"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -901,7 +914,7 @@
 				<textFieldExpression><![CDATA[$F{observacoes}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="780" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="63a98be0-1cdf-4ac8-b129-72fbd2bc5743"/>
+				<reportElement x="800" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="63a98be0-1cdf-4ac8-b129-72fbd2bc5743"/>
 				<box>
 					<pen lineWidth="0.5"/>
 				</box>
@@ -919,6 +932,16 @@
 					<font fontName="DejaVu Sans"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{index}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="120" y="0" width="20" height="32" isPrintWhenDetailOverflows="true" uuid="05002b30-c18a-47b1-9a67-10949dfd5204"/>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_inscricao}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

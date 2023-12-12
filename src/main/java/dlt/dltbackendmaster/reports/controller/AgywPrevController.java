@@ -145,18 +145,19 @@ public class AgywPrevController {
 			for (Object[] obj : reportObjectArray) {
 				rows.add(new NewlyEnrolledAgywAndServices(i + "", String.valueOf(obj[0]), String.valueOf(obj[1]),
 						String.valueOf(obj[2]), String.valueOf(obj[3]), String.valueOf(obj[4]), String.valueOf(obj[5]),
-						String.valueOf(obj[6]), String.valueOf(obj[7]), String.valueOf(obj[8]), String.valueOf(obj[9]),
-						String.valueOf(obj[10]), String.valueOf(obj[11]), String.valueOf(obj[12]),
-						String.valueOf(obj[13]), String.valueOf(obj[14]), String.valueOf(obj[15]),
-						String.valueOf(obj[16]), String.valueOf(obj[17]), String.valueOf(obj[18]),
-						String.valueOf(obj[19]), String.valueOf(obj[20]), String.valueOf(obj[21]),
-						String.valueOf(obj[22] != null ? obj[22] : ""), String.valueOf(obj[23]),
-						String.valueOf(obj[24]), String.valueOf(obj[25]), String.valueOf(obj[26]),
-						String.valueOf(obj[27]), String.valueOf(obj[28]), String.valueOf(obj[29]),
-						String.valueOf(obj[30]), String.valueOf(obj[31]), String.valueOf(obj[32]),
-						String.valueOf(obj[33]), String.valueOf(obj[34]), String.valueOf(obj[35]),
+						String.valueOf(obj[6]), String.valueOf(obj[7]), String.valueOf(obj[8] != null ? obj[8] : ""),
+						String.valueOf(obj[9] != null ? obj[9] : ""), String.valueOf(obj[10]), String.valueOf(obj[11]),
+						String.valueOf(obj[12]), String.valueOf(obj[13]), String.valueOf(obj[14]),
+						String.valueOf(obj[15]), String.valueOf(obj[16]), String.valueOf(obj[17]),
+						String.valueOf(obj[18]), String.valueOf(obj[19]), String.valueOf(obj[20]),
+						String.valueOf(obj[21]), String.valueOf(obj[22] != null ? obj[22] : ""),
+						String.valueOf(obj[23] != null ? obj[23] : ""), String.valueOf(obj[24]),
+						String.valueOf(obj[25]), String.valueOf(obj[26]), String.valueOf(obj[27]),
+						String.valueOf(obj[28]), String.valueOf(obj[29]), String.valueOf(obj[30]),
+						String.valueOf(obj[31]), String.valueOf(obj[32]), String.valueOf(obj[33]),
+						String.valueOf(obj[34]), String.valueOf(obj[35]),
 						String.valueOf(obj[36] != null ? obj[36] : ""), String.valueOf(obj[37] != null ? obj[37] : ""),
-						String.valueOf(obj[38])));
+						String.valueOf(obj[38] != null ? obj[38] : ""), String.valueOf(obj[39])));
 				i++;
 			}
 
@@ -171,6 +172,8 @@ public class AgywPrevController {
 			Map<String, Object> parameters = new HashMap<>();
 			parameters.put("date_start", formattedInitialDate);
 			parameters.put("date_end", formattedFinalDate);
+			parameters.put("slab", "Data de Início:");
+			parameters.put("elab", "Data de Fim:");
 
 			// Generate the report
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
@@ -329,6 +332,8 @@ public class AgywPrevController {
 				Map<String, Object> parameters = new HashMap<>();
 				parameters.put("date_start", formattedInitialDate);
 				parameters.put("date_end", formattedFinalDate);
+				parameters.put("slab", "Data de Início:");
+				parameters.put("elab", "Data de Fim:");
 
 				// Generate the report
 				JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
@@ -405,8 +410,8 @@ public class AgywPrevController {
 
 		List<NewlyEnrolledAgywAndServices> rows = new ArrayList<>();
 
-		List<Object> reportObjectList = report.getBeneficiariesVulnerabilitiesAndServices(districts, new Date(startDate),
-				new Date(endDate), pageIndex, pageSize);
+		List<Object> reportObjectList = report.getBeneficiariesVulnerabilitiesAndServices(districts,
+				new Date(startDate), new Date(endDate), pageIndex, pageSize);
 		Object[][] reportObjectArray = reportObjectList.toArray(new Object[0][0]);
 
 		int i = 1;
@@ -414,18 +419,19 @@ public class AgywPrevController {
 			for (Object[] obj : reportObjectArray) {
 				rows.add(new NewlyEnrolledAgywAndServices(i + "", String.valueOf(obj[0]), String.valueOf(obj[1]),
 						String.valueOf(obj[2]), String.valueOf(obj[3]), String.valueOf(obj[4]), String.valueOf(obj[5]),
-						String.valueOf(obj[6]), String.valueOf(obj[7]), String.valueOf(obj[8]), String.valueOf(obj[9]),
-						String.valueOf(obj[10]), String.valueOf(obj[11]), String.valueOf(obj[12]),
-						String.valueOf(obj[13]), String.valueOf(obj[14]), String.valueOf(obj[15]),
-						String.valueOf(obj[16]), String.valueOf(obj[17]), String.valueOf(obj[18]),
-						String.valueOf(obj[19]), String.valueOf(obj[20]), String.valueOf(obj[21]),
-						String.valueOf(obj[22] != null ? obj[22] : ""), String.valueOf(obj[23]),
-						String.valueOf(obj[24]), String.valueOf(obj[25]), String.valueOf(obj[26]),
+						String.valueOf(obj[6]), String.valueOf(obj[7]), String.valueOf(obj[8] != null ? obj[8] : ""),
+						String.valueOf(obj[9] != null ? obj[9] : ""), String.valueOf(obj[10]), String.valueOf(obj[11]),
+						String.valueOf(obj[12]), String.valueOf(obj[13]), String.valueOf(obj[14]),
+						String.valueOf(obj[15]), String.valueOf(obj[16]), String.valueOf(obj[17]),
+						String.valueOf(obj[18]), String.valueOf(obj[19]), String.valueOf(obj[20]),
+						String.valueOf(obj[21]), String.valueOf(obj[22] != null ? obj[22] : ""),
+						String.valueOf(obj[23] != null ? obj[23] : ""), String.valueOf(obj[24]),
+						String.valueOf(obj[25] != null ? obj[25] : ""), String.valueOf(obj[26]),
 						String.valueOf(obj[27]), String.valueOf(obj[28]), String.valueOf(obj[29]),
 						String.valueOf(obj[30]), String.valueOf(obj[31]), String.valueOf(obj[32]),
 						String.valueOf(obj[33]), String.valueOf(obj[34]), String.valueOf(obj[35]),
 						String.valueOf(obj[36] != null ? obj[36] : ""), String.valueOf(obj[37] != null ? obj[37] : ""),
-						String.valueOf(obj[38])));
+						String.valueOf(obj[38] != null ? obj[38] : ""), String.valueOf(obj[39])));
 				i++;
 			}
 
@@ -441,6 +447,8 @@ public class AgywPrevController {
 			Map<String, Object> parameters = new HashMap<>();
 			parameters.put("date_start", formattedInitialDate);
 			parameters.put("date_end", formattedFinalDate);
+			parameters.put("slab", "Data de Início:");
+			parameters.put("elab", "Data de Fim:");
 
 			// Generate the report
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
@@ -537,6 +545,8 @@ public class AgywPrevController {
 				Map<String, Object> parameters = new HashMap<>();
 				parameters.put("date_start", formattedInitialDate);
 				parameters.put("date_end", formattedFinalDate);
+				parameters.put("slab", "Data de Início:");
+				parameters.put("elab", "Data de Fim:");
 
 				// Generate the report
 				JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);

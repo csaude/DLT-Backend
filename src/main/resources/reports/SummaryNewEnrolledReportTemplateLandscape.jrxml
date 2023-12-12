@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RESUMO" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="3054277f-e571-4287-b139-b4d6bcbb3bd0">
+	<parameter name="slab" class="java.lang.String"/>
 	<parameter name="date_start" class="java.lang.String"/>
+	<parameter name="elab" class="java.lang.String"/>
 	<parameter name="date_end" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
@@ -56,29 +58,15 @@
 				</textElement>
 				<textFieldExpression><![CDATA["RELATÓRIO RESUMO DE RAMJ REGISTADAS NO DLT NO PERÍODO EM CONSIDERAÇÃO, SUAS VULNERABILIDADES E SERVIÇOS RECEBIDOS "]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="0" y="44" width="90" height="18" uuid="6d9de0d6-87f0-4bf3-8585-e4830fa2ee0a"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Data de Inicio:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="62" width="90" height="18" uuid="cde60775-dc77-4f05-810e-218dba17d411"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Data de Fim:]]></text>
-			</staticText>
 			<textField>
-				<reportElement x="90" y="44" width="110" height="18" uuid="3baee868-4aef-40f3-b1dd-479f495b3f36"/>
+				<reportElement x="90" y="44" width="100" height="18" uuid="3baee868-4aef-40f3-b1dd-479f495b3f36"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{date_start}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="90" y="62" width="110" height="18" uuid="fbda0d26-7321-47aa-bae3-b5476e484d3d"/>
+				<reportElement x="90" y="62" width="100" height="18" uuid="fbda0d26-7321-47aa-bae3-b5476e484d3d"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -493,6 +481,20 @@
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Promoção e Provisão de Contracepção"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="44" width="90" height="18" uuid="2dbc64c9-4941-4732-9566-c7b0ceb698bf"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{slab}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="62" width="90" height="18" uuid="1f4a701c-dc9a-43a4-96f8-35c8ff1db3da"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{elab}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
