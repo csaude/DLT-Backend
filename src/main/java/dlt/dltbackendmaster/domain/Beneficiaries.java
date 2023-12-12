@@ -263,6 +263,8 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " and b.id in :ids "
 																+ " order by b.id desc"
 																+ ""),
+				@NamedQuery(name = "Beneficiary.getBeneficiariesByPartnerId", query = "SELECT  b FROM  Beneficiaries b "
+																+ " where b.partnerId = :partnerId "),
 })
 public class Beneficiaries implements java.io.Serializable
 {

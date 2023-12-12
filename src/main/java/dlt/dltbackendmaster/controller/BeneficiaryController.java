@@ -221,4 +221,15 @@ public class BeneficiaryController
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+	
+	@GetMapping(path = "/findByPartnerId", produces = "application/json")
+	public ResponseEntity<List<Beneficiaries>> getBeneficiariesByPartnerId(@RequestParam(name = "partnerId") int partnerId) {
+		try {			
+			List<Beneficiaries> beneficiaries = service.GetAllEntityByNamedQuery("Beneficiary.getBeneficiariesByPartnerId",partnerId);
+		
+			return new ResponseEntity<List<Beneficiaries>>(beneficiaries, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }
