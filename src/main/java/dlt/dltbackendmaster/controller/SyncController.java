@@ -536,13 +536,18 @@ public class SyncController {
 
 				for (BeneficiarySyncModel created : createdList) {
 					if (created.getOnline_id() == null) {
-						Beneficiaries beneficiary = new Beneficiaries(created, lastPulledAt);
-						setPartner(created, beneficiary);
-						beneficiary.setCreatedBy(user.getId());
-						beneficiary.setDateUpdated(new Date());
-						Integer beneficiaryId = (Integer) service.Save(beneficiary);
-						vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
-						beneficiariesIds.put(created.getId(), beneficiaryId);
+						try {
+							Beneficiaries beneficiary = new Beneficiaries(created, lastPulledAt);
+							setPartner(created, beneficiary);
+							beneficiary.setCreatedBy(user.getId());
+							beneficiary.setDateUpdated(new Date());
+							Integer beneficiaryId = (Integer) service.Save(beneficiary);
+							vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
+							beneficiariesIds.put(created.getId(), beneficiaryId);
+						} catch (DataIntegrityViolationException e) {
+							logger.warn(e.getRootCause().getMessage());
+							continue;
+						}
 					} else {
 						beneficiariesIds.put(created.getId(), created.getOnline_id());
 					}
@@ -556,12 +561,17 @@ public class SyncController {
 				for (BeneficiarySyncModel updated : updatedList) {
 
 					if (updated.getOnline_id() == null) {
-						Beneficiaries beneficiary = new Beneficiaries(updated, lastPulledAt);
-						beneficiary.setCreatedBy(user.getId());
-						setPartner(updated, beneficiary);
-						Integer beneficiaryId = (Integer) service.Save(beneficiary);
-						vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
-						beneficiariesIds.put(updated.getId(), beneficiaryId);
+						try {
+							Beneficiaries beneficiary = new Beneficiaries(updated, lastPulledAt);
+							beneficiary.setCreatedBy(user.getId());
+							setPartner(updated, beneficiary);
+							Integer beneficiaryId = (Integer) service.Save(beneficiary);
+							vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
+							beneficiariesIds.put(updated.getId(), beneficiaryId);
+						} catch (DataIntegrityViolationException e) {
+							logger.warn(e.getRootCause().getMessage());
+							continue;
+						}
 
 					} else {
 						Beneficiaries beneficiary = service.find(Beneficiaries.class, updated.getOnline_id());
@@ -581,23 +591,28 @@ public class SyncController {
 
 				for (BeneficiaryInterventionSyncModel created : createdList) {
 					if (created.getOnline_id() == null) {
-						BeneficiariesInterventions intervention = new BeneficiariesInterventions(created, lastPulledAt);
-						if (created.getBeneficiary_id() == 0) {
-							Integer beneficiaryId = beneficiariesIds.get(created.getBeneficiary_offline_id());
-							if (beneficiaryId == null) {
-								Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
-										"Beneficiary.findByOfflineId", created.getBeneficiary_offline_id());
-								beneficiaryId = beneficiary.getId();
+						try {
+							BeneficiariesInterventions intervention = new BeneficiariesInterventions(created, lastPulledAt);
+							if (created.getBeneficiary_id() == 0) {
+								Integer beneficiaryId = beneficiariesIds.get(created.getBeneficiary_offline_id());
+								if (beneficiaryId == null) {
+									Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
+											"Beneficiary.findByOfflineId", created.getBeneficiary_offline_id());
+									beneficiaryId = beneficiary.getId();
+								}
+								intervention.setBeneficiaries(new Beneficiaries(beneficiaryId));
+								intervention.getId().setBeneficiaryId(beneficiaryId);
+								intervention.setUpdatedBy(user.getId().toString());
 							}
-							intervention.setBeneficiaries(new Beneficiaries(beneficiaryId));
-							intervention.getId().setBeneficiaryId(beneficiaryId);
-							intervention.setUpdatedBy(user.getId().toString());
-						}
-						intervention.setDateUpdated(new Date());
-						intervention.setCreatedBy(user.getId());
-						service.Save(intervention);
+							intervention.setDateUpdated(new Date());
+							intervention.setCreatedBy(user.getId());
+							service.Save(intervention);
 
-						service.registerServiceCompletionStatus(intervention);
+							service.registerServiceCompletionStatus(intervention);
+						} catch (DataIntegrityViolationException e) {
+							logger.warn(e.getRootCause().getMessage());
+							continue;
+						}
 
 					}
 				}
@@ -614,36 +629,47 @@ public class SyncController {
 
 				for (ReferenceSyncModel created : createdList) {
 					if (created.getOnline_id() == null) {
-						References reference = new References(created, lastPulledAt);
-						if (created.getBeneficiary_id() == 0) {
-							Integer beneficiaryId = beneficiariesIds.get(created.getBeneficiary_offline_id());
-							if (beneficiaryId == null) {
-								Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
-										"Beneficiary.findByOfflineId", created.getBeneficiary_offline_id());
-								beneficiaryId = beneficiary.getId();
+						References reference;
+						try {
+							reference = new References(created, lastPulledAt);
+							if (created.getBeneficiary_id() == 0) {
+								Integer beneficiaryId = beneficiariesIds.get(created.getBeneficiary_offline_id());
+								if (beneficiaryId == null) {
+									Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
+											"Beneficiary.findByOfflineId", created.getBeneficiary_offline_id());
+									beneficiaryId = beneficiary.getId();
+								}
+								reference.setBeneficiaries(new Beneficiaries(beneficiaryId));
 							}
-							reference.setBeneficiaries(new Beneficiaries(beneficiaryId));
+							reference.setUserCreated(user.getId() + "");
+							service.Save(reference);
+						} catch (DataIntegrityViolationException e) {
+							logger.warn(e.getRootCause().getMessage());
+							continue;
 						}
-						reference.setUserCreated(user.getId() + "");
-						service.Save(reference);
 
 						for (ReferenceServicesSyncModel refService : refServices) {
 							if (refService.getReference_id().equals(reference.getOfflineId())) {
-								refService.setReference_id("" + reference.getId());
-								ReferencesServices referenceService = new ReferencesServices(refService, lastPulledAt);
-								reference.getReferencesServiceses().add(referenceService);
-								referenceService.setCreatedBy(user.getId());
-								referenceService.setDateUpdated(new Date());
-								List<BeneficiariesInterventions> beneficiaryInterventions = service
-										.GetAllEntityByNamedQuery("BeneficiaryIntervention.findAllByBeneficiaryAndDate",
-												reference.getDate().toInstant().atZone(ZoneId.systemDefault())
-														.toLocalDate(),
-												reference.getBeneficiaries().getId());
+								try {
+									refService.setReference_id("" + reference.getId());
+									ReferencesServices referenceService = new ReferencesServices(refService, lastPulledAt);
+									reference.getReferencesServiceses().add(referenceService);
+									referenceService.setCreatedBy(user.getId());
+									referenceService.setDateUpdated(new Date());
+									List<BeneficiariesInterventions> beneficiaryInterventions = service
+											.GetAllEntityByNamedQuery("BeneficiaryIntervention.findAllByBeneficiaryAndDate",
+													reference.getDate().toInstant().atZone(ZoneId.systemDefault())
+															.toLocalDate(),
+													reference.getBeneficiaries().getId());
 
-								Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(
-										beneficiaryInterventions, referenceService.getServices().getId());
-								referenceService.setStatus(referenceServiceStatus);
-								service.Save(referenceService);
+									Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(
+											beneficiaryInterventions, referenceService.getServices().getId());
+									referenceService.setStatus(referenceServiceStatus);
+									service.Save(referenceService);
+								} catch (DataIntegrityViolationException e) {
+									logger.warn(e.getRootCause().getMessage());
+									continue;
+								}
 							}
 						}
 						List<BeneficiariesInterventions> beneficiaryInterventions = service.GetAllEntityByNamedQuery(
@@ -690,21 +716,26 @@ public class SyncController {
 				for (BeneficiaryInterventionSyncModel updated : updatedList) {
 
 					if (updated.getOnline_id() == null) {
-						BeneficiariesInterventions intervention = new BeneficiariesInterventions(updated, lastPulledAt);
-						intervention.setCreatedBy(user.getId());
-						if (updated.getBeneficiary_id() == 0) {
-							Integer beneficiaryId = beneficiariesIds.get(updated.getBeneficiary_offline_id());
-							if (beneficiaryId == null) {
-								Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
-										"Beneficiary.findByOfflineId", updated.getBeneficiary_offline_id());
-								beneficiaryId = beneficiary.getId();
+						try {
+							BeneficiariesInterventions intervention = new BeneficiariesInterventions(updated, lastPulledAt);
+							intervention.setCreatedBy(user.getId());
+							if (updated.getBeneficiary_id() == 0) {
+								Integer beneficiaryId = beneficiariesIds.get(updated.getBeneficiary_offline_id());
+								if (beneficiaryId == null) {
+									Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
+											"Beneficiary.findByOfflineId", updated.getBeneficiary_offline_id());
+									beneficiaryId = beneficiary.getId();
+								}
+								intervention.setBeneficiaries(new Beneficiaries(beneficiaryId));
+								intervention.getId().setBeneficiaryId(beneficiaryId);
+								intervention.setDateUpdated(new Date());
+								intervention.setUpdatedBy(user.getId().toString());
 							}
-							intervention.setBeneficiaries(new Beneficiaries(beneficiaryId));
-							intervention.getId().setBeneficiaryId(beneficiaryId);
-							intervention.setDateUpdated(new Date());
-							intervention.setUpdatedBy(user.getId().toString());
+							service.Save(intervention);
+						} catch (DataIntegrityViolationException e) {
+							logger.warn(e.getRootCause().getMessage());
+							continue;
 						}
-						service.Save(intervention);
 
 					} else {
 						String[] keys = updated.getOnline_id().split(",");
@@ -743,20 +774,25 @@ public class SyncController {
 				for (ReferenceSyncModel updated : updatedList) {
 
 					if (updated.getOnline_id() == null) {
-						References reference = new References(updated, lastPulledAt);
-						if (updated.getBeneficiary_id() == 0) {
-							Integer beneficiaryId = beneficiariesIds.get(updated.getBeneficiary_offline_id());
-							if (beneficiaryId == null) {
-								Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
-										"Beneficiary.findByOfflineId", updated.getBeneficiary_offline_id());
-								beneficiaryId = beneficiary.getId();
+						try {
+							References reference = new References(updated, lastPulledAt);
+							if (updated.getBeneficiary_id() == 0) {
+								Integer beneficiaryId = beneficiariesIds.get(updated.getBeneficiary_offline_id());
+								if (beneficiaryId == null) {
+									Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
+											"Beneficiary.findByOfflineId", updated.getBeneficiary_offline_id());
+									beneficiaryId = beneficiary.getId();
+								}
+								reference.setBeneficiaries(new Beneficiaries(beneficiaryId));
+								reference.setDateUpdated(new Date());
+								reference.setUpdatedBy(user.getId());
 							}
-							reference.setBeneficiaries(new Beneficiaries(beneficiaryId));
-							reference.setDateUpdated(new Date());
-							reference.setUpdatedBy(user.getId());
+							reference.setUserCreated(user.getId() + "");
+							service.Save(reference);
+						} catch (DataIntegrityViolationException e) {
+							logger.warn(e.getRootCause().getMessage());
+							continue;
 						}
-						reference.setUserCreated(user.getId() + "");
-						service.Save(reference);
 
 					} else {
 						References reference = service.find(References.class, updated.getOnline_id());
@@ -774,9 +810,14 @@ public class SyncController {
 				for (ReferenceServicesSyncModel updated : updatedList) {
 
 					if (updated.getOnline_id() == null) {
-						ReferencesServices referenceServices = new ReferencesServices(updated, lastPulledAt);
-						referenceServices.setCreatedBy(user.getId());
-						service.Save(referenceServices);
+						try {
+							ReferencesServices referenceServices = new ReferencesServices(updated, lastPulledAt);
+							referenceServices.setCreatedBy(user.getId());
+							service.Save(referenceServices);
+						} catch (DataIntegrityViolationException e) {
+							logger.warn(e.getRootCause().getMessage());
+							continue;
+						}
 
 					} else {
 						String[] keys = updated.getOnline_id().split(",");
@@ -798,8 +839,6 @@ public class SyncController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new ResponseEntity<>("Json Processing Error!", HttpStatus.INTERNAL_SERVER_ERROR);
-		} catch (DataIntegrityViolationException e) {
-			logger.warn(e.getRootCause().getMessage());
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
