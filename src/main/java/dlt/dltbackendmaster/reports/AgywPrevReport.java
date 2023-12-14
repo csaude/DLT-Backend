@@ -608,18 +608,49 @@ public class AgywPrevReport {
 	}
 
 	public List<Object> countNewlyEnrolledAgywAndServices(Integer[] districts, Date startDate, Date endDate) {
-		List<Object> total = service.GetByNamedNativeQuery("AgywPrev.countNewlyEnrolledAgywAndServices", Arrays.asList(districts), startDate, endDate);
-	    return total;
+		List<Object> total = service.GetByNamedNativeQuery("AgywPrev.countNewlyEnrolledAgywAndServices",
+				Arrays.asList(districts), startDate, endDate);
+		return total;
 	}
-	
-	public List<Object>  getNewlyEnrolledAgywAndServices(Integer[] districts, Date startDate,	Date endDate, int pageIndex, int pageSize) {
-		List<Object> dataObjs = service.GetAllPagedEntityByNamedNativeQuery("AgywPrev.findByNewlyEnrolledAgywAndServices", pageIndex,  pageSize, startDate, endDate,  Arrays.asList(districts));
 
-	return dataObjs;
+	public List<Object> getNewlyEnrolledAgywAndServices(Integer[] districts, Date startDate, Date endDate,
+			int pageIndex, int pageSize) {
+		List<Object> dataObjs = service.GetAllPagedEntityByNamedNativeQuery(
+				"AgywPrev.findByNewlyEnrolledAgywAndServices", pageIndex, pageSize, startDate, endDate,
+				Arrays.asList(districts));
+
+		return dataObjs;
 	}
-	public List<Object>  getNewlyEnrolledAgywAndServicesSummary(Integer[] districts, Date startDate,	Date endDate) {
-		List<Object> dataObjs = service.GetByNamedNativeQuery("AgywPrev.findByNewlyEnrolledAgywAndServicesSummary", Arrays.asList(districts), startDate, endDate);
 
-	return dataObjs;
+	public List<Object> getNewlyEnrolledAgywAndServicesSummary(Integer[] districts, Date startDate, Date endDate) {
+		List<Object> dataObjs = service.GetByNamedNativeQuery("AgywPrev.findByNewlyEnrolledAgywAndServicesSummary",
+				Arrays.asList(districts), startDate, endDate);
+
+		return dataObjs;
+	}
+
+	public List<Object> countBeneficiariesVulnerabilitiesAndServices(Integer[] districts, Date startDate,
+			Date endDate) {
+		List<Object> total = service.GetByNamedNativeQuery("AgywPrev.countBeneficiariesVulnerabilitiesAndServices",
+				Arrays.asList(districts), startDate, endDate);
+		return total;
+	}
+
+	public List<Object> getBeneficiariesVulnerabilitiesAndServices(Integer[] districts, Date startDate, Date endDate,
+			int pageIndex, int pageSize) {
+		List<Object> dataObjs = service.GetAllPagedEntityByNamedNativeQuery(
+				"AgywPrev.findByBeneficiariesVulnerabilitiesAndServices", pageIndex, pageSize, startDate, endDate,
+				Arrays.asList(districts));
+
+		return dataObjs;
+	}
+
+	public List<Object> getBeneficiariesVulnerabilitiesAndServicesSummary(Integer[] districts, Date startDate,
+			Date endDate) {
+		List<Object> dataObjs = service.GetByNamedNativeQuery(
+				"AgywPrev.findByBeneficiariesVulnerabilitiesAndServicesSummary", Arrays.asList(districts), startDate,
+				endDate);
+
+		return dataObjs;
 	}
 }

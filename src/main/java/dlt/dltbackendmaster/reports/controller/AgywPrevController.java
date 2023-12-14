@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dlt.dltbackendmaster.reports.AgywPrevReport;
+import dlt.dltbackendmaster.reports.ExcelDocumentFormatting;
 import dlt.dltbackendmaster.reports.domain.NewlyEnrolledAgywAndServices;
 import dlt.dltbackendmaster.reports.domain.ReportResponse;
 import dlt.dltbackendmaster.reports.domain.ResultObject;
@@ -55,11 +56,18 @@ import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 @RestController
 @RequestMapping("/api/agyw-prev")
 public class AgywPrevController {
-	private static final String REPORTS_HOME = "target/reports";
-	private static final String REPORT_TEMPLATE = "/reports/NewEnrolledReportTemplateLandscape.jrxml";
-	private static final String REPORT_NAME = "DLT2.0_NOVAS_RAMJ_VULNERABILIDADES_E_SERVICOS_POR";
-	private static final String SUMMARY_REPORT_TEMPLATE = "/reports/SummaryNewEnrolledReportTemplateLandscape.jrxml";
-	private static final String SUMMARY_REPORT_NAME = "DLT2.0_RESUMO_NOVAS_RAMJ_VULNERABILIDADES_E_SERVICOS_POR";
+	private static final String REPORTS_HOME = System.getProperty("user.dir") + "/webapps/reports";
+
+	private static final String NEW_ENROLLED_REPORT_TEMPLATE = "/reports/NewEnrolledReportTemplateLandscape.jrxml";
+	private static final String NEW_ENROLLED_REPORT_NAME = "DLT2.0_NOVAS_RAMJ_VULNERABILIDADES_E_SERVICOS_POR";
+	private static final String NEW_ENROLLED_SUMMARY_REPORT_TEMPLATE = "/reports/SummaryNewEnrolledReportTemplateLandscape.jrxml";
+	private static final String NEW_ENROLLED_SUMMARY_REPORT_NAME = "DLT2.0_RESUMO_NOVAS_RAMJ_VULNERABILIDADES_E_SERVICOS_POR";
+
+	private static final String VULNERABILITIES_AND_SERVICES_REPORT_TEMPLATE = "/reports/BeneficiariesVulnerabilitiesAndServicesReportTemplateLandscape.jrxml";
+	private static final String VULNERABILITIES_AND_SERVICES_REPORT_NAME = "DLT2.0_BENEFICIARIAS_VULNERABILIDADES_E_SERVICOS_POR";
+	private static final String VULNERABILITIES_AND_SERVICES_SUMMARY_REPORT_TEMPLATE = "/reports/SummaryBeneficiariesVulnerabilitiesAndServicesReportTemplateLandscape.jrxml";
+	private static final String VULNERABILITIES_AND_SERVICES_SUMMARY_REPORT_NAME = "DLT2.0_BENEFICIARIAS_VULNERABILIDADES_E_SERVICOS_RESUMO_POR";
+
 	private final DAOService service;
 
 	@Autowired
@@ -122,8 +130,9 @@ public class AgywPrevController {
 
 		createDirectory(REPORTS_HOME + "/" + username);
 
-		String generatedFileName = REPORTS_HOME + "/" + username + "/" + REPORT_NAME + "_" + province.toUpperCase()
-				+ "_" + formattedInitialDate + "_" + formattedFinalDate + "_" + pageIndex + "_" + ".xlsx";
+		String generatedFilePath = REPORTS_HOME + "/" + username + "/" + NEW_ENROLLED_REPORT_NAME + "_"
+				+ province.toUpperCase() + "_" + formattedInitialDate + "_" + formattedFinalDate + "_" + pageIndex + "_"
+				+ ".xlsx";
 
 		List<NewlyEnrolledAgywAndServices> rows = new ArrayList<>();
 
@@ -136,23 +145,24 @@ public class AgywPrevController {
 			for (Object[] obj : reportObjectArray) {
 				rows.add(new NewlyEnrolledAgywAndServices(i + "", String.valueOf(obj[0]), String.valueOf(obj[1]),
 						String.valueOf(obj[2]), String.valueOf(obj[3]), String.valueOf(obj[4]), String.valueOf(obj[5]),
-						String.valueOf(obj[6]), String.valueOf(obj[7]), String.valueOf(obj[8]), String.valueOf(obj[9]),
-						String.valueOf(obj[10]), String.valueOf(obj[11]), String.valueOf(obj[12]),
-						String.valueOf(obj[13]), String.valueOf(obj[14]), String.valueOf(obj[15]),
-						String.valueOf(obj[16]), String.valueOf(obj[17]), String.valueOf(obj[18]),
-						String.valueOf(obj[19]), String.valueOf(obj[20]), String.valueOf(obj[21]),
-						String.valueOf(obj[22] != null ? obj[22] : ""), String.valueOf(obj[23]),
-						String.valueOf(obj[24]), String.valueOf(obj[25]), String.valueOf(obj[26]),
-						String.valueOf(obj[27]), String.valueOf(obj[28]), String.valueOf(obj[29]),
-						String.valueOf(obj[30]), String.valueOf(obj[31]), String.valueOf(obj[32]),
-						String.valueOf(obj[33]), String.valueOf(obj[34]), String.valueOf(obj[35]),
+						String.valueOf(obj[6]), String.valueOf(obj[7]), String.valueOf(obj[8] != null ? obj[8] : ""),
+						String.valueOf(obj[9] != null ? obj[9] : ""), String.valueOf(obj[10]), String.valueOf(obj[11]),
+						String.valueOf(obj[12]), String.valueOf(obj[13]), String.valueOf(obj[14]),
+						String.valueOf(obj[15]), String.valueOf(obj[16]), String.valueOf(obj[17]),
+						String.valueOf(obj[18]), String.valueOf(obj[19]), String.valueOf(obj[20]),
+						String.valueOf(obj[21]), String.valueOf(obj[22] != null ? obj[22] : ""),
+						String.valueOf(obj[23] != null ? obj[23] : ""), String.valueOf(obj[24]),
+						String.valueOf(obj[25]), String.valueOf(obj[26]), String.valueOf(obj[27]),
+						String.valueOf(obj[28]), String.valueOf(obj[29]), String.valueOf(obj[30]),
+						String.valueOf(obj[31]), String.valueOf(obj[32]), String.valueOf(obj[33]),
+						String.valueOf(obj[34]), String.valueOf(obj[35]),
 						String.valueOf(obj[36] != null ? obj[36] : ""), String.valueOf(obj[37] != null ? obj[37] : ""),
-						String.valueOf(obj[38])));
+						String.valueOf(obj[38] != null ? obj[38] : ""), String.valueOf(obj[39])));
 				i++;
 			}
 
 			// Compile the .jrxml template to a .jasper file
-			InputStream jrxmlStream = AgywPrevController.class.getResourceAsStream(REPORT_TEMPLATE);
+			InputStream jrxmlStream = AgywPrevController.class.getResourceAsStream(NEW_ENROLLED_REPORT_TEMPLATE);
 			JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlStream);
 
 			// Convert data to a JRBeanCollectionDataSource
@@ -162,19 +172,11 @@ public class AgywPrevController {
 			Map<String, Object> parameters = new HashMap<>();
 			parameters.put("date_start", formattedInitialDate);
 			parameters.put("date_end", formattedFinalDate);
+			parameters.put("slab", "Data de Início:");
+			parameters.put("elab", "Data de Fim:");
 
 			// Generate the report
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
-
-			SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
-//				configuration.setOnePagePerSheet(true);
-			configuration.setDetectCellType(true);
-			configuration.setAutoFitPageHeight(true);
-			configuration.setIgnoreGraphics(false);
-			// Set text wrapping
-			configuration.setWhitePageBackground(false);
-			configuration.setRemoveEmptySpaceBetweenColumns(true);
-			configuration.setWrapText(true); // Enable text wrapping
 
 			// Apply the configuration to the exporter
 			JasperReportsContext jasperReportsContext = DefaultJasperReportsContext.getInstance();
@@ -182,16 +184,22 @@ public class AgywPrevController {
 			// Export the report to XLSX
 			JRXlsxExporter exporter = new JRXlsxExporter(jasperReportsContext);
 			exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-			exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(generatedFileName));
-			exporter.setConfiguration(configuration);
+			exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(generatedFilePath));
+
+			// Set your preferred column width (in pixels)
+			exporter.setConfiguration(getXlsxExporterConfiguration());
+
 			exporter.exportReport();
 
-			System.out.println(generatedFileName + ": generated and exported to XLSX with borders successfully.");
+			System.out.println(generatedFilePath + ": generated and exported to XLSX with borders successfully.");
+
+			new ExcelDocumentFormatting(generatedFilePath).execute();
+
 		} catch (JRException e) {
 			e.printStackTrace();
 		}
 
-		return new ResponseEntity<>(generatedFileName, HttpStatus.OK);
+		return new ResponseEntity<>(generatedFilePath, HttpStatus.OK);
 	}
 
 	public static <T> List<List<T>> splitList(List<T> originalList, int chunkSize) {
@@ -274,7 +282,7 @@ public class AgywPrevController {
 
 		createDirectory(REPORTS_HOME + "/" + username);
 
-		String generatedFileName = REPORTS_HOME + "/" + username + "/" + SUMMARY_REPORT_NAME + "_"
+		String generatedFilePath = REPORTS_HOME + "/" + username + "/" + NEW_ENROLLED_SUMMARY_REPORT_NAME + "_"
 				+ province.toUpperCase() + "_" + formattedInitialDate + "_" + formattedFinalDate + "_" + pageNumber
 				+ "_" + ".xlsx";
 
@@ -312,7 +320,8 @@ public class AgywPrevController {
 			}
 
 			// Compile the .jrxml template to a .jasper file
-			InputStream jrxmlStream = AgywPrevController.class.getResourceAsStream(SUMMARY_REPORT_TEMPLATE);
+			InputStream jrxmlStream = AgywPrevController.class
+					.getResourceAsStream(NEW_ENROLLED_SUMMARY_REPORT_TEMPLATE);
 			JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlStream);
 
 			if (rows.size() > 0) {
@@ -323,19 +332,11 @@ public class AgywPrevController {
 				Map<String, Object> parameters = new HashMap<>();
 				parameters.put("date_start", formattedInitialDate);
 				parameters.put("date_end", formattedFinalDate);
+				parameters.put("slab", "Data de Início:");
+				parameters.put("elab", "Data de Fim:");
 
 				// Generate the report
 				JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
-
-				SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
-//					configuration.setOnePagePerSheet(true);
-				configuration.setDetectCellType(true);
-				configuration.setAutoFitPageHeight(true);
-				configuration.setIgnoreGraphics(false);
-				// Set text wrapping
-				configuration.setWhitePageBackground(false);
-				configuration.setRemoveEmptySpaceBetweenColumns(true);
-				configuration.setWrapText(true); // Enable text wrapping
 
 				// Apply the configuration to the exporter
 				JasperReportsContext jasperReportsContext = DefaultJasperReportsContext.getInstance();
@@ -343,16 +344,22 @@ public class AgywPrevController {
 				// Export the report to XLSX
 				JRXlsxExporter exporter = new JRXlsxExporter(jasperReportsContext);
 				exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-				exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(generatedFileName));
-				exporter.setConfiguration(configuration);
+				exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(generatedFilePath));
+
+				// Set your preferred column width (in pixels)
+				exporter.setConfiguration(getXlsxExporterConfiguration());
+
 				exporter.exportReport();
 			}
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			generatedReportResponse = objectMapper
-					.writeValueAsString(new ReportResponse(generatedFileName, rows.size(), nextIndex));
+					.writeValueAsString(new ReportResponse(generatedFilePath, rows.size(), nextIndex));
 
-			System.out.println(generatedFileName + ": generated and exported to XLSX with borders successfully.");
+			System.out.println(generatedFilePath + ": generated and exported to XLSX with borders successfully.");
+
+			new ExcelDocumentFormatting(generatedFilePath).execute();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -360,4 +367,241 @@ public class AgywPrevController {
 		return new ResponseEntity<>(generatedReportResponse, HttpStatus.OK);
 	}
 
+	@GetMapping(produces = "application/json", path = "/countBeneficiariesVulnerabilitiesAndServices")
+	public ResponseEntity<List<Object>> countBeneficiariesVulnerabilitiesAndServices(
+			@RequestParam(name = "districts") Integer[] districts, @RequestParam(name = "startDate") Long startDate,
+			@RequestParam(name = "endDate") Long endDate) {
+
+		AgywPrevReport report = new AgywPrevReport(service);
+
+		try {
+			List<Object> reportObject = report.countBeneficiariesVulnerabilitiesAndServices(districts,
+					new Date(startDate), new Date(endDate));
+
+			return new ResponseEntity<>(reportObject, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping(path = "/getBeneficiariesVulnerabilitiesAndServices")
+	public ResponseEntity<String> getBeneficiariesVulnerabilitiesAndServices(
+			@RequestParam(name = "province") String province, @RequestParam(name = "districts") Integer[] districts,
+			@RequestParam(name = "startDate") Long startDate, @RequestParam(name = "endDate") Long endDate,
+			@RequestParam(name = "pageIndex") int pageIndex, @RequestParam(name = "pageSize") int pageSize,
+			@RequestParam(name = "username") String username) throws IOException {
+
+		AgywPrevReport report = new AgywPrevReport(service);
+
+		Date initialDate = new Date(startDate);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String formattedInitialDate = sdf.format(initialDate);
+
+		Date finalDate = new Date(endDate);
+		SimpleDateFormat sdfFinal = new SimpleDateFormat("yyyy-MM-dd");
+		String formattedFinalDate = sdfFinal.format(finalDate);
+
+		createDirectory(REPORTS_HOME + "/" + username);
+
+		String generatedFilePath = REPORTS_HOME + "/" + username + "/" + VULNERABILITIES_AND_SERVICES_REPORT_NAME + "_"
+				+ province.toUpperCase() + "_" + formattedInitialDate + "_" + formattedFinalDate + "_" + pageIndex + "_"
+				+ ".xlsx";
+
+		List<NewlyEnrolledAgywAndServices> rows = new ArrayList<>();
+
+		List<Object> reportObjectList = report.getBeneficiariesVulnerabilitiesAndServices(districts,
+				new Date(startDate), new Date(endDate), pageIndex, pageSize);
+		Object[][] reportObjectArray = reportObjectList.toArray(new Object[0][0]);
+
+		int i = 1;
+		try {
+			for (Object[] obj : reportObjectArray) {
+				rows.add(new NewlyEnrolledAgywAndServices(i + "", String.valueOf(obj[0]), String.valueOf(obj[1]),
+						String.valueOf(obj[2]), String.valueOf(obj[3]), String.valueOf(obj[4]), String.valueOf(obj[5]),
+						String.valueOf(obj[6]), String.valueOf(obj[7]), String.valueOf(obj[8] != null ? obj[8] : ""),
+						String.valueOf(obj[9] != null ? obj[9] : ""), String.valueOf(obj[10]), String.valueOf(obj[11]),
+						String.valueOf(obj[12]), String.valueOf(obj[13]), String.valueOf(obj[14]),
+						String.valueOf(obj[15]), String.valueOf(obj[16]), String.valueOf(obj[17]),
+						String.valueOf(obj[18]), String.valueOf(obj[19]), String.valueOf(obj[20]),
+						String.valueOf(obj[21]), String.valueOf(obj[22] != null ? obj[22] : ""),
+						String.valueOf(obj[23] != null ? obj[23] : ""), String.valueOf(obj[24]),
+						String.valueOf(obj[25] != null ? obj[25] : ""), String.valueOf(obj[26]),
+						String.valueOf(obj[27]), String.valueOf(obj[28]), String.valueOf(obj[29]),
+						String.valueOf(obj[30]), String.valueOf(obj[31]), String.valueOf(obj[32]),
+						String.valueOf(obj[33]), String.valueOf(obj[34]), String.valueOf(obj[35]),
+						String.valueOf(obj[36] != null ? obj[36] : ""), String.valueOf(obj[37] != null ? obj[37] : ""),
+						String.valueOf(obj[38] != null ? obj[38] : ""), String.valueOf(obj[39])));
+				i++;
+			}
+
+			// Compile the .jrxml template to a .jasper file
+			InputStream jrxmlStream = AgywPrevController.class
+					.getResourceAsStream(VULNERABILITIES_AND_SERVICES_REPORT_TEMPLATE);
+			JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlStream);
+
+			// Convert data to a JRBeanCollectionDataSource
+			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(rows);
+
+			// Create a Map to store report parameters
+			Map<String, Object> parameters = new HashMap<>();
+			parameters.put("date_start", formattedInitialDate);
+			parameters.put("date_end", formattedFinalDate);
+			parameters.put("slab", "Data de Início:");
+			parameters.put("elab", "Data de Fim:");
+
+			// Generate the report
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+			// Apply the configuration to the exporter
+			JasperReportsContext jasperReportsContext = DefaultJasperReportsContext.getInstance();
+
+			// Export the report to XLSX
+			JRXlsxExporter exporter = new JRXlsxExporter(jasperReportsContext);
+			exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+			exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(generatedFilePath));
+
+			// Set your preferred column width (in pixels)
+			exporter.setConfiguration(getXlsxExporterConfiguration());
+
+			exporter.exportReport();
+
+			System.out.println(generatedFilePath + ": generated and exported to XLSX with borders successfully.");
+
+			new ExcelDocumentFormatting(generatedFilePath).execute();
+
+		} catch (JRException e) {
+			e.printStackTrace();
+		}
+
+		return new ResponseEntity<>(generatedFilePath, HttpStatus.OK);
+	}
+
+	@GetMapping(produces = "application/json", path = "/getBeneficiariesVulnerabilitiesAndServicesSummary")
+	public ResponseEntity<String> getBeneficiariesVulnerabilitiesAndServicesSummary(
+			@RequestParam(name = "province") String province, @RequestParam(name = "districts") Integer[] districts,
+			@RequestParam(name = "startDate") Long startDate, @RequestParam(name = "endDate") Long endDate,
+			@RequestParam(name = "pageNumber") int pageNumber, @RequestParam(name = "nextIndex") int nextIndex,
+			@RequestParam(name = "username") String username) {
+		String generatedReportResponse;
+
+		Date initialDate = new Date(startDate);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String formattedInitialDate = sdf.format(initialDate);
+
+		Date finalDate = new Date(endDate);
+		SimpleDateFormat sdfFinal = new SimpleDateFormat("yyyy-MM-dd");
+		String formattedFinalDate = sdfFinal.format(finalDate);
+
+		createDirectory(REPORTS_HOME + "/" + username);
+
+		String generatedFilePath = REPORTS_HOME + "/" + username + "/"
+				+ VULNERABILITIES_AND_SERVICES_SUMMARY_REPORT_NAME + "_" + province.toUpperCase() + "_"
+				+ formattedInitialDate + "_" + formattedFinalDate + "_" + pageNumber + "_" + ".xlsx";
+
+		List<SummaryNewlyEnrolledAgywAndServices> rows = new ArrayList<>();
+
+		AgywPrevReport report = new AgywPrevReport(service);
+
+		List<Object> reportObjectList = report.getBeneficiariesVulnerabilitiesAndServicesSummary(districts,
+				new Date(startDate), new Date(endDate));
+		Object[][] reportObjectArray = reportObjectList.toArray(new Object[0][0]);
+
+		try {
+			for (Object[] obj : reportObjectArray) {
+				rows.add(new SummaryNewlyEnrolledAgywAndServices(nextIndex + "",
+						String.valueOf(obj[0] != null ? obj[0] : ""), String.valueOf(obj[1] != null ? obj[1] : ""),
+						String.valueOf(obj[2] != null ? obj[2] : ""), String.valueOf(obj[3] != null ? obj[3] : ""),
+						String.valueOf(obj[4] != null ? obj[4] : ""), String.valueOf(obj[5] != null ? obj[5] : ""),
+						String.valueOf(obj[6] != null ? obj[6] : ""), String.valueOf(obj[7] != null ? obj[7] : ""),
+						String.valueOf(obj[8] != null ? obj[8] : ""), String.valueOf(obj[9] != null ? obj[9] : ""),
+						String.valueOf(obj[10] != null ? obj[10] : ""), String.valueOf(obj[11] != null ? obj[11] : ""),
+						String.valueOf(obj[12] != null ? obj[12] : ""), String.valueOf(obj[13] != null ? obj[13] : ""),
+						String.valueOf(obj[14] != null ? obj[14] : ""), String.valueOf(obj[15] != null ? obj[15] : ""),
+						String.valueOf(obj[16] != null ? obj[16] : ""), String.valueOf(obj[17] != null ? obj[17] : ""),
+						String.valueOf(obj[18] != null ? obj[18] : ""), String.valueOf(obj[19] != null ? obj[19] : ""),
+						String.valueOf(obj[20] != null ? obj[20] : ""), String.valueOf(obj[21] != null ? obj[21] : ""),
+						String.valueOf(obj[22] != null ? obj[22] : ""), String.valueOf(obj[23] != null ? obj[23] : ""),
+						String.valueOf(obj[24] != null ? obj[24] : ""), String.valueOf(obj[25] != null ? obj[25] : ""),
+						String.valueOf(obj[26] != null ? obj[26] : ""), String.valueOf(obj[27] != null ? obj[27] : ""),
+						String.valueOf(obj[28] != null ? obj[28] : ""), String.valueOf(obj[29] != null ? obj[29] : ""),
+						String.valueOf(obj[30] != null ? obj[30] : ""), String.valueOf(obj[31] != null ? obj[31] : ""),
+						String.valueOf(obj[32] != null ? obj[32] : ""), String.valueOf(obj[33] != null ? obj[33] : ""),
+						String.valueOf(obj[34] != null ? obj[34] : ""), String.valueOf(obj[35] != null ? obj[35] : ""),
+						String.valueOf(obj[36] != null ? obj[36] : "")));
+				nextIndex++;
+			}
+
+			// Compile the .jrxml template to a .jasper file
+			InputStream jrxmlStream = AgywPrevController.class
+					.getResourceAsStream(VULNERABILITIES_AND_SERVICES_SUMMARY_REPORT_TEMPLATE);
+			JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlStream);
+
+			if (rows.size() > 0) {
+				// Convert data to a JRBeanCollectionDataSource
+				JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(rows);
+
+				// Create a Map to store report parameters
+				Map<String, Object> parameters = new HashMap<>();
+				parameters.put("date_start", formattedInitialDate);
+				parameters.put("date_end", formattedFinalDate);
+				parameters.put("slab", "Data de Início:");
+				parameters.put("elab", "Data de Fim:");
+
+				// Generate the report
+				JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+				// Apply the configuration to the exporter
+				JasperReportsContext jasperReportsContext = DefaultJasperReportsContext.getInstance();
+
+				// Export the report to XLSX
+				JRXlsxExporter exporter = new JRXlsxExporter(jasperReportsContext);
+				exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+				exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(generatedFilePath));
+
+				// Set your preferred column width (in pixels)
+				exporter.setConfiguration(getXlsxExporterConfiguration());
+
+				exporter.exportReport();
+			}
+
+			ObjectMapper objectMapper = new ObjectMapper();
+			generatedReportResponse = objectMapper
+					.writeValueAsString(new ReportResponse(generatedFilePath, rows.size(), nextIndex));
+
+			System.out.println(generatedFilePath + ": generated and exported to XLSX with borders successfully.");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(generatedReportResponse, HttpStatus.OK);
+	}
+
+	private static SimpleXlsxReportConfiguration getXlsxExporterConfiguration() {
+		SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
+		configuration.setOnePagePerSheet(true);
+		configuration.setDetectCellType(true);
+		configuration.setAutoFitPageHeight(true);
+		configuration.setIgnoreGraphics(false);
+		// Set text wrapping
+		configuration.setWhitePageBackground(false);
+		configuration.setRemoveEmptySpaceBetweenColumns(true);
+		configuration.setWrapText(true); // Enable text wrapping
+
+		configuration.setRemoveEmptySpaceBetweenRows(true);
+		configuration.setCollapseRowSpan(true);
+
+		// Adjust column width
+		configuration.setColumnWidthRatio(5f); // Adjust this ratio based on your preferences
+
+		return configuration;
+	}
+
+	@GetMapping("/excelDocumentFormat")
+	public ResponseEntity<String> excelDocumentFormat(@RequestParam(name = "filePath") String filePath)
+			throws IOException {
+		new ExcelDocumentFormatting(filePath).execute();
+		return new ResponseEntity<String>(filePath, HttpStatus.OK);
+	}
 }

@@ -14,6 +14,7 @@ public class NewlyEnrolledAgywAndServices {
 	private String onde_mora;
 	private String ponto_entrada;
 	private String organizacao;
+	private String data_inscricao;
 	private String data_registo;
 	private String registado_por;
 	private String data_actualizacao;
@@ -50,7 +51,7 @@ public class NewlyEnrolledAgywAndServices {
 	private String servico_status;
 
 	public NewlyEnrolledAgywAndServices(String index, String provincia, String distrito, String onde_mora,
-			String ponto_entrada, String organizacao, String data_registo, String registado_por,
+			String ponto_entrada, String organizacao, String data_inscricao, String data_registo, String registado_por,
 			String data_actualizacao, String actualizado_por, String nui, String sexo, String idade_registo,
 			String idade_actual, String faixa_registo, String faixa_actual, String data_nascimento, String agyw_prev,
 			String com_quem_mora, String sustenta_casa, String e_orfa, String vai_escola, String tem_deficiencia,
@@ -65,6 +66,7 @@ public class NewlyEnrolledAgywAndServices {
 		this.onde_mora = onde_mora;
 		this.ponto_entrada = ponto_entrada;
 		this.organizacao = organizacao;
+		this.data_inscricao = data_inscricao;
 		this.data_registo = data_registo;
 		this.registado_por = registado_por;
 		this.data_actualizacao = data_actualizacao;
@@ -419,5 +421,13 @@ public class NewlyEnrolledAgywAndServices {
 
 	public void setServico_status(String servico_status) {
 		this.servico_status = servico_status;
+	}
+
+	public String getData_inscricao() {
+		return data_inscricao;
+	}
+
+	public void setData_inscricao(String data_inscricao) {
+		this.data_inscricao = data_inscricao;
 	}
 }

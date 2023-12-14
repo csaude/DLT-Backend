@@ -15,7 +15,10 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -47,6 +50,8 @@ import dlt.dltbackendmaster.domain.ReferencesServicesId;
 import dlt.dltbackendmaster.domain.Services;
 import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.domain.Us;
+import dlt.dltbackendmaster.domain.UserLastSync;
+import dlt.dltbackendmaster.domain.Users;
 import dlt.dltbackendmaster.domain.UsersBeneficiariesCustomSync;
 import dlt.dltbackendmaster.domain.UsersSync;
 import dlt.dltbackendmaster.domain.watermelondb.BeneficiaryInterventionSyncModel;
@@ -66,6 +71,7 @@ import dlt.dltbackendmaster.util.ServiceCompletionRules;
 @RestController
 @RequestMapping("/sync")
 public class SyncController {
+	Logger logger = LoggerFactory.getLogger(SyncController.class);
 
 	private final DAOService service;
 	private SequenceGenerator generator;
@@ -77,7 +83,7 @@ public class SyncController {
 
 	@Autowired
 	private VulnerabilityHistoryService vulnerabilityHistoryService;
-	
+
 	@Autowired
 	private UserLastSyncService userLastSyncService;
 
@@ -208,9 +214,8 @@ public class SyncController {
 			beneficiariesCreated.addAll(refBeneficiaries);
 
 			for (Beneficiaries beneficiary : beneficiariesCreated) {
-				if (beneficiary.getLocality() != null 
-						&& !user.getProfiles().getName().equals("MENTORA") 
-						&& !user.getProfiles().getName().equals("ENFERMEIRA") 
+				if (beneficiary.getLocality() != null && !user.getProfiles().getName().equals("MENTORA")
+						&& !user.getProfiles().getName().equals("ENFERMEIRA")
 						&& !user.getProfiles().getName().equals("CONSELHEIRA")) {
 					localitiesIds.add(beneficiary.getLocality().getId());
 				}
@@ -454,7 +459,7 @@ public class SyncController {
 			String object = SyncSerializer.createSyncObject(usersSO, provinceSO, districtSO, localitySO, profilesSO,
 					partnersSO, usSO, beneficiarySO, beneficiaryInterventionSO, neighborhoodSO, serviceSO, subServiceSO,
 					referencesSO, referencesServicesSO, lastPulledAt);
-			
+
 			userLastSyncService.saveLastSyncDate(username);
 
 			return new ResponseEntity<>(object, HttpStatus.OK);
@@ -531,13 +536,18 @@ public class SyncController {
 
 				for (BeneficiarySyncModel created : createdList) {
 					if (created.getOnline_id() == null) {
-						Beneficiaries beneficiary = new Beneficiaries(created, lastPulledAt);
-						setPartner(created, beneficiary);
-						beneficiary.setCreatedBy(user.getId());
-						beneficiary.setDateUpdated(new Date());
-						Integer beneficiaryId = (Integer) service.Save(beneficiary);
-						vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
-						beneficiariesIds.put(created.getId(), beneficiaryId);
+						try {
+							Beneficiaries beneficiary = new Beneficiaries(created, lastPulledAt);
+							setPartner(created, beneficiary);
+							beneficiary.setCreatedBy(user.getId());
+							beneficiary.setDateUpdated(new Date());
+							Integer beneficiaryId = (Integer) service.Save(beneficiary);
+							vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
+							beneficiariesIds.put(created.getId(), beneficiaryId);
+						} catch (DataIntegrityViolationException e) {
+							logger.warn(e.getRootCause().getMessage());
+							continue;
+						}
 					} else {
 						beneficiariesIds.put(created.getId(), created.getOnline_id());
 					}
@@ -551,12 +561,17 @@ public class SyncController {
 				for (BeneficiarySyncModel updated : updatedList) {
 
 					if (updated.getOnline_id() == null) {
-						Beneficiaries beneficiary = new Beneficiaries(updated, lastPulledAt);
-						beneficiary.setCreatedBy(user.getId());
-						setPartner(updated, beneficiary);
-						Integer beneficiaryId = (Integer) service.Save(beneficiary);
-						vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
-						beneficiariesIds.put(updated.getId(), beneficiaryId);
+						try {
+							Beneficiaries beneficiary = new Beneficiaries(updated, lastPulledAt);
+							beneficiary.setCreatedBy(user.getId());
+							setPartner(updated, beneficiary);
+							Integer beneficiaryId = (Integer) service.Save(beneficiary);
+							vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
+							beneficiariesIds.put(updated.getId(), beneficiaryId);
+						} catch (DataIntegrityViolationException e) {
+							logger.warn(e.getRootCause().getMessage());
+							continue;
+						}
 
 					} else {
 						Beneficiaries beneficiary = service.find(Beneficiaries.class, updated.getOnline_id());
@@ -576,23 +591,28 @@ public class SyncController {
 
 				for (BeneficiaryInterventionSyncModel created : createdList) {
 					if (created.getOnline_id() == null) {
-						BeneficiariesInterventions intervention = new BeneficiariesInterventions(created, lastPulledAt);
-						if (created.getBeneficiary_id() == 0) {
-							Integer beneficiaryId = beneficiariesIds.get(created.getBeneficiary_offline_id());
-							if (beneficiaryId == null) {
-								Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
-										"Beneficiary.findByOfflineId", created.getBeneficiary_offline_id());
-								beneficiaryId = beneficiary.getId();
+						try {
+							BeneficiariesInterventions intervention = new BeneficiariesInterventions(created, lastPulledAt);
+							if (created.getBeneficiary_id() == 0) {
+								Integer beneficiaryId = beneficiariesIds.get(created.getBeneficiary_offline_id());
+								if (beneficiaryId == null) {
+									Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
+											"Beneficiary.findByOfflineId", created.getBeneficiary_offline_id());
+									beneficiaryId = beneficiary.getId();
+								}
+								intervention.setBeneficiaries(new Beneficiaries(beneficiaryId));
+								intervention.getId().setBeneficiaryId(beneficiaryId);
+								intervention.setUpdatedBy(user.getId().toString());
 							}
-							intervention.setBeneficiaries(new Beneficiaries(beneficiaryId));
-							intervention.getId().setBeneficiaryId(beneficiaryId);
-							intervention.setUpdatedBy(user.getId().toString());
-						}
-						intervention.setDateUpdated(new Date());
-						intervention.setCreatedBy(user.getId());
-						service.Save(intervention);
+							intervention.setDateUpdated(new Date());
+							intervention.setCreatedBy(user.getId());
+							service.Save(intervention);
 
-						service.registerServiceCompletionStatus(intervention);
+							service.registerServiceCompletionStatus(intervention);
+						} catch (DataIntegrityViolationException e) {
+							logger.warn(e.getRootCause().getMessage());
+							continue;
+						}
 
 					}
 				}
@@ -609,36 +629,47 @@ public class SyncController {
 
 				for (ReferenceSyncModel created : createdList) {
 					if (created.getOnline_id() == null) {
-						References reference = new References(created, lastPulledAt);
-						if (created.getBeneficiary_id() == 0) {
-							Integer beneficiaryId = beneficiariesIds.get(created.getBeneficiary_offline_id());
-							if (beneficiaryId == null) {
-								Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
-										"Beneficiary.findByOfflineId", created.getBeneficiary_offline_id());
-								beneficiaryId = beneficiary.getId();
+						References reference;
+						try {
+							reference = new References(created, lastPulledAt);
+							if (created.getBeneficiary_id() == 0) {
+								Integer beneficiaryId = beneficiariesIds.get(created.getBeneficiary_offline_id());
+								if (beneficiaryId == null) {
+									Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
+											"Beneficiary.findByOfflineId", created.getBeneficiary_offline_id());
+									beneficiaryId = beneficiary.getId();
+								}
+								reference.setBeneficiaries(new Beneficiaries(beneficiaryId));
 							}
-							reference.setBeneficiaries(new Beneficiaries(beneficiaryId));
+							reference.setUserCreated(user.getId() + "");
+							service.Save(reference);
+						} catch (DataIntegrityViolationException e) {
+							logger.warn(e.getRootCause().getMessage());
+							continue;
 						}
-						reference.setUserCreated(user.getId() + "");
-						service.Save(reference);
 
 						for (ReferenceServicesSyncModel refService : refServices) {
 							if (refService.getReference_id().equals(reference.getOfflineId())) {
-								refService.setReference_id("" + reference.getId());
-								ReferencesServices referenceService = new ReferencesServices(refService, lastPulledAt);
-								reference.getReferencesServiceses().add(referenceService);
-								referenceService.setCreatedBy(user.getId());
-								referenceService.setDateUpdated(new Date());
-								List<BeneficiariesInterventions> beneficiaryInterventions = service
-										.GetAllEntityByNamedQuery("BeneficiaryIntervention.findAllByBeneficiaryAndDate",
-												reference.getDate().toInstant().atZone(ZoneId.systemDefault())
-														.toLocalDate(),
-												reference.getBeneficiaries().getId());
+								try {
+									refService.setReference_id("" + reference.getId());
+									ReferencesServices referenceService = new ReferencesServices(refService, lastPulledAt);
+									reference.getReferencesServiceses().add(referenceService);
+									referenceService.setCreatedBy(user.getId());
+									referenceService.setDateUpdated(new Date());
+									List<BeneficiariesInterventions> beneficiaryInterventions = service
+											.GetAllEntityByNamedQuery("BeneficiaryIntervention.findAllByBeneficiaryAndDate",
+													reference.getDate().toInstant().atZone(ZoneId.systemDefault())
+															.toLocalDate(),
+													reference.getBeneficiaries().getId());
 
-								Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(
-										beneficiaryInterventions, referenceService.getServices().getId());
-								referenceService.setStatus(referenceServiceStatus);
-								service.Save(referenceService);
+									Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(
+											beneficiaryInterventions, referenceService.getServices().getId());
+									referenceService.setStatus(referenceServiceStatus);
+									service.Save(referenceService);
+								} catch (DataIntegrityViolationException e) {
+									logger.warn(e.getRootCause().getMessage());
+									continue;
+								}
 							}
 						}
 						List<BeneficiariesInterventions> beneficiaryInterventions = service.GetAllEntityByNamedQuery(
@@ -685,21 +716,26 @@ public class SyncController {
 				for (BeneficiaryInterventionSyncModel updated : updatedList) {
 
 					if (updated.getOnline_id() == null) {
-						BeneficiariesInterventions intervention = new BeneficiariesInterventions(updated, lastPulledAt);
-						intervention.setCreatedBy(user.getId());
-						if (updated.getBeneficiary_id() == 0) {
-							Integer beneficiaryId = beneficiariesIds.get(updated.getBeneficiary_offline_id());
-							if (beneficiaryId == null) {
-								Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
-										"Beneficiary.findByOfflineId", updated.getBeneficiary_offline_id());
-								beneficiaryId = beneficiary.getId();
+						try {
+							BeneficiariesInterventions intervention = new BeneficiariesInterventions(updated, lastPulledAt);
+							intervention.setCreatedBy(user.getId());
+							if (updated.getBeneficiary_id() == 0) {
+								Integer beneficiaryId = beneficiariesIds.get(updated.getBeneficiary_offline_id());
+								if (beneficiaryId == null) {
+									Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
+											"Beneficiary.findByOfflineId", updated.getBeneficiary_offline_id());
+									beneficiaryId = beneficiary.getId();
+								}
+								intervention.setBeneficiaries(new Beneficiaries(beneficiaryId));
+								intervention.getId().setBeneficiaryId(beneficiaryId);
+								intervention.setDateUpdated(new Date());
+								intervention.setUpdatedBy(user.getId().toString());
 							}
-							intervention.setBeneficiaries(new Beneficiaries(beneficiaryId));
-							intervention.getId().setBeneficiaryId(beneficiaryId);
-							intervention.setDateUpdated(new Date());
-							intervention.setUpdatedBy(user.getId().toString());
+							service.Save(intervention);
+						} catch (DataIntegrityViolationException e) {
+							logger.warn(e.getRootCause().getMessage());
+							continue;
 						}
-						service.Save(intervention);
 
 					} else {
 						String[] keys = updated.getOnline_id().split(",");
@@ -738,20 +774,25 @@ public class SyncController {
 				for (ReferenceSyncModel updated : updatedList) {
 
 					if (updated.getOnline_id() == null) {
-						References reference = new References(updated, lastPulledAt);
-						if (updated.getBeneficiary_id() == 0) {
-							Integer beneficiaryId = beneficiariesIds.get(updated.getBeneficiary_offline_id());
-							if (beneficiaryId == null) {
-								Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
-										"Beneficiary.findByOfflineId", updated.getBeneficiary_offline_id());
-								beneficiaryId = beneficiary.getId();
+						try {
+							References reference = new References(updated, lastPulledAt);
+							if (updated.getBeneficiary_id() == 0) {
+								Integer beneficiaryId = beneficiariesIds.get(updated.getBeneficiary_offline_id());
+								if (beneficiaryId == null) {
+									Beneficiaries beneficiary = service.GetUniqueEntityByNamedQuery(
+											"Beneficiary.findByOfflineId", updated.getBeneficiary_offline_id());
+									beneficiaryId = beneficiary.getId();
+								}
+								reference.setBeneficiaries(new Beneficiaries(beneficiaryId));
+								reference.setDateUpdated(new Date());
+								reference.setUpdatedBy(user.getId());
 							}
-							reference.setBeneficiaries(new Beneficiaries(beneficiaryId));
-							reference.setDateUpdated(new Date());
-							reference.setUpdatedBy(user.getId());
+							reference.setUserCreated(user.getId() + "");
+							service.Save(reference);
+						} catch (DataIntegrityViolationException e) {
+							logger.warn(e.getRootCause().getMessage());
+							continue;
 						}
-						reference.setUserCreated(user.getId() + "");
-						service.Save(reference);
 
 					} else {
 						References reference = service.find(References.class, updated.getOnline_id());
@@ -769,9 +810,14 @@ public class SyncController {
 				for (ReferenceServicesSyncModel updated : updatedList) {
 
 					if (updated.getOnline_id() == null) {
-						ReferencesServices referenceServices = new ReferencesServices(updated, lastPulledAt);
-						referenceServices.setCreatedBy(user.getId());
-						service.Save(referenceServices);
+						try {
+							ReferencesServices referenceServices = new ReferencesServices(updated, lastPulledAt);
+							referenceServices.setCreatedBy(user.getId());
+							service.Save(referenceServices);
+						} catch (DataIntegrityViolationException e) {
+							logger.warn(e.getRootCause().getMessage());
+							continue;
+						}
 
 					} else {
 						String[] keys = updated.getOnline_id().split(",");
@@ -786,7 +832,7 @@ public class SyncController {
 					}
 				}
 			}
-			
+
 			userLastSyncService.saveLastSyncDate(username);
 
 		} catch (JsonProcessingException e) {
@@ -827,4 +873,40 @@ public class SyncController {
 					.toArray(Integer[]::new);
 		}
 	}
+	
+	@GetMapping(path = "/usersLastSync", produces = "application/json")
+	public ResponseEntity <List<UserLastSync>> getUsersLastSync() throws ParseException {
+		try {	
+			List<UserLastSync> usersLastSync = service.GetAllEntityByNamedQuery("UserLastSync.findAll");
+			return ResponseEntity.ok(usersLastSync);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping(path = "/usersLastSync/paged", produces = "application/json")
+    public ResponseEntity<List<Users>> get(
+    		@RequestParam(name = "userId") Integer userId, 
+    		@RequestParam(name = "level") String level, 
+    		@RequestParam(name = "params",required = false) @Nullable Integer[] params,
+    		@RequestParam(name = "pageIndex") int pageIndex,
+    		@RequestParam(name = "pageSize") int pageSize,
+    		@RequestParam(name = "searchUsername", required = false) @Nullable String searchUsername,
+    		@RequestParam(name = "searchUserCreator", required = false) @Nullable Integer searchUserCreator,
+    		@RequestParam(name = "searchDistrict", required = false) @Nullable Integer searchDistrict
+    		) {
+
+        try {
+            List<Users> users = service.GetAllPagedUserEntityByNamedQuery("UserLastSync.findAll", pageIndex, pageSize, searchUsername, searchUserCreator, searchDistrict);
+
+            return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }

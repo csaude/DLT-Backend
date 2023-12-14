@@ -28,6 +28,9 @@ import dlt.dltbackendmaster.reports.queries.AgywPrevQueries;
 		@NamedNativeQuery(name = "AgywPrev.findByNewlyEnrolledAgywAndServices", query = AgywPrevQueries.NEWLY_ENROLLED_AGYW_AND_SERVICES), 
 		@NamedNativeQuery(name = "AgywPrev.countNewlyEnrolledAgywAndServices", query = AgywPrevQueries.TOTAL_NEWLY_ENROLLED_AGYW_AND_SERVICES), 
 		@NamedNativeQuery(name = "AgywPrev.findByNewlyEnrolledAgywAndServicesSummary", query = AgywPrevQueries.NEWLY_ENROLLED_AGYW_AND_SERVICES_SUMMARY),
+		@NamedNativeQuery(name = "AgywPrev.findByBeneficiariesVulnerabilitiesAndServices", query = AgywPrevQueries.VULNERABILITIES_AND_SERVICES), 
+		@NamedNativeQuery(name = "AgywPrev.countBeneficiariesVulnerabilitiesAndServices", query = AgywPrevQueries.TOTAL_VULNERABILITIES_AND_SERVICES), 
+		@NamedNativeQuery(name = "AgywPrev.findByBeneficiariesVulnerabilitiesAndServicesSummary", query = AgywPrevQueries.VULNERABILITIES_AND_SERVICES_SUMMARY),
 		})
 public class AgywPrev implements Serializable {
 
