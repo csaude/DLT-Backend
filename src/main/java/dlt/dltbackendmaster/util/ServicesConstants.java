@@ -67,7 +67,9 @@ public class ServicesConstants
     // ABORDAGENS SÓCIO-ECONÓMICAS COMBINADAS
     public static final Integer GRUPO_PUPANCA = 84;
 
-    public static final Integer INICIATIVAS_EMPREGABILIDADE = 214;
+    public static final Integer SIYAKHA_LIGHT = 235;
+
+    public static final Integer SIYAKHA_COMPREHENSIVE = 214;
 
     // OUTROS SERVIÇOS DE SAAJ
     public static final Integer RASTREIO_ITS = 69;
@@ -452,7 +454,8 @@ public class ServicesConstants
                                                                        UNIFORME_ESCOLAR);
 
     public static final List<Integer> ABORDAGENS_SOCIO_ECONOMICAS_COMBINADAS = Arrays.asList(GRUPO_PUPANCA,
-                                                                                             INICIATIVAS_EMPREGABILIDADE);
+                                                                                             SIYAKHA_LIGHT,
+                                                                                             SIYAKHA_COMPREHENSIVE);
 
     public static final List<Integer> OUTROS_SERVICOS_SAAJ = Arrays.asList(RASTREIO_ITS,
                                                                            TRATAMENTO_ITS,
