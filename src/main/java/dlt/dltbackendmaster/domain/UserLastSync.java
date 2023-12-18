@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -26,11 +28,20 @@ import javax.persistence.TemporalType;
 @NamedQueries({
 		@NamedQuery(name = "UserLastSync.findByUsername", query = "SELECT a FROM UserLastSync a WHERE a.username =:username"),
 		@NamedQuery(name = "UserLastSync.findAll", query = "SELECT distinct u FROM UserLastSync u "
-														+ " LEFT JOIN u.user.districts d "
-														+ " Where u.username like :searchUsername "
-														+ " AND (:searchUserCreator IS NULL OR u.user.createdBy = :searchUserCreator OR u.user.updatedBy =:searchUserCreator) "
-										                + " AND (:searchDistrict IS NULL OR d.id = :searchDistrict) "
-				+ ""), })
+				+ " LEFT JOIN u.user.districts d "
+				+ " Where u.username like :searchUsername "
+				+ " AND (:searchUserCreator IS NULL OR u.user.createdBy = :searchUserCreator OR u.user.updatedBy =:searchUserCreator) "
+				+ " AND (:searchDistrict IS NULL OR d.id = :searchDistrict) "), })
+@NamedNativeQueries({
+		@NamedNativeQuery(name = "UserLastSync.findByDistricts", query = "SELECT uls.* FROM users_last_sync uls  "
+				+ "left join users u on u.id = uls.user_id " 
+				+ "LEFT JOIN users_districts ud on ud.user_id = u.id "
+				+ "where ud.district_id in (:districts)", resultClass = UserLastSync.class),
+		@NamedNativeQuery(name = "UserLastSync.findByProvinces", query = "SELECT uls.* FROM users_last_sync uls "
+				+ "left join users u on u.id = uls.user_id " 
+				+ "left join users_provinces up on up.user_id = u.id "
+				+ "where up.province_id in (:provinces)", resultClass = UserLastSync.class), })
+
 public class UserLastSync implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
