@@ -193,8 +193,6 @@ public class AgywPrevController {
 
 			System.out.println(generatedFilePath + ": generated and exported to XLSX with borders successfully.");
 
-			new ExcelDocumentFormatting(generatedFilePath).execute();
-
 		} catch (JRException e) {
 			e.printStackTrace();
 		}
@@ -358,8 +356,6 @@ public class AgywPrevController {
 
 			System.out.println(generatedFilePath + ": generated and exported to XLSX with borders successfully.");
 
-			new ExcelDocumentFormatting(generatedFilePath).execute();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -467,8 +463,6 @@ public class AgywPrevController {
 			exporter.exportReport();
 
 			System.out.println(generatedFilePath + ": generated and exported to XLSX with borders successfully.");
-
-			new ExcelDocumentFormatting(generatedFilePath).execute();
 
 		} catch (JRException e) {
 			e.printStackTrace();
