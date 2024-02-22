@@ -83,10 +83,10 @@ public class BeneficiariyInterventionServiceImpl implements BeneficiariyInterven
 	}
 
 	@Override
-	public List<CountIntervention> findInterventionsPerBeneficiary() {
+	public List<CountIntervention> countAllInterventionsAndbByServiceType() {
 
 		List<CountIntervention> beneficiariesInterventions = daoService
-				.GetAllEntityByNamedQuery("BeneficiaryIntervention.findInterventionsPerBeneficiary");
+				.GetAllEntityByNamedQuery("BeneficiaryIntervention.countAllInterventionsAndbByServiceType");
 
 		return beneficiariesInterventions;
 	}
@@ -94,6 +94,22 @@ public class BeneficiariyInterventionServiceImpl implements BeneficiariyInterven
 	@Override
 	public List<BeneficiariesInterventions> findByBeneficiariesIds(Integer[] params) {	
         List<BeneficiariesInterventions> beneficiariesInterventions = daoService.GetAllEntityByNamedQuery("BeneficiaryIntervention.findInterventionsByBeneficiariesIds", Arrays.asList(params));
+
+		return beneficiariesInterventions;
+	}
+
+	@Override
+	public List<CountIntervention> countInterventionsByBeneficiaryAndServiceType(Integer beneficiaryId) {
+		List<CountIntervention> beneficiariesInterventions = daoService
+				.GetAllEntityByNamedQuery("BeneficiaryIntervention.countInterventionsByBeneficiaryAndServiceType", beneficiaryId);
+
+		return beneficiariesInterventions;
+	}
+
+	@Override
+	public List<CountIntervention> countInterventionsByBeneficiaryAndAgeBandAndLevel(Integer beneficiaryId, Integer ageBand, Integer level) {
+		List<CountIntervention> beneficiariesInterventions = daoService
+				.GetEntityByNamedQuery("BeneficiaryIntervention.countInterventionsByBeneficiaryAndAgeBandAndLevel", beneficiaryId, ageBand, level);
 
 		return beneficiariesInterventions;
 	}

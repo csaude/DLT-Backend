@@ -164,6 +164,32 @@ public class DAORepositoryImpl implements DAORepository {
 
 		return results;
 	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> List<T> GetEntityByNamedQuery(String query, int beneficiaryId,List<Integer> servicesIds) {
+		Query q = getCurrentSession().getNamedQuery(query);
+		
+		q.setParameter("beneficiaryId", beneficiaryId);
+		q.setParameter("servicesIds",servicesIds); 
+				
+		List<T> results = q.getResultList();
+
+		return results;
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> List<T> GetEntityByNamedQuery(String query, Integer beneficiaryId, Integer ageBand,
+			Integer level) {
+		Query q = getCurrentSession().getNamedQuery(query);
+		
+		q.setParameter("beneficiaryId", beneficiaryId);
+		q.setParameter("ageBand",ageBand); 
+		q.setParameter("level",level); 
+				
+		List<T> results = q.getResultList();
+
+		return results;
+	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchNui, Integer searchUserCreator, Integer searchDistrict, Object... params) {

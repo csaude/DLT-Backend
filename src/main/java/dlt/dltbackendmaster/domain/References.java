@@ -334,7 +334,11 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "and r.dateCreated < :lastpulledat "
 																+ "and r.dateUpdated >= :lastpulledat"
 																),
-		
+		@NamedQuery(name = "References.countByBeneficiary",
+													    query = "SELECT ref.beneficiaries.id AS beneficiary_id, COUNT(ref.beneficiaries.id) AS total " 
+													            +"FROM References ref " 
+													            +"WHERE ref.beneficiaries.id = :beneficiaryId " 
+													            +"GROUP BY ref.beneficiaries.id"),
 })
 public class References implements java.io.Serializable {
 

@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dlt.dltbackendmaster.domain.BeneficiariesInterventions;
+import dlt.dltbackendmaster.domain.CountIntervention;
 import dlt.dltbackendmaster.domain.District;
 import dlt.dltbackendmaster.domain.Locality;
 import dlt.dltbackendmaster.domain.Province;
@@ -464,6 +465,19 @@ public class ReferencesController {
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping(path = "/countByBeneficiary/{beneficiaryId}", produces = "application/json")
+	public ResponseEntity<List<CountIntervention>> countByBeneficiary(
+			@PathVariable Integer beneficiaryId) {
+		try {
+			List<CountIntervention> interventions = referenceService
+						.countByBeneficiary(beneficiaryId);
+			
+			return new ResponseEntity<>(interventions, HttpStatus.OK);
+		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
