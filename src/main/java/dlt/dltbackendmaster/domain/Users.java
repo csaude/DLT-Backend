@@ -68,7 +68,7 @@ import dlt.dltbackendmaster.serializers.UssSerializer;
 				+ "left join fetch u.users_provinces up on up.user_id = u.id "
 				+ "where up.province_id in (:provinces)", resultClass = Users.class), })
 
-@NamedQueries({ @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u "
+@NamedQueries({ @NamedQuery(name = "Users.findAll", query = "SELECT distinct u FROM Users u "
 															+ " LEFT JOIN u.districts d "
 															+ " Where u.username like :searchUsername "
 															+ " AND (:searchUserCreator IS NULL OR u.createdBy = :searchUserCreator OR u.updatedBy =:searchUserCreator) "
@@ -159,6 +159,10 @@ public class Users implements java.io.Serializable {
 	private String recoverPasswordOrigin;
 
 	public Users() {
+	}
+	
+	public Users(Integer id) {
+		this.id = id;
 	}
 
 	public Users(Partners partners, Profiles profiles, String surname, String name, String phoneNumber, String email,

@@ -402,6 +402,16 @@ public class ServicesConstants
                                                                           AVANCOS_INDESEJADOS,
                                                                           RAPARIGAS_MODULO_3);
 
+    public static final List<Integer> SIMPLIFIED_RAPARIGAS_MANDATORY = Arrays.asList(RAPARIGAS_CORPO_MUDAR,
+                                                                          EVITAR_GRAVIDEZ_INDESEJADA,
+                                                                          SACO_OPACO_ITS_HIV,
+                                                                          RAPARIGAS_MODULO_2,
+                                                                          RAPARIGAS_AMIZADES_SAUDAVEIS,
+                                                                          COMO_COMUNICAR_PARCEIRO,
+                                                                          AVANCOS_INDESEJADOS,
+                                                                          RAPARIGAS_MODULO_3,
+                                                                          VALORES_DINHEIRO_PRENDAS);
+
     public static final List<Integer> RAPARIGAS_NON_MANDATORY = Arrays.asList(RAPARIGAS_O_QUE_ESPERAR,
                                                                               DELES_DELAS,
                                                                               PERMANECER_VOLTAR_ESCOLA,
@@ -418,6 +428,15 @@ public class ServicesConstants
                                                                                   RISCO_PARCEIROS_MULTIPLOS,
                                                                                   CASAMENTOS_PREMATUROS,
                                                                                   PROTECCAO_SOCIAL,
+                                                                                  VBG);
+
+    public static final List<Integer> SIMPLIFIED_GUIAO_FACILITACAO_MANDATORY = Arrays.asList(SEXUALIDADE,
+                                                                                  ITS,
+                                                                                  PREVENCAO_HIV,
+                                                                                  HIV_EDUCACAO_TRATAMENTO,
+                                                                                  GRAVIDEZ_CONTRACEPCAO,
+                                                                                  RISCO_PARCEIROS_MULTIPLOS,
+                                                                                  CASAMENTOS_PREMATUROS,
                                                                                   VBG);
 
     public static final List<Integer> GUIAO_FACILITACAO_NON_MANDATORY = Arrays.asList(GENERO,
@@ -473,6 +492,9 @@ public class ServicesConstants
                                                                                         EDUCACAO_ITS_HIV,
                                                                                         EDUCACAO_PREVENCAO_VBG);
 
+    public static final List<Integer> SIMPLIFIED_SESSOES_EDUCATIVAS_SAAJ_MANDATORY = Arrays.asList(EDUCACAO_HIGIENE_MENSTRUAL,
+    																							   EDUCACAO_NUTRICAO);
+
     public static final List<Integer> SESSOES_EDUCATIVAS_SAAJ_NON_MANDATORY = Arrays.asList(EDUCACAO_NUTRICAO);
 
     public static final List<Integer> MOBILIZACAO_COMUNITARIA_MUDANCA_NORMAS = Arrays.asList(HISTORIA_XILUVA,
@@ -480,7 +502,7 @@ public class ServicesConstants
                                                                                              GUIAO_FACILITACAO_DIALOGOS_COMUNITARIOS);
 
     public static final List<Integer> CUIDADOS_POS_VIOLENCIA_COMUNIDADE = Arrays.asList(APSS_CM,
-                                                                                        APOIO_LEGAL,
+                                                                                       	APOIO_LEGAL,
                                                                                         ACONSELHAMENTO_LIVES_CM,
                                                                                         GRUPOS_APOIO,
                                                                                         PROTECAO_CRIANCA,
@@ -503,4 +525,7 @@ public class ServicesConstants
                                                                                         DINHEIRO_EMPRESTADO,
                                                                                         FLUXOS_DINHEIRO,
                                                                                         IMAGINANDO_MEU_FUTURO);
+
+    public static final List<Integer> SIMPLIFIED_LITERACIA_FINANCEIRA_AFLATEEN = Arrays.asList(ORCAMENTOS_DINHEIRO_PODER,
+                                                                                        APRENDENDO_GASTAR);
 }

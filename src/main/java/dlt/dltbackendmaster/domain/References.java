@@ -334,6 +334,9 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "and r.dateCreated < :lastpulledat "
 																+ "and r.dateUpdated >= :lastpulledat"
 																),
+		@NamedQuery(name = "References.findByOfflineId", query = "SELECT r FROM References r "
+																+ "where r.offlineId = :offlineId "),
+		
 		@NamedQuery(name = "References.countByBeneficiary",
 													    query = "SELECT ref.beneficiaries.id AS beneficiary_id, COUNT(ref.beneficiaries.id) AS total " 
 													            +"FROM References ref " 
@@ -703,10 +706,10 @@ public class References implements java.io.Serializable {
 		this.date = model.getDate();
 		this.remarks = model.getRemarks();
 		this.referTo = model.getRefer_to();
-		this.notifyTo.setId(model.getNotify_to());
-		this.referredBy.setId(model.getReferred_by());
+		this.notifyTo = model.getNotify_to() == 0 ? null : new Users(model.getNotify_to());
+		this.referredBy = model.getReferred_by() == 0 ? null : new Users(model.getReferred_by());
 //		this.status = model.getStatus();
-		this.us.setId(model.getUs_id());
+		this.us = model.getUs_id() == 0 ? null : new Us(model.getUs_id());
 		this.cancelReason = model.getCancel_reason();
 		this.otherReason = model.getOther_reason();
 		this.userCreated = model.getUser_created();

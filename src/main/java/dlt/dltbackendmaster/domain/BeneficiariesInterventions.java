@@ -264,7 +264,7 @@ public class BeneficiariesInterventions implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "us_id", nullable = false)
+	@JoinColumn(name = "us_id", nullable = true)
 	@JsonProperty("us")
     @JsonSerialize(using = UsSerializer.class)
 	public Us getUs() {
@@ -442,7 +442,7 @@ public class BeneficiariesInterventions implements java.io.Serializable {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         this.id.setDate(LocalDate.parse(model.getDate(), dtf));
         this.id.setSubServiceId(model.getSub_service_id());
-        this.us = new Us(model.getUs_id());
+		this.us = model.getUs_id() == 0 ? null : new Us(model.getUs_id());
         this.result = model.getResult();
         this.activistId = model.getActivist_id();
         this.entryPoint = model.getEntry_point();

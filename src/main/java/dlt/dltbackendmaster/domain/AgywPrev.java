@@ -24,12 +24,11 @@ import dlt.dltbackendmaster.reports.queries.AgywPrevQueries;
 @Table(name = "agyw_prev_mview", catalog = "dreams_db")
 @NamedNativeQueries({
 		@NamedNativeQuery(name = "AgywPrev.findAll", query = "SELECT * FROM agyw_prev_mview", resultClass = AgywPrev.class),
-		@NamedNativeQuery(name = "AgywPrev.findByDistricts", query = AgywPrevQueries.AGYW_PREV, resultClass = AgywPrev.class), 
+		@NamedNativeQuery(name = "AgywPrev.findByDistricts", query = AgywPrevQueries.AGYW_PREV, resultClass = AgywPrev.class),
+		@NamedNativeQuery(name = "AgywPrev.findSimplifiedByDistricts", query = AgywPrevQueries.SIMPLIFIED_AGYW_PREV, resultClass = AgywPrev.class), 
 		@NamedNativeQuery(name = "AgywPrev.findByNewlyEnrolledAgywAndServices", query = AgywPrevQueries.NEWLY_ENROLLED_AGYW_AND_SERVICES), 
-		@NamedNativeQuery(name = "AgywPrev.countNewlyEnrolledAgywAndServices", query = AgywPrevQueries.TOTAL_NEWLY_ENROLLED_AGYW_AND_SERVICES), 
 		@NamedNativeQuery(name = "AgywPrev.findByNewlyEnrolledAgywAndServicesSummary", query = AgywPrevQueries.NEWLY_ENROLLED_AGYW_AND_SERVICES_SUMMARY),
 		@NamedNativeQuery(name = "AgywPrev.findByBeneficiariesVulnerabilitiesAndServices", query = AgywPrevQueries.VULNERABILITIES_AND_SERVICES), 
-		@NamedNativeQuery(name = "AgywPrev.countBeneficiariesVulnerabilitiesAndServices", query = AgywPrevQueries.TOTAL_VULNERABILITIES_AND_SERVICES), 
 		@NamedNativeQuery(name = "AgywPrev.findByBeneficiariesVulnerabilitiesAndServicesSummary", query = AgywPrevQueries.VULNERABILITIES_AND_SERVICES_SUMMARY),
 		})
 public class AgywPrev implements Serializable {
