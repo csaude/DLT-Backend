@@ -75,6 +75,7 @@ public class AgywPrevController {
 		this.service = service;
 	}
 
+	@SuppressWarnings("null")
 	@GetMapping(produces = "application/json")
 	public ResponseEntity<Map<Integer, Map<String, ResultObject>>> get(
 			@RequestParam(name = "districts") Integer[] districts, @RequestParam(name = "startDate") String startDate,
@@ -93,6 +94,7 @@ public class AgywPrevController {
 		}
 	}
 
+	@SuppressWarnings("null")
 	@GetMapping(produces = "application/json", path = "/countNewlyEnrolledAgywAndServices")
 	public ResponseEntity<List<Object>> countNewlyEnrolledAgywAndServices(
 			@RequestParam(name = "districts") Integer[] districts, @RequestParam(name = "startDate") Long startDate,
@@ -250,6 +252,7 @@ public class AgywPrevController {
 		}
 	}
 
+	@SuppressWarnings("null")
 	@GetMapping("/downloadFile")
 	public ResponseEntity<Resource> downloadFile(@RequestParam(name = "filePath") String filePath) throws IOException {
 		File file = new File(filePath);
