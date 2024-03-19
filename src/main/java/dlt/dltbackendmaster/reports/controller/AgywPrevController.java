@@ -239,8 +239,8 @@ public class AgywPrevController {
 			
 			// Define headers
 			String[] headers = { "Província", "Distrito", "Onde Mora", "Ponto de Entrada", "Organização", "Data de Inscrição",
-					"Data de Inscrição", "Data de Registo", "Registado Por", "Data da Última Actualização", "Actualizado Por",
-					"NUI", "Sexo", "Idade (Registo)", "Idade (Actual)", "Faixa Etária (Registo)", "Faixa Etária (Actual)", "Data de Nascimento" };
+					"Data de Registo", "Registado Por", "Data da Última Actualização", "Actualizado Por", "NUI", "Sexo", 
+					"Idade (Registo)", "Idade (Actual)", "Faixa Etária (Registo)", "Faixa Etária (Actual)", "Data de Nascimento" };
 
 			// Create a header row
 			Row headerRow = sheet.createRow(4);
