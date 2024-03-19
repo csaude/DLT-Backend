@@ -3,6 +3,9 @@ package dlt.dltbackendmaster.repository;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+
+import org.hibernate.query.Query;
+
 import java.util.Date;
 
 /**
@@ -38,6 +41,8 @@ public interface DAORepository {
 	<T> List<T> GetEntityByNamedQuery(String query, int beneficiaryId, List<Integer> servicesIds );
 	
 	<T> List<T> GetEntityByNamedQuery(String query, Integer beneficiaryId, Integer ageBand, Integer level);
+	
+	public <T> List<T> GetEntityByNamedQuery(String query, String name, Date dateOfBirth, int locality);
 	
 	<T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize,String searchNui, String searchName, Integer searchUserCreator, Integer searchDistrict , Object... params);
 	

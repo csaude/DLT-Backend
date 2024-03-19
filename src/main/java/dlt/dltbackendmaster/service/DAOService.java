@@ -73,4 +73,6 @@ public interface DAOService {
 	<T> ReferencesServicesObject registerServiceCompletionStatus(BeneficiariesInterventions intervention);
 
 	<T> List<T> GetByParamsPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, Object... params);
+	
+	<T> List<T> GetEntityByNamedQuery(String query, String name, Date dateOfBirth, int locality);
 }

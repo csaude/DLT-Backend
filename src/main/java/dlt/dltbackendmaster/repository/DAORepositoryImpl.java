@@ -18,6 +18,7 @@ import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * This class implements the DAO Repository Interface
@@ -192,7 +193,20 @@ public class DAORepositoryImpl implements DAORepository {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchNui, Integer searchUserCreator, Integer searchDistrict, Object... params) {
+	public <T> List<T> GetEntityByNamedQuery(String query, String name, Date dateOfBirth, int locality) {
+		Query q = getCurrentSession().getNamedQuery(query);
+
+		q.setParameter("name", name);
+		q.setParameter("dateOfBirth", dateOfBirth);
+		q.setParameter("locality", locality);
+
+		List<T> results = q.getResultList();
+
+		return results;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchNui,Integer searchUserCreator, Integer searchDistrict, Object... params) {
 		Query q = getCurrentSession().getNamedQuery(query);
 		int i = 0;
 		

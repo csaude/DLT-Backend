@@ -97,6 +97,11 @@ public class DAOServiceImpl implements DAOService {
 	public <T> List<T> GetAllEntityByNamedQuery(String query, Object... params) {
 		return repository.GetAllEntityByNamedQuery(query, params);
 	}
+		
+	@Transactional
+	public <T> List<T> GetEntityByNamedQuery(String query,  String name, Date dateOfBirth, int locality) {
+		return repository.GetEntityByNamedQuery(query,  name,  dateOfBirth,  locality);
+	}
 	
 	@Transactional
 	public <T> List<T> GetEntityByNamedQuery(String query, int beneficiaryId, List<Integer> servicesIds) {

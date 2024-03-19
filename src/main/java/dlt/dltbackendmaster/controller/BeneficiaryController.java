@@ -2,6 +2,7 @@ package dlt.dltbackendmaster.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -263,6 +264,22 @@ public class BeneficiaryController
 		try {			
 			List<Beneficiaries> beneficiaries = service.GetAllEntityByNamedQuery("Beneficiary.getBeneficiariesByPartnerId",partnerId);
 		
+			return new ResponseEntity<List<Beneficiaries>>(beneficiaries, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+
+	@GetMapping(path = "/findByNameAndDateOfBirthAndLocality", produces = "application/json")
+	public ResponseEntity<List<Beneficiaries>> findByNameAndDateOfBirthAndLocality(@RequestParam(name = "name") String name,
+			@RequestParam(name = "dateOfBirth") Long dateOfBirth,
+			@RequestParam(name = "locality") int locality) {
+		try {
+			List<Beneficiaries> beneficiaries = service.GetEntityByNamedQuery(
+					"Beneficiary.findByNameAndDateOfBirthAndLocality", name, new Date(dateOfBirth),
+					locality);
+
 			return new ResponseEntity<List<Beneficiaries>>(beneficiaries, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
