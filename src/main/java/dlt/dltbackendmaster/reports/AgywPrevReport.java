@@ -751,4 +751,13 @@ public class AgywPrevReport {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'countNewlyEnrolledAgywAndServices'");
     }
+
+	public List<Object> getBeneficiariesNoVulnerabilities(Integer[] districts, Date startDate, Date endDate,
+			int pageIndex, int pageSize) {
+		List<Object> dataObjs = service.GetAllPagedEntityByNamedNativeQuery(
+				"AgywPrev.findByBeneficiariesNoVulnerabilities", pageIndex, pageSize, startDate, endDate,
+				Arrays.asList(districts));
+
+		return dataObjs;
+	}
 }

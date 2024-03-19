@@ -27,6 +27,7 @@ import dlt.dltbackendmaster.reports.queries.AgywPrevQueries;
 		@NamedNativeQuery(name = "AgywPrev.findByDistricts", query = AgywPrevQueries.AGYW_PREV, resultClass = AgywPrev.class),
 		@NamedNativeQuery(name = "AgywPrev.findSimplifiedByDistricts", query = AgywPrevQueries.SIMPLIFIED_AGYW_PREV, resultClass = AgywPrev.class), 
 		@NamedNativeQuery(name = "AgywPrev.findByNewlyEnrolledAgywAndServices", query = AgywPrevQueries.NEWLY_ENROLLED_AGYW_AND_SERVICES), 
+		@NamedNativeQuery(name = "AgywPrev.findByBeneficiariesNoVulnerabilities", query = AgywPrevQueries.Beneficiaries_No_Vulnerabilities), 
 		@NamedNativeQuery(name = "AgywPrev.findByNewlyEnrolledAgywAndServicesSummary", query = AgywPrevQueries.NEWLY_ENROLLED_AGYW_AND_SERVICES_SUMMARY),
 		@NamedNativeQuery(name = "AgywPrev.findByBeneficiariesVulnerabilitiesAndServices", query = AgywPrevQueries.VULNERABILITIES_AND_SERVICES), 
 		@NamedNativeQuery(name = "AgywPrev.findByBeneficiariesVulnerabilitiesAndServicesSummary", query = AgywPrevQueries.VULNERABILITIES_AND_SERVICES_SUMMARY),
