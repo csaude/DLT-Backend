@@ -428,7 +428,7 @@ public class AgywPrevQueries {
 			+ "	order by pr.name, dt.name, v.nui\n"
 			+ ") a";
 
-	public static final String Beneficiaries_No_Vulnerabilities=""
+	public static final String Beneficiaries_No_Vulnerabilities= ""
 			+ "select  provincia,\n"
 			+ "	distrito,\n"
 			+ "	onde_mora,\n"
@@ -465,7 +465,6 @@ public class AgywPrevQueries {
 			+ "		if(v.registration_age_band=1,'9-14', if(v.registration_age_band=2,'15-19',if(v.registration_age_band=3,'20-24',if(v.registration_age_band=4,'25-29','')))) faixa_registo,\n"
 			+ "		if(v.current_age_band=1,'9-14', if(v.current_age_band=2,'15-19',if(v.current_age_band=3,'20-24',if(v.current_age_band=4,'25-29','')))) faixa_actual,\n"
 			+ "		v.date_of_birth data_nascimento,\n"
-			+ "		-- STR_TO_DATE(v.data_nascimento,'%d/%m/%Y') data_nascimento_formatada,\n"
 			+ "	from agyw_prev_mview v\n"
 			+ "	left join province pr on v.province_id = pr.id\n"
 			+ "	left join district dt on v.district_id = dt.id\n"
@@ -474,10 +473,8 @@ public class AgywPrevQueries {
 			+ "	left join users u on v.created_by = u.id\n"
 			+ "	left join users u1 on v.updated_by = u1.id\n"
 			+ "	where v.date_created between :startDate and :endDate\n"
-			+ "	-- and v.vulneravel=0\n"
-			+ "	-- and pr.id in (10)\n"
+			+ "	and v.vulneravel=0\n"
 			+ "	and dt.id in (:districts) \n"
-			+ "	-- and dt.district_code not in (7,8,25,26) -- ZAMBEZIA\n"
 			+ "	order by pr.name, dt.name, v.nui\n"
 			+ ") a";
 		
