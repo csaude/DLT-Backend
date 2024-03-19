@@ -162,7 +162,11 @@ public class AgywPrevController {
 
 		boolean isEndOfCycle = false;
 
-		Date initialDate = new Date(startDate);
+		Date today = new Date();
+		SimpleDateFormat sdfToday = new SimpleDateFormat("yyyy-MM-dd");
+		String formattedToday = sdfToday.format(today);
+
+		Date initialDate = new Date(startDate); 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String formattedInitialDate = sdf.format(initialDate);
 
@@ -173,7 +177,7 @@ public class AgywPrevController {
 		createDirectory(REPORTS_HOME + "/" + username);
 
 		String generatedFilePath = REPORTS_HOME + "/" + username + "/" + BENEFICIARIAS_SEM_VULNERABILIDADES_ESPECIFICAS + "_"
-				+ province.toUpperCase() + "_" + formattedInitialDate + "_" + formattedFinalDate + "_" + ".xlsx";
+				+ province.toUpperCase() + "_" + formattedInitialDate + "_" + formattedFinalDate + "_" + formattedToday + ".xlsx";
 
 		try {
 			// Set up streaming workbook
