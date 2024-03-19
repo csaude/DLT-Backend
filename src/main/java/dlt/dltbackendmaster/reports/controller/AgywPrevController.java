@@ -209,7 +209,7 @@ public class AgywPrevController {
 			// Define Initial Date
 			String initialDateHeaders[] = { "Data de Início:", formattedInitialDate };
 			// Create a header row
-			Row initialHeaderRow = sheet.createRow(1);
+			Row initialHeaderRow = sheet.createRow(2);
 			// Write headers
 			for (int i = 0; i < initialDateHeaders.length; i++) {
 				Cell cell = initialHeaderRow.createCell(i);
@@ -219,7 +219,7 @@ public class AgywPrevController {
 			// Define Final Date
 			String finalDateHeaders[] = { "Data de Fim:", formattedFinalDate };
 			// Create a header row
-			Row finalHeaderRow = sheet.createRow(2);
+			Row finalHeaderRow = sheet.createRow(3);
 			// Write headers
 			for (int i = 0; i < finalDateHeaders.length; i++) {
 				Cell cell = finalHeaderRow.createCell(i);
@@ -227,7 +227,7 @@ public class AgywPrevController {
 			}
 
 			// Create a header row
-			Row sessionRow = sheet.createRow(3);
+			Row sessionRow = sheet.createRow(4);
 			// Write Title and Merge cells for session headers
 
 			Cell cell1 = sessionRow.createCell(0);
@@ -235,7 +235,7 @@ public class AgywPrevController {
 			cell1.setCellStyle(alignCellStyle);
 
 			// Merge cells for session headers
-			sheet.addMergedRegion(new CellRangeAddress(3, 3, 0, 16)); // Merge first 17 columns
+			sheet.addMergedRegion(new CellRangeAddress(4, 4, 0, 16)); // Merge first 17 columns
 			
 			// Define headers
 			String[] headers = { "Província", "Distrito", "Onde Mora", "Ponto de Entrada", "Organização", "Data de Inscrição",
@@ -243,14 +243,14 @@ public class AgywPrevController {
 					"Idade (Registo)", "Idade (Actual)", "Faixa Etária (Registo)", "Faixa Etária (Actual)", "Data de Nascimento" };
 
 			// Create a header row
-			Row headerRow = sheet.createRow(4);
+			Row headerRow = sheet.createRow(5);
 			// Write headers
 			for (int i = 0; i < headers.length; i++) {
 				Cell cell = headerRow.createCell(i);
 				cell.setCellValue(headers[i]);
 			}
 
-			int rowCount = 5; // start from row 1 (row 0 is for headers)
+			int rowCount = 6; // start from row 1 (row 0 is for headers)
 			int currentSheet;
 
 			for (currentSheet = 0; currentSheet < currentSheet + 1; currentSheet++) {
