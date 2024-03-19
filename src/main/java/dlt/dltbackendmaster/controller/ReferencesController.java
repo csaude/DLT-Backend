@@ -5,8 +5,6 @@ import static dlt.dltbackendmaster.util.ProfilesConstants.MANAGER;
 import static dlt.dltbackendmaster.util.ProfilesConstants.MENTOR;
 import static dlt.dltbackendmaster.util.ProfilesConstants.NURSE;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
