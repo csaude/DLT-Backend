@@ -152,6 +152,7 @@ public class AgywPrevController {
 	}
 
 
+	@SuppressWarnings("null")
 	@GetMapping(produces = "application/json", path = "/getBeneficiariesNoVulnerabilities")
 	public ResponseEntity<String> getBeneficiariesNoVulnerabilities(
 			@RequestParam(name = "province") String province, @RequestParam(name = "districts") Integer[] districts,
