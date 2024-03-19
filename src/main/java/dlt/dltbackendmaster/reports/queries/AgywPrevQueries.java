@@ -473,8 +473,15 @@ public class AgywPrevQueries {
 			+ "	left join users u on v.created_by = u.id\n"
 			+ "	left join users u1 on v.updated_by = u1.id\n"
 			+ "	where v.date_created between :startDate and :endDate\n"
-			+ "	and v.vulnerable=0\n"
+			+ "	-- and v.vulnerable=0\n"
 			+ "	and dt.id in (:districts) \n"
+			+ " and (v.gender = 2\n"
+			+ "     and (v.vblt_sexual_exploitation <> 1\n"
+			+ "		and v.vblt_is_migrant <> 1 and v.vblt_trafficking_victim <> 1\n"
+			+ "     and v.vblt_sexually_active <> 1 and v.vblt_multiple_partners <> 1\n"
+			+ "     and v.vblt_sex_worker <> 1 and v.vblt_gbv_victim <> 1\n"
+			+ "     and v.vblt_alcohol_drugs_use <> 1 and v.vblt_sti_history <> 1\n"
+			+ "     ))\n"
 			+ "	order by pr.name, dt.name, v.nui\n"
 			+ ") a";
 		
