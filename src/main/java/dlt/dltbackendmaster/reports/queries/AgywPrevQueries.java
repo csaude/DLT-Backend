@@ -482,7 +482,7 @@ public class AgywPrevQueries {
 			+ "	left join users u1 on b.updated_by = u1.id\n"
 			+ "	where b.date_created between :startDate and :endDate\n"
 			+ "	and dt.id in (:districts) \n"
-			+ " and (b.gender = 2\n"
+			+ " and (b.gender = 2 and b.status = 1\n"
 			+ "     and (b.vblt_sexual_exploitation is null\n"
 			+ "		and b.vblt_is_migrant is null and b.vblt_trafficking_victim is null\n"
 			+ "     and b.vblt_sexually_active is null and b.vblt_multiple_partners is null\n"
