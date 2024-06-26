@@ -718,12 +718,17 @@ public class SyncController {
 
 				// Update interventions counts
 				for (Integer beneficiaryId : interventionsCount.keySet()) {
-					Beneficiaries beneficiary = service.find(Beneficiaries.class, beneficiaryId);
-					int[] counts = interventionsCount.get(beneficiaryId);
-					beneficiary.setClinicalInterventions(counts[0]);
-					beneficiary.setCommunityInterventions(counts[1]);
+					try {
+						Beneficiaries beneficiary = service.find(Beneficiaries.class, beneficiaryId);
+						int[] counts = interventionsCount.get(beneficiaryId);
+						beneficiary.setClinicalInterventions(counts[0]);
+						beneficiary.setCommunityInterventions(counts[1]);
 
-					service.update(beneficiary);
+						service.update(beneficiary);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 
