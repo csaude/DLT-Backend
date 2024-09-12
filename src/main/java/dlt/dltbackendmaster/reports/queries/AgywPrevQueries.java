@@ -1075,9 +1075,10 @@ public class AgywPrevQueries {
 			"    WHEN sub_service_id IN (210, 211, 212) THEN 1 " +
 			"    ELSE 0 " +
 			"END) AS violence_prevention_15_plus, " +
-
-			"0 AS financial_literacy_aflatoun, " +
-
+			"sum(case\n" +
+			"    when sub_service_id in (217,218,219,220,221,222,223) then 1\n" +
+			"    else 0\n" +
+			"end) financial_literacy_aflatoun,\n" +
 			"SUM(case when sub_service_id in (224,226) then 1 else 0 end) AS financial_literacy_aflateen, " +
 
 			"MIN(service_date) AS intervention_date, " +
