@@ -994,12 +994,12 @@ public class AgywPrevQueries {
 			"IF(vblt_alcohol_drugs_use = 1, 1, 0) + " +
 			"IF(vblt_sti_history = 1, 1, 0) AS vulnerabilities, " +			
 			"SUM(CASE " +
-			"    WHEN (vblt_is_student = 0 AND sub_service_id IN (162,179,181,182,183,196,198,199,200)) THEN 1 " +
+			"    WHEN (sub_service_id IN (162,179,181,182,183,196,198,199,200)) THEN 1 " +
 			"    ELSE 0 " +
 			"END) AS mandatory_social_assets, " +
 			
 			"SUM(CASE " +
-			"    WHEN vblt_is_student = 0 AND sub_service_id IN (157,158,159,160,161,162,163) THEN 1 " +
+			"    WHEN sub_service_id IN (157,158,159,160,161,162,163) THEN 1 " +
 			"    ELSE 0 " +
 			"END) AS other_social_assets, " +
 			
