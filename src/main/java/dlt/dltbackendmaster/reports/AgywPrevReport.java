@@ -1,6 +1,17 @@
 package dlt.dltbackendmaster.reports;
 
-import static dlt.dltbackendmaster.reports.utils.ReportsConstants.*;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.AGE_BANDS;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.COMPLETED_PRIMARY_PACKAGE;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.COMPLETED_PRIMARY_SERVICE;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.COMPLETED_SECONDARY_SERVICE;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.COMPLETED_VIOLENCE_SERVICE;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.COMPLETION_STATUSES;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.DISAGGREGATIONS;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.ENROLLMENT_TIMES;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.HAD_SCHOLL_ALLOWANCE;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.HAD_SOCIAL_ECONOMIC_APPROACHES;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.SERVICE_PACKAGES;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.STARTED_SERVICE;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedAvanteEstudante;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedAvanteEstudanteViolencePrevention;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedAvanteRapariga;
@@ -20,6 +31,8 @@ import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedOtherSAA
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedPostViolenceCare_CM;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedPostViolenceCare_US;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedPrep;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSiyakhaLight;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSiyakhaComprehensive;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSAAJEducationSessions;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedAvanteRapariga;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedAvanteRaparigaViolencePrevention;
@@ -312,7 +325,8 @@ public class AgywPrevReport {
 						&& (hadSchoolAllowance(agywPrev) || completedSocialAssetsOldCurriculum(agywPrev))
 						|| completedPostViolenceCare_US(agywPrev) || completedPostViolenceCare_CM(agywPrev)
 						|| completedCombinedSocioEconomicApproaches(agywPrev) || completedOtherSAAJServices(agywPrev)
-						|| completedPrep(agywPrev) || completedContraceptionsPromotionOrProvision(agywPrev)) {
+						|| completedPrep(agywPrev) || completedContraceptionsPromotionOrProvision(agywPrev)
+						|| completedSiyakhaLight(agywPrev) || completedSiyakhaComprehensive(agywPrev)) {
 					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
 							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
 							COMPLETED_SECONDARY_SERVICE, agywPrev.getBeneficiary_id());
@@ -1044,5 +1058,12 @@ public class AgywPrevReport {
 			}
 		}
 		return null;
+	}
+	
+	public List<Object> getAgywPrevBeneficiaries(Integer[] beneficiariesIds) {
+		List<Object> dataObjs = service.GetAllEntityByNamedNativeQuery("AgywPrev.findAgywPrevBeneficiariesByIds",
+				Arrays.asList(beneficiariesIds));
+
+		return dataObjs;
 	}
 }

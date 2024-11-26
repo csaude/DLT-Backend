@@ -67,7 +67,9 @@ public class AgywPrevController {
 	private static final String VULNERABILITIES_AND_SERVICES_SUMMARY_REPORT_NAME = "DLT2.0_BENEFICIARIAS_VULNERABILIDADES_E_SERVICOS_RESUMO_POR";
 
 	private static final String BENEFICIARIES_WITHOUT_PP_COMPLETED = "DLT2.0_BENEFICIARIAS_NAO_COMPLETARAM_PACOTE_PRIMARIO";
-
+	
+	private static final String AGYW_PREV_BENEFICIARIES = "PEPFAR_MER_2.8_AGYW_PREV_Beneficiaries";
+	
 	private final DAOService service;
 	private final BeneficiariyService beneficiariyService;
 
@@ -1201,5 +1203,108 @@ public class AgywPrevController {
 			e.printStackTrace();
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	@GetMapping(path = "/agywPrevBeneficiaries")
+	public ResponseEntity<String> getAgywPrevBeneficiaries(
+			@RequestParam(name = "beneficiariesIds") Integer[] beneficiariesIds,
+			@RequestParam(name = "username") String username) throws IOException {
+
+		AgywPrevReport report = new AgywPrevReport(service);
+
+		boolean isEndOfCycle = false;
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_hhmmss");
+
+		String generationDate = sdf.format(new Date());
+
+		createDirectory(REPORTS_HOME + "/" + username);
+
+		String generatedFilePath = REPORTS_HOME + "/" + username + "/" + AGYW_PREV_BENEFICIARIES + "_" + generationDate
+				+ ".xlsx";
+
+		try {
+			// Set up streaming workbook
+			SXSSFWorkbook workbook = new SXSSFWorkbook();
+			workbook.setCompressTempFiles(true); // Enable compression of temporary files
+
+			// Create a sheet
+			Sheet sheet = workbook.createSheet(SHEET_LABEL);
+			// Create font for bold style
+			Font boldFont = workbook.createFont();
+			boldFont.setFontName("Liberation Sans");
+			boldFont.setBold(true);
+
+			// Apply bold font style to the cells in the header row
+			CellStyle boldCellStyle = workbook.createCellStyle();
+			boldCellStyle.setFont(boldFont);
+
+			// Apply bold font style to the cells in the header row
+			CellStyle alignCellStyle = workbook.createCellStyle();
+			// alignCellStyle.setFont(boldFont);
+			alignCellStyle.setAlignment(HorizontalAlignment.CENTER);
+
+			// Define headers
+			String[] headers = { "Província", "Distrito", "Onde Mora", "Ponto de Entrada", "Organização",
+					"Data de Inscrição", "Data de Registo", "NUI", "Idade de Registo", "Idade Actual",
+					"Faixa Etária de Registo", "Faixa Etária Actual", "Data de Nascimento",
+					"Número de Vulnerabilidades", "Tipo de Serviço", "Serviço", "Sub-Serviço", "Pacote Serviço",
+					"Ponto de Entrada Serviço", "Local Serviço", "Data Serviço", "Provedor", "Observações" };
+
+			// Create a header row
+			Row headerRow = sheet.createRow(0);
+			// Write headers
+			for (int i = 0; i < headers.length; i++) {
+				Cell cell = headerRow.createCell(i);
+				cell.setCellValue(headers[i]);
+				cell.setCellStyle(boldCellStyle);
+			}
+
+			int rowCount = 1; // start from row 1 (row 0 is for headers)
+			int currentSheet;
+
+			for (currentSheet = 0; currentSheet < currentSheet + 1; currentSheet++) {
+				if (!isEndOfCycle) {
+					List<Object> reportObjectList = report.getAgywPrevBeneficiaries(beneficiariesIds);
+
+					if (reportObjectList.size() < MAX_ROWS_NUMBER) {
+						isEndOfCycle = true;
+					}
+					if (currentSheet != 0) {
+						rowCount = 0;
+						sheet = workbook.createSheet(SHEET_LABEL + currentSheet);
+					}
+					for (Object reportObject : reportObjectList) {
+						Row row = sheet.createRow(rowCount++);
+						// Write values to cells based on headers
+						for (int i = 0; i < headers.length; i++) {
+							Object value = getValueAtIndex(reportObject, i); // You need to implement this method
+							if (value != null) {
+								row.createCell(i).setCellValue(String.valueOf(value));
+							}
+						}
+					}
+				} else {
+					break;
+				}
+			}
+			// Write the workbook content to a file
+			FileOutputStream fileOut = new FileOutputStream(generatedFilePath);
+			workbook.write(fileOut);
+			fileOut.close();
+
+			// Dispose of temporary files backing this workbook on disk
+			workbook.dispose();
+
+			// Close the workbook
+			workbook.close();
+
+			System.out.println("Excel file has been created successfully ! - path: " + generatedFilePath);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return new ResponseEntity<>(generatedFilePath, HttpStatus.OK);
 	}
 }
