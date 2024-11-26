@@ -446,6 +446,27 @@ public class ServiceCompletionRules {
 		return agywPrev.getPrep() > 0;
 	}
 
+	public static boolean completedSiyakhaLight(List<Integer> subServices) {
+
+		return containsAny(ServicesConstants.SIYAKHA_LIGHT_SERVICES, subServices);
+
+	}
+
+	public static boolean completedSiyakhaLight(AgywPrev agywPrev) {
+
+		return agywPrev.getSiyakha_light() > 0;
+	}
+
+	public static boolean completedSiyakhaComprehensive(List<Integer> subServices) {
+
+		return containsAny(ServicesConstants.SIYAKHA_COMPREHENSIVE_SERVICES, subServices);
+	}
+
+	public static boolean completedSiyakhaComprehensive(AgywPrev agywPrev) {
+
+		return agywPrev.getSiyakha_comprehensive() > 0;
+
+	}
 	public static Integer getReferenceServiceStatus(Collection<BeneficiariesInterventions> interventions,
 			Integer service) {
 		List<Integer> subServices = interventions.stream().map(BeneficiariesInterventions::getSubServices)
@@ -539,6 +560,10 @@ public class ServiceCompletionRules {
 			return completedFinancialLiteracyAflateen(subServices) ? ReferencesStatus.ADDRESSED
 					: startedFinancialLiteracyAflateen(subServices) ? ReferencesStatus.PARTIALLY_ADDRESSED
 							: ReferencesStatus.PENDING;
+		case 59:
+			return completedSiyakhaLight(subServices) ? ReferencesStatus.ADDRESSED : ReferencesStatus.PENDING;
+		case 60:
+			return completedSiyakhaComprehensive(subServices) ? ReferencesStatus.ADDRESSED : ReferencesStatus.PENDING;
 
 		default:
 			return ReferencesStatus.PENDING;

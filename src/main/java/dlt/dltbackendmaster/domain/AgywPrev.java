@@ -31,7 +31,8 @@ import dlt.dltbackendmaster.reports.queries.AgywPrevQueries;
 		@NamedNativeQuery(name = "AgywPrev.findByNewlyEnrolledAgywAndServicesSummary", query = AgywPrevQueries.NEWLY_ENROLLED_AGYW_AND_SERVICES_SUMMARY),
 		@NamedNativeQuery(name = "AgywPrev.findByBeneficiariesVulnerabilitiesAndServices", query = AgywPrevQueries.VULNERABILITIES_AND_SERVICES), 
 		@NamedNativeQuery(name = "AgywPrev.findByBeneficiariesVulnerabilitiesAndServicesSummary", query = AgywPrevQueries.VULNERABILITIES_AND_SERVICES_SUMMARY),
-		@NamedNativeQuery(name = "AgywPrev.findBeneficiariesByIds", query = AgywPrevQueries.BENEFICIARIES_WITH_NO_PP_COMPLETION)
+		@NamedNativeQuery(name = "AgywPrev.findBeneficiariesByIds", query = AgywPrevQueries.BENEFICIARIES_WITH_NO_PP_COMPLETION),
+		@NamedNativeQuery(name = "AgywPrev.findAgywPrevBeneficiariesByIds", query = AgywPrevQueries.AGYW_PREV_BENEFICIARIES),
 		})
 public class AgywPrev implements Serializable {
 
@@ -75,6 +76,9 @@ public class AgywPrev implements Serializable {
 	private Integer violence_prevention_15_plus;
 	private Integer financial_literacy_aflatoun;
 	private Integer financial_literacy_aflateen;
+	private Integer siyakha_light;
+	private Integer siyakha_comprehensive;
+	private Integer completion_status;
 	private Date approaches_date;
 	private Date intervention_date;
 
@@ -396,6 +400,30 @@ public class AgywPrev implements Serializable {
 
 	public void setFinancial_literacy_aflateen(Integer financial_literacy_aflateen) {
 		this.financial_literacy_aflateen = financial_literacy_aflateen;
+	}
+
+	public Integer getSiyakha_light() {
+		return siyakha_light;
+	}
+
+	public void setSiyakha_light(Integer siyakha_light) {
+		this.siyakha_light = siyakha_light;
+	}
+
+	public Integer getSiyakha_comprehensive() {
+		return siyakha_comprehensive;
+	}
+
+	public void setSiyakha_comprehensive(Integer siyakha_comprehensive) {
+		this.siyakha_comprehensive = siyakha_comprehensive;
+	}
+
+	public Integer getCompletion_status() {
+		return completion_status;
+	}
+
+	public void setCompletion_status(Integer completion_status) {
+		this.completion_status = completion_status;
 	}
 
 	public Date getApproaches_date() {

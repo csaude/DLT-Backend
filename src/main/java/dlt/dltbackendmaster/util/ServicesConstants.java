@@ -292,6 +292,24 @@ public class ServicesConstants
     public static final Integer FLUXOS_DINHEIRO = 231;
     
     public static final Integer IMAGINANDO_MEU_FUTURO = 232;
+    
+
+    /* Siyakha Light*/
+    public static final Integer SIYAKHA_LIGHT_INSCRICAO = 236;
+    public static final Integer SIYAKHA_LIGHT_HPV_PMT = 237;
+    public static final Integer SIYAKHA_LIGHT_VOCACIONAL = 238;
+    public static final Integer SIYAKHA_LIGHT_EMPREENDEDORISMO = 239;    
+
+    /* Siyakha Comprens */
+    public static final Integer SIYAKHA_COMPREHENSIVE_INSCRICAO = 240;
+    public static final Integer SIYAKHA_COMPREHENSIVE_HPV_PMT = 241;
+    public static final Integer SIYAKHA_COMPREHENSIVE_VOCACIONAL = 242;
+    public static final Integer SIYAKHA_COMPREHENSIVE_EMPREENDEDORISMO = 243;
+    public static final Integer SIYAKHA_COMPREHENSIVE_ESTAGIO = 244;
+    public static final Integer SIYAKHA_COMPREHENSIVE_EMPREGO = 245;
+    public static final Integer SIYAKHA_COMPREHENSIVE_AUTO_EMPREGO = 246;
+    public static final Integer SIYAKHA_COMPREHENSIVE_POUPANCA = 247;
+    public static final Integer SIYAKHA_COMPREHENSIVE_SAIDA = 248;
 
     public static final List<Integer> ESTUDANTES_RECURSOS_SOCIAIS_MANDATORY = Arrays.asList(ESTUDANTES_FALAR_ALTO,
                                                                                             ADULTOS_APOIANTES,
@@ -530,4 +548,21 @@ public class ServicesConstants
 
     public static final List<Integer> SIMPLIFIED_LITERACIA_FINANCEIRA_AFLATEEN = Arrays.asList(ORCAMENTOS_DINHEIRO_PODER,
                                                                                         APRENDENDO_GASTAR);
+
+
+
+    public static final List<Integer> SIYAKHA_LIGHT_SERVICES = Arrays.asList(SIYAKHA_LIGHT_INSCRICAO,
+    																			SIYAKHA_LIGHT_HPV_PMT, 
+    																			SIYAKHA_LIGHT_VOCACIONAL, 
+    																			SIYAKHA_LIGHT_EMPREENDEDORISMO);
+
+    public static final List<Integer> SIYAKHA_COMPREHENSIVE_SERVICES = Arrays.asList(SIYAKHA_COMPREHENSIVE_INSCRICAO,
+    																			SIYAKHA_COMPREHENSIVE_HPV_PMT, 
+    																			SIYAKHA_COMPREHENSIVE_VOCACIONAL, 
+    																			SIYAKHA_COMPREHENSIVE_EMPREENDEDORISMO,
+    																			SIYAKHA_COMPREHENSIVE_ESTAGIO,
+    																			SIYAKHA_COMPREHENSIVE_EMPREGO,
+    																			SIYAKHA_COMPREHENSIVE_AUTO_EMPREGO,
+    																			SIYAKHA_COMPREHENSIVE_POUPANCA,
+    																			SIYAKHA_COMPREHENSIVE_SAIDA);
 }
