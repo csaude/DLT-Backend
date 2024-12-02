@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +55,8 @@ public class BeneficiariyInterventionServiceImpl implements BeneficiariyInterven
 
 				// Actualizar o status da referências
 				References reference = referenceServices.getReferences();
-				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference, interventions);
+				References referenceDB = daoService.find(References.class, reference.getId());
+				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(referenceDB, interventions);
 
 				if (referenceStatus.intValue() != reference.getStatus()) {
 					reference.setStatus(referenceStatus);

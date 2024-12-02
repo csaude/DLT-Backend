@@ -224,6 +224,7 @@ public class ReferencesController {
 					"BeneficiaryIntervention.findAllByBeneficiaryAndDate",
 					Instant.ofEpochMilli(reference.getDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate(),
 					reference.getBeneficiaries().getId());
+			
 			Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference, beneficiaryInterventions);
 			reference.setStatus(referenceStatus);
 
@@ -452,7 +453,10 @@ public class ReferencesController {
 						service.update(referenceService);
 					}
 				}
-				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference, interventions);
+				
+				References referenceDB = service.find(References.class, reference.getId());
+				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(referenceDB, interventions);
+				
 				if (reference.getStatus() != referenceStatus) {
 					reference.setStatus(referenceStatus);
 					service.update(reference);

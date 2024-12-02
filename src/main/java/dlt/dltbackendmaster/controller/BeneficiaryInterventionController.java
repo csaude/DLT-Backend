@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.gemfire.config.annotation.EnableCompression;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.mysql.cj.x.protobuf.MysqlxCrud.Collection;
 
 import dlt.dltbackendmaster.domain.Beneficiaries;
 import dlt.dltbackendmaster.domain.BeneficiariesInterventions;
@@ -225,7 +228,8 @@ public class BeneficiaryInterventionController {
 				referenceServices = service.update(referenceServices);
 
 				// Actualizar o status da referências
-				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference, interventions);
+				References referenceDB = service.find(References.class, reference.getId());
+				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(referenceDB, interventions);
 
 				if (referenceStatus.intValue() != reference.getStatus()) {
 					reference.setStatus(referenceStatus);

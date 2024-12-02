@@ -253,7 +253,8 @@ public class DAOServiceImpl implements DAOService {
 
 				// Actualizar o status da referências
 				References reference = referenceServices.getReferences();
-				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference, interventions);
+				References referenceDB = find(References.class, reference.getId());
+				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(referenceDB, interventions);
 
 				if (referenceStatus.intValue() != reference.getStatus()) {
 					reference.setStatus(referenceStatus);

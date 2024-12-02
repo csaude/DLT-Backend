@@ -520,7 +520,7 @@ public class References implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "beneficiary_id", nullable = false)
 	public Beneficiaries getBeneficiaries() {
 		return this.beneficiaries;
@@ -707,7 +707,7 @@ public class References implements java.io.Serializable {
 		this.beneficiaryOfflineId = beneficiaryOfflineId;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "references")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "references")
 	public Set<ReferencesServices> getReferencesServiceses() {
 		return this.referencesServiceses;
 	}
