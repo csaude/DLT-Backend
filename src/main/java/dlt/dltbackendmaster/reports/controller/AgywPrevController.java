@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -28,6 +29,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -1205,9 +1208,9 @@ public class AgywPrevController {
 		}
 	}
 
-	@GetMapping(path = "/agywPrevBeneficiaries")
+	@PostMapping(path = "/agywPrevBeneficiaries")
 	public ResponseEntity<String> getAgywPrevBeneficiaries(
-			@RequestParam(name = "beneficiariesIds") Integer[] beneficiariesIds,
+			@RequestBody Integer[] beneficiariesIds ,
 			@RequestParam(name = "username") String username) throws IOException {
 
 		AgywPrevReport report = new AgywPrevReport(service);
