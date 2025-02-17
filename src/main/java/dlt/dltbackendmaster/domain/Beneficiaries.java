@@ -378,6 +378,7 @@ public class Beneficiaries implements java.io.Serializable
     private Byte vbltIsMigrant;
     private Byte vbltTraffickingVictim;
     private Byte vbltSexualExploitation;
+    private Byte vbltSexualExploitationTraffickingVictim;
     private String vbltSexploitationTime;
     private Byte vbltVbgVictim;
     private String vbltVbgType;
@@ -430,7 +431,7 @@ public class Beneficiaries implements java.io.Serializable
                          String vbltDeficiencyType, Byte vbltMarriedBefore, Byte vbltPregnantBefore, Byte vbltChildren,
                          Byte vbltPregnantOrBreastfeeding, String vbltIsEmployed, String vbltTestedHiv, Byte vbltIdp,
                          Byte vbltSexuallyActive, Byte vbltPregnantOrHasChildren, Byte vbltMultiplePartners, Byte vbltIsMigrant,
-                         Byte vbltTraffickingVictim, Byte vbltSexualExploitation, String vbltSexploitationTime,
+                         Byte vbltTraffickingVictim, Byte vbltSexualExploitation,Byte vbltSexualExploitationTraffickingVictim, String vbltSexploitationTime,
                          Byte vbltVbgVictim, String vbltVbgType, String vbltVbgTime, Byte vbltAlcoholDrugsUse,
                          Byte vbltStiHistory, Byte vbltSexWorker, Byte vbltHouseSustainer, int status, int createdBy,
                          Date dateCreated, Integer updatedBy, Date dateUpdated, String offlineId,
@@ -475,6 +476,7 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltIsMigrant = vbltIsMigrant;
         this.vbltTraffickingVictim = vbltTraffickingVictim;
         this.vbltSexualExploitation = vbltSexualExploitation;
+        this.vbltSexualExploitationTraffickingVictim = vbltSexualExploitationTraffickingVictim;
         this.vbltSexploitationTime = vbltSexploitationTime;
         this.vbltVbgVictim = vbltVbgVictim;
         this.vbltVbgType = vbltVbgType;
@@ -538,6 +540,7 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltIsMigrant = model.getVblt_is_migrant();
         this.vbltTraffickingVictim = model.getVblt_trafficking_victim();
         this.vbltSexualExploitation = model.getVblt_sexual_exploitation();
+        this.vbltSexualExploitationTraffickingVictim = model.getVblt_sexual_exploitation_trafficking_victim();
         this.vbltSexploitationTime = model.getVblt_sexploitation_time();
         this.vbltVbgVictim = model.getVblt_vbg_victim();
         this.vbltVbgType = model.getVblt_vbg_type();
@@ -589,6 +592,7 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltIsMigrant = model.getVblt_is_migrant();
         this.vbltTraffickingVictim = model.getVblt_trafficking_victim();
         this.vbltSexualExploitation = model.getVblt_sexual_exploitation();
+        this.vbltSexualExploitationTraffickingVictim = model.getVblt_sexual_exploitation_trafficking_victim();
         this.vbltSexploitationTime = model.getVblt_sexploitation_time();
         this.vbltVbgVictim = model.getVblt_vbg_victim();
         this.vbltVbgType = model.getVblt_vbg_type();
@@ -1250,6 +1254,7 @@ public class Beneficiaries implements java.io.Serializable
             if(vbltIsMigrant != null) beneficiary.put("vblt_is_migrant", vbltIsMigrant);
             if(vbltTraffickingVictim != null) beneficiary.put("vblt_trafficking_victim", vbltTraffickingVictim);
             if(vbltSexualExploitation != null) beneficiary.put("vblt_sexual_exploitation", vbltSexualExploitation);
+            if(vbltSexualExploitationTraffickingVictim != null) beneficiary.put("vblt_sexual_exploitation_trafficking_victim", vbltSexualExploitationTraffickingVictim);
             if(vbltSexploitationTime != null) beneficiary.put("vblt_sexploitation_time", vbltSexploitationTime);
             if(vbltVbgVictim != null) beneficiary.put("vblt_vbg_victim", vbltVbgVictim);
             if(vbltVbgType != null) beneficiary.put("vblt_vbg_type", vbltVbgType);
@@ -1314,6 +1319,7 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltIsMigrant = model.getVblt_is_migrant();
         this.vbltTraffickingVictim = model.getVblt_trafficking_victim();
         this.vbltSexualExploitation = model.getVblt_sexual_exploitation();
+        this.vbltSexualExploitationTraffickingVictim = model.getVblt_sexual_exploitation_trafficking_victim();
         this.vbltSexploitationTime = model.getVblt_sexploitation_time();
         this.vbltVbgVictim = model.getVblt_vbg_victim();
         this.vbltVbgType = model.getVblt_vbg_type();
@@ -1366,6 +1372,15 @@ public class Beneficiaries implements java.io.Serializable
 		if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	@Column(name = "vblt_sexual_exploitation_trafficking_victim")
+	public Byte getVbltSexualExploitationTraffickingVictim() {
+		return vbltSexualExploitationTraffickingVictim;
+	}
+
+	public void setVbltSexualExploitationTraffickingVictim(Byte vbltSexualExploitationTraffickingVictim) {
+		this.vbltSexualExploitationTraffickingVictim = vbltSexualExploitationTraffickingVictim;
 	}
 
 }
