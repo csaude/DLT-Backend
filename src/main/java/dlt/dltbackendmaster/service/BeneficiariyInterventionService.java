@@ -18,7 +18,12 @@ public interface BeneficiariyInterventionService {
 
 	List<BeneficiariesInterventions> findByBeneficiaryId(Integer beneficiaryId);
 
-	List<CountIntervention> findInterventionsPerBeneficiary();
+	List<CountIntervention> countAllInterventionsAndbByServiceType();
 	
 	List<BeneficiariesInterventions> findByBeneficiariesIds(Integer[] params);
+	
+	List<CountIntervention> countInterventionsByBeneficiaryAndServiceType(Integer beneficiaryId);
+	
+	List<CountIntervention> countInterventionsByBeneficiaryAndAgeBandAndLevel(Integer beneficiaryId, Integer ageBand,
+			Integer level);
 }

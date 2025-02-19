@@ -209,7 +209,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " or   b.id in "
 																+ "	("
 																+ "		SELECT r.beneficiaries.id from References r"
-												                + " 	where r.status in (0,1,2) "
+												                + " 	where r.status in (0,1) "
 												                + " 	and r.notifyTo.id = :userId"
 												                + "	)) "    											     
 												                ),
@@ -224,7 +224,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " or   b.id in "
 																+ "	("
 																+ "		SELECT r.beneficiaries.id from References r"
-												                + " 	where r.status in (0,1,2) "
+												                + " 	where r.status in (0,1) "
 												                + " 	and r.notifyTo.id = :userId"
 												                + " 	and r.dateCreated >= :lastpulledat"
 												                + "	))"
@@ -239,7 +239,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ " or   b.id in "
 																+ " ("
 																+ "		SELECT r.beneficiaries.id from References r"
-												                + " 	where r.status in (0,1,2) "
+												                + " 	where r.status in (0,1) "
 												                + " 	and r.notifyTo.id = :userId "
 												                + "		and r.dateCreated >= :lastpulledat"
 												                + "	))"
@@ -265,6 +265,73 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 																+ ""),
 				@NamedQuery(name = "Beneficiary.getBeneficiariesByPartnerId", query = "SELECT  b FROM  Beneficiaries b "
 																+ " where b.partnerId = :partnerId "),
+				@NamedQuery(name = "Beneficiary.findByNameAndDateOfBirthAndLocality", query = "SELECT  b FROM  Beneficiaries b "
+																+ " left join fetch b.neighborhood "
+																+ " left join fetch b.partners "
+																+ " left join fetch b.locality "
+																+ " left join fetch b.us "
+																+ " where b.name =:name "															
+																+ " and b.dateOfBirth =:dateOfBirth "
+																+ " and b.locality.id =:locality "												         											     
+												                ),
+				
+				
+				@NamedQuery(name = "Beneficiary.findAny", query = "SELECT b FROM Beneficiaries b "
+										+ " left join fetch b.neighborhood "
+										+ " left join fetch b.partners "
+										+ " left join fetch b.locality "
+										+ " left join fetch b.us "
+										+ " where b.status IN (0,1) "
+										+ " and b.nui like :searchNui "
+										+ " and concat(b.name, \' \' ,b.surname) like concat('%',:searchName,'%') "
+										+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
+						                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
+										+ " order by b.id desc"
+										+ ""),
+				@NamedQuery(name = "Beneficiary.findAnyByLocalitiesOrReferenceNotifyTo", query = "SELECT b FROM Beneficiaries b "
+				                		+ " left join fetch b.neighborhood nb "
+										+ " left join fetch b.partners "
+										+ " left join fetch b.locality l "
+										+ " left join fetch b.us "
+										+ " where (b.locality.id in (:localities) "	
+										+ " or b.id in (SELECT r.beneficiaries.id from References r "
+										+ "				where r.notifyTo.id = :userId)) "
+										+ " and b.nui like :searchNui "
+										+ " and concat(b.name, \' \' ,b.surname) like concat('%',:searchName,'%') "
+										+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
+						                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
+										+ " and b.status IN (0,1) "
+										+ " order by b.id desc "
+										+ ""),
+				@NamedQuery(name = "Beneficiary.findAnyByDistricts", query = "SELECT b FROM Beneficiaries b "
+				                		+ " left join fetch b.neighborhood nb "
+										+ " left join fetch b.partners "
+										+ " left join fetch b.locality "
+										+ " left join fetch b.us "
+										+ " where b.district.id in (:districts) "
+										+ " and b.nui like :searchNui "
+										+ " and concat(b.name, \' \' ,b.surname) like concat('%',:searchName,'%') "
+										+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
+						                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
+										+ " and b.status IN (0,1) "
+										+ " order by b.id desc "
+				                        + ""),
+				@NamedQuery(name = "Beneficiary.findAnyByProvinces", query = "SELECT b FROM Beneficiaries b "
+				                		+ " left join fetch b.neighborhood nb "
+										+ " left join fetch b.partners "
+										+ " left join fetch b.locality "
+										+ " left join fetch b.us "
+										+ " where b.district.province.id in (:provinces) "
+										+ " and b.nui like :searchNui "
+										+ " and concat(b.name, \' \' ,b.surname) like concat('%',:searchName,'%') "
+										+ " AND (:searchUserCreator IS NULL OR b.createdBy = :searchUserCreator OR b.updatedBy =:searchUserCreator) "
+						                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
+										+ " and b.status IN (0,1) "
+										+ " order by b.id desc "
+										+ ""),
+				@NamedQuery(name = "Beneficiary.findByIdAndBeforeCompletedAServiceButNotFullPrimaryPackage", query = "SELECT b FROM Beneficiaries b where b.id = :beneficiary_id and b.completionStatus < 1"),
+				@NamedQuery(name = "Beneficiary.findByIdAndBeforeCompletedExactlyPrimaryPackage", query = "SELECT b FROM Beneficiaries b where b.id = :beneficiary_id and b.completionStatus < 2"),
+				@NamedQuery(name = "Beneficiary.findByIdAndBeforeCompletedPrimaryPackageAndAdditionalServices", query = "SELECT b FROM Beneficiaries b where b.id = :beneficiary_id and b.completionStatus < 3"), 
 })
 public class Beneficiaries implements java.io.Serializable
 {
@@ -303,12 +370,15 @@ public class Beneficiaries implements java.io.Serializable
     private Byte vbltChildren;
     private Byte vbltPregnantOrBreastfeeding;
     private String vbltIsEmployed;
+    private Byte vbltIdp;
     private String vbltTestedHiv;
     private Byte vbltSexuallyActive;
+    private Byte vbltPregnantOrHasChildren;
     private Byte vbltMultiplePartners;
     private Byte vbltIsMigrant;
     private Byte vbltTraffickingVictim;
     private Byte vbltSexualExploitation;
+    private Byte vbltSexualExploitationTraffickingVictim;
     private String vbltSexploitationTime;
     private Byte vbltVbgVictim;
     private String vbltVbgType;
@@ -318,6 +388,8 @@ public class Beneficiaries implements java.io.Serializable
     private Byte vbltSexWorker;
     private Byte vbltHouseSustainer;
     private int status;
+    private int clinicalInterventions;
+    private int communityInterventions;
     private int createdBy;
     private Date dateCreated;
     private Integer updatedBy;
@@ -326,8 +398,9 @@ public class Beneficiaries implements java.io.Serializable
     private Set<VulnerabilityHistory> vulnerabilityHistories = new HashSet<VulnerabilityHistory>(0);
     private Set<BeneficiariesInterventions> beneficiariesInterventionses = new HashSet<BeneficiariesInterventions>(0);
     private Set<References> referenceses = new HashSet<References>(0);
-
-    public Beneficiaries() {}
+	private int completionStatus;
+	
+	public Beneficiaries() {}
 
     public Beneficiaries(Neighborhood neighborhood, Us us, String nui, String surname, String name, String nickName,
                          Date dateOfBirth, char gender, Date enrollmentDate, Integer nationality, String entryPoint,
@@ -346,6 +419,8 @@ public class Beneficiaries implements java.io.Serializable
         this.status = status;
         this.createdBy = createdBy;
         this.dateCreated = dateCreated;
+        this.clinicalInterventions = 0;
+        this.communityInterventions = 0;
     }
 
     public Beneficiaries(Neighborhood neighborhood, Partners partners, Locality locality, District district_id, Us us, String nui, String surname, String name,
@@ -354,9 +429,9 @@ public class Beneficiaries implements java.io.Serializable
                          Integer partnerId, String entryPoint, String vbltLivesWith, Byte vbltIsOrphan,
                          Byte vbltIsStudent, Integer vbltSchoolGrade, String vbltSchoolName, Byte vbltIsDeficient,
                          String vbltDeficiencyType, Byte vbltMarriedBefore, Byte vbltPregnantBefore, Byte vbltChildren,
-                         Byte vbltPregnantOrBreastfeeding, String vbltIsEmployed, String vbltTestedHiv,
-                         Byte vbltSexuallyActive, Byte vbltMultiplePartners, Byte vbltIsMigrant,
-                         Byte vbltTraffickingVictim, Byte vbltSexualExploitation, String vbltSexploitationTime,
+                         Byte vbltPregnantOrBreastfeeding, String vbltIsEmployed, String vbltTestedHiv, Byte vbltIdp,
+                         Byte vbltSexuallyActive, Byte vbltPregnantOrHasChildren, Byte vbltMultiplePartners, Byte vbltIsMigrant,
+                         Byte vbltTraffickingVictim, Byte vbltSexualExploitation,Byte vbltSexualExploitationTraffickingVictim, String vbltSexploitationTime,
                          Byte vbltVbgVictim, String vbltVbgType, String vbltVbgTime, Byte vbltAlcoholDrugsUse,
                          Byte vbltStiHistory, Byte vbltSexWorker, Byte vbltHouseSustainer, int status, int createdBy,
                          Date dateCreated, Integer updatedBy, Date dateUpdated, String offlineId,
@@ -394,11 +469,14 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltPregnantOrBreastfeeding = vbltPregnantOrBreastfeeding;
         this.vbltIsEmployed = vbltIsEmployed;
         this.vbltTestedHiv = vbltTestedHiv;
+        this.vbltIdp = vbltIdp;
         this.vbltSexuallyActive = vbltSexuallyActive;
+        this.vbltPregnantOrHasChildren = vbltPregnantOrHasChildren;
         this.vbltMultiplePartners = vbltMultiplePartners;
         this.vbltIsMigrant = vbltIsMigrant;
         this.vbltTraffickingVictim = vbltTraffickingVictim;
         this.vbltSexualExploitation = vbltSexualExploitation;
+        this.vbltSexualExploitationTraffickingVictim = vbltSexualExploitationTraffickingVictim;
         this.vbltSexploitationTime = vbltSexploitationTime;
         this.vbltVbgVictim = vbltVbgVictim;
         this.vbltVbgType = vbltVbgType;
@@ -416,6 +494,8 @@ public class Beneficiaries implements java.io.Serializable
         this.vulnerabilityHistories = vulnerabilityHistories;
         this.beneficiariesInterventionses = beneficiariesInterventionses;
         this.referenceses = referenceses;
+        this.clinicalInterventions = 0;
+        this.communityInterventions = 0;
     }
 
     public Beneficiaries(BeneficiarySyncModel model, String timestamp) {
@@ -452,12 +532,15 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltChildren = model.getVblt_children();
         this.vbltPregnantOrBreastfeeding = model.getVblt_pregnant_or_breastfeeding();
         this.vbltIsEmployed = model.getVblt_is_employed();
+        this.vbltIdp = model.getVblt_idp();
         this.vbltTestedHiv = model.getVblt_tested_hiv();
         this.vbltSexuallyActive = model.getVblt_sexually_active();
+        this.vbltPregnantOrHasChildren = model.getVblt_pregnant_or_has_children();
         this.vbltMultiplePartners = model.getVblt_multiple_partners();
         this.vbltIsMigrant = model.getVblt_is_migrant();
         this.vbltTraffickingVictim = model.getVblt_trafficking_victim();
         this.vbltSexualExploitation = model.getVblt_sexual_exploitation();
+        this.vbltSexualExploitationTraffickingVictim = model.getVblt_sexual_exploitation_trafficking_victim();
         this.vbltSexploitationTime = model.getVblt_sexploitation_time();
         this.vbltVbgVictim = model.getVblt_vbg_victim();
         this.vbltVbgType = model.getVblt_vbg_type();
@@ -467,6 +550,8 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltSexWorker = model.getVblt_sex_worker();
         this.vbltHouseSustainer = model.getVblt_house_sustainer();
         this.status = Integer.valueOf(model.getStatus());
+        this.clinicalInterventions = 0;
+        this.communityInterventions = 0;
     }
 
     public Beneficiaries(BeneficiarySyncModel model) {
@@ -507,6 +592,7 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltIsMigrant = model.getVblt_is_migrant();
         this.vbltTraffickingVictim = model.getVblt_trafficking_victim();
         this.vbltSexualExploitation = model.getVblt_sexual_exploitation();
+        this.vbltSexualExploitationTraffickingVictim = model.getVblt_sexual_exploitation_trafficking_victim();
         this.vbltSexploitationTime = model.getVblt_sexploitation_time();
         this.vbltVbgVictim = model.getVblt_vbg_victim();
         this.vbltVbgType = model.getVblt_vbg_type();
@@ -516,6 +602,8 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltSexWorker = model.getVblt_sex_worker();
         this.vbltHouseSustainer = model.getVblt_house_sustainer();
         this.status = Integer.valueOf(model.getStatus());
+        this.clinicalInterventions = 0;
+        this.communityInterventions = 0;
     }
 
     public Beneficiaries(Integer id) {
@@ -834,16 +922,25 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltIsEmployed = vbltIsEmployed;
     }
 
+    public void setVbltTestedHiv(String vbltTestedHiv) {
+        this.vbltTestedHiv = vbltTestedHiv;
+    }
+
+    @Column(name = "vblt_idp")
+    public Byte getVbltIdp() {
+		return vbltIdp;
+	}
+
+	public void setVbltIdp(Byte vbltIdp) {
+		this.vbltIdp = vbltIdp;
+	}
+
     @Column(name = "vblt_tested_hiv", length = 254)
     public String getVbltTestedHiv() {
         return this.vbltTestedHiv;
     }
 
-    public void setVbltTestedHiv(String vbltTestedHiv) {
-        this.vbltTestedHiv = vbltTestedHiv;
-    }
-
-    @Column(name = "vblt_sexually_active")
+	@Column(name = "vblt_sexually_active")
     public Byte getVbltSexuallyActive() {
         return this.vbltSexuallyActive;
     }
@@ -852,7 +949,16 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltSexuallyActive = vbltSexuallyActive;
     }
 
-    @Column(name = "vblt_multiple_partners")
+    @Column(name = "vblt_pregnant_or_has_children")
+    public Byte getVbltPregnantOrHasChildren() {
+		return vbltPregnantOrHasChildren;
+	}
+
+	public void setVbltPregnantOrHasChildren(Byte vbltPregnantOrHasChildren) {
+		this.vbltPregnantOrHasChildren = vbltPregnantOrHasChildren;
+	}
+
+	@Column(name = "vblt_multiple_partners")
     public Byte getVbltMultiplePartners() {
         return this.vbltMultiplePartners;
     }
@@ -969,7 +1075,25 @@ public class Beneficiaries implements java.io.Serializable
         this.status = status;
     }
 
-    @Column(name = "created_by", nullable = false)
+    @Column(name = "clinical_interventions", nullable = false)
+    public int getClinicalInterventions() {
+		return clinicalInterventions;
+	}
+
+	public void setClinicalInterventions(int clinicalInterbentions) {
+		this.clinicalInterventions = clinicalInterbentions;
+	}
+
+	@Column(name = "community_interventions", nullable = false)
+	public int getCommunityInterventions() {
+		return communityInterventions;
+	}
+
+	public void setCommunityInterventions(int communityInterventions) {
+		this.communityInterventions = communityInterventions;
+	}
+
+	@Column(name = "created_by", nullable = false)
     public int getCreatedBy() {
         return this.createdBy;
     }
@@ -1046,6 +1170,15 @@ public class Beneficiaries implements java.io.Serializable
         this.referenceses = referenceses;
     }
 
+	@Column(name = "completion_status")
+    public int getCompletionStatus() {
+		return completionStatus;
+	}
+
+	public void setCompletionStatus(int completionStatus) {
+		this.completionStatus = completionStatus;
+	}
+
     public ObjectNode toObjectNode(String lastPulledAt) {
         ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule())
                                                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
@@ -1113,12 +1246,15 @@ public class Beneficiaries implements java.io.Serializable
             if(vbltChildren != null) beneficiary.put("vblt_children", vbltChildren);
             if(vbltPregnantOrBreastfeeding != null) beneficiary.put("vblt_pregnant_or_breastfeeding", vbltPregnantOrBreastfeeding);
             if(vbltIsEmployed != null) beneficiary.put("vblt_is_employed", vbltIsEmployed);
+            if(vbltIdp != null) beneficiary.put("vblt_idp", vbltIdp);
             if(vbltTestedHiv != null) beneficiary.put("vblt_tested_hiv", vbltTestedHiv);
             if(vbltSexuallyActive != null) beneficiary.put("vblt_sexually_active", vbltSexuallyActive);
+            if(vbltPregnantOrHasChildren != null) beneficiary.put("vblt_pregnant_or_has_children", vbltPregnantOrHasChildren);
             if(vbltMultiplePartners != null) beneficiary.put("vblt_multiple_partners", vbltMultiplePartners);
             if(vbltIsMigrant != null) beneficiary.put("vblt_is_migrant", vbltIsMigrant);
             if(vbltTraffickingVictim != null) beneficiary.put("vblt_trafficking_victim", vbltTraffickingVictim);
             if(vbltSexualExploitation != null) beneficiary.put("vblt_sexual_exploitation", vbltSexualExploitation);
+            if(vbltSexualExploitationTraffickingVictim != null) beneficiary.put("vblt_sexual_exploitation_trafficking_victim", vbltSexualExploitationTraffickingVictim);
             if(vbltSexploitationTime != null) beneficiary.put("vblt_sexploitation_time", vbltSexploitationTime);
             if(vbltVbgVictim != null) beneficiary.put("vblt_vbg_victim", vbltVbgVictim);
             if(vbltVbgType != null) beneficiary.put("vblt_vbg_type", vbltVbgType);
@@ -1175,12 +1311,15 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltChildren = model.getVblt_children();
         this.vbltPregnantOrBreastfeeding = model.getVblt_pregnant_or_breastfeeding();
         this.vbltIsEmployed = model.getVblt_is_employed();
+        this.vbltIdp = model.getVblt_idp();
         this.vbltTestedHiv = model.getVblt_tested_hiv();
         this.vbltSexuallyActive = model.getVblt_sexually_active();
+        this.vbltPregnantOrHasChildren = model.getVblt_pregnant_or_has_children();
         this.vbltMultiplePartners = model.getVblt_multiple_partners();
         this.vbltIsMigrant = model.getVblt_is_migrant();
         this.vbltTraffickingVictim = model.getVblt_trafficking_victim();
         this.vbltSexualExploitation = model.getVblt_sexual_exploitation();
+        this.vbltSexualExploitationTraffickingVictim = model.getVblt_sexual_exploitation_trafficking_victim();
         this.vbltSexploitationTime = model.getVblt_sexploitation_time();
         this.vbltVbgVictim = model.getVblt_vbg_victim();
         this.vbltVbgType = model.getVblt_vbg_type();
@@ -1233,6 +1372,15 @@ public class Beneficiaries implements java.io.Serializable
 		if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	@Column(name = "vblt_sexual_exploitation_trafficking_victim")
+	public Byte getVbltSexualExploitationTraffickingVictim() {
+		return vbltSexualExploitationTraffickingVictim;
+	}
+
+	public void setVbltSexualExploitationTraffickingVictim(Byte vbltSexualExploitationTraffickingVictim) {
+		this.vbltSexualExploitationTraffickingVictim = vbltSexualExploitationTraffickingVictim;
 	}
 
 }

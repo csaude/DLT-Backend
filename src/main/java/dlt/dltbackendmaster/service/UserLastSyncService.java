@@ -4,6 +4,6 @@ import dlt.dltbackendmaster.domain.UserLastSync;
 
 public interface UserLastSyncService {
 
-	UserLastSync saveLastSyncDate(String username);
+	UserLastSync saveLastSyncDate(String username, String appVersion);
 
 }

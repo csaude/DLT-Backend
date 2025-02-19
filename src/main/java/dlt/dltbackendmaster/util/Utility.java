@@ -2,6 +2,7 @@ package dlt.dltbackendmaster.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,5 +42,20 @@ public class Utility {
 		int age = (d2 - d1) / 10000;
 		return age;
 
+	}
+
+	public static Date nMonthsDate(Date date, int months) {
+		Date today = new Date();
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(today);
+
+		// Subtracting time
+		cal.add(Calendar.MONTH, -months);
+
+		// convert calendar to date
+		Date modifiedDate = cal.getTime();
+
+		return modifiedDate;
 	}
 }

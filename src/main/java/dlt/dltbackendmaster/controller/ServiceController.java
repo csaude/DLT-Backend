@@ -91,8 +91,8 @@ public class ServiceController {
 			if (beneficiaryAge == 15) {
 				// Check if beneficiary received avante package
 				List<Integer> subServices = beneficiary.getBeneficiariesInterventionses().stream()
-						.map(BeneficiariesInterventions::getSubServices).collect(Collectors.toList()).stream()
-						.map(SubServices::getId).collect(Collectors.toList());
+						.filter(i -> i.getStatus() == 1).map(BeneficiariesInterventions::getSubServices)
+						.collect(Collectors.toList()).stream().map(SubServices::getId).collect(Collectors.toList());
 				if (ServiceCompletionRules.startedAvanteEstudante(subServices)
 						|| ServiceCompletionRules.startedAvanteRapariga(subServices)
 						|| ServiceCompletionRules.startedFinancialLiteracyAflatoun(subServices)) {

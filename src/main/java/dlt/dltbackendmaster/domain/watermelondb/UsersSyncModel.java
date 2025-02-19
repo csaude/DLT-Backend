@@ -18,6 +18,7 @@ public class UsersSyncModel {
 	private String us_ids;
 	private Integer online_id;
 	private String organization_name;
+	private String last_login_date;
 	private String password_last_change_date;
 	private Integer is_awaiting_sync;
 
@@ -151,26 +152,6 @@ public class UsersSyncModel {
 	public void setOnline_id(Integer online_id) {
 		this.online_id = online_id;
 	}
-	
-	public String toString() {
-		String object = ""
-				+ "id: " + id + "\n"
-				+ "name: " + name + "\n"
-				+ "surname: " + surname + "\n"
-				+ "phone_number: " + phone_number + "\n"
-				+ "email: " + email + "\n"
-				+ "username: " + username + "\n"
-				+ "password: " + password + "\n"
-				+ "entry_point: " + entry_point + "\n"
-				+ "status: " + status + "\n"
-				+ "localities_ids: " + localities_ids + "\n"
-				+ "partner_id" + partner_id + "\n"
-				+ "profile_id: " + profile_id + "\n"
-				+ "us_id: " + us_ids + "\n"
-				+ "password_last_change_date: "+password_last_change_date+ "\n"
-				+ "online_id: " + online_id + "\n";
-		return object;
-	}
 
 	public String getOrganization_name() {
 		return organization_name;
@@ -178,6 +159,14 @@ public class UsersSyncModel {
 
 	public void setOrganization_name(String organization_name) {
 		this.organization_name = organization_name;
+	}
+
+	public String getLast_login_date() {
+		return last_login_date;
+	}
+
+	public void setLast_login_date(String last_login_date) {
+		this.last_login_date = last_login_date;
 	}
 
 	public String getPassword_last_change_date() {
@@ -194,5 +183,26 @@ public class UsersSyncModel {
 
 	public void setIs_awaiting_sync(Integer is_awaiting_sync) {
 		this.is_awaiting_sync = is_awaiting_sync;
+	}
+	
+	public String toString() {
+		String object = ""
+				+ "id: " + id + "\n"
+				+ "name: " + name + "\n"
+				+ "surname: " + surname + "\n"
+				+ "phone_number: " + phone_number + "\n"
+				+ "email: " + email + "\n"
+				+ "username: " + username + "\n"
+				+ "password: " + password + "\n"
+				+ "entry_point: " + entry_point + "\n"
+				+ "status: " + status + "\n"
+				+ "localities_ids: " + localities_ids + "\n"
+				+ "partner_id" + partner_id + "\n"
+				+ "profile_id: " + profile_id + "\n"
+				+ "us_id: " + us_ids + "\n"
+				+ "last_login_date: "+last_login_date+ "\n"
+				+ "password_last_change_date: "+password_last_change_date+ "\n"
+				+ "online_id: " + online_id + "\n";
+		return object;
 	}
 }

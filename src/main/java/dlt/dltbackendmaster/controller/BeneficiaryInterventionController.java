@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.gemfire.config.annotation.EnableCompression;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ import dlt.dltbackendmaster.service.DAOService;
 import dlt.dltbackendmaster.util.ServiceCompletionRules;
 
 @RestController
+@EnableCompression
 @RequestMapping("/api/beneficiary-intervention")
 public class BeneficiaryInterventionController {
 	private final DAOService service;
@@ -61,7 +63,7 @@ public class BeneficiaryInterventionController {
 
 		try {
 			Us us = service.find(Us.class, intervention.getUs().getId());
-			//FIXME: Remover esta gambiária após resolver o issue
+			// FIXME: Remover esta gambiária após resolver o issue
 			Beneficiaries beneficiary = service.find(Beneficiaries.class, intervention.getId().getBeneficiaryId());
 			intervention.setUs(us);
 			intervention.setBeneficiaries(beneficiary);
@@ -71,44 +73,16 @@ public class BeneficiaryInterventionController {
 			SubServices subService = service.find(SubServices.class, intervention.getId().getSubServiceId());
 			intervention.setSubServices(subService);
 
-			// Actualizar o status dos serviços solicitados
-			Integer serviceId = subService.getServices().getId();
-			List<ReferencesServices> referencesServices = service.GetAllEntityByNamedQuery(
-					"ReferencesServices.findByBeneficiaryAndService", beneficiary.getId(), serviceId);
-
-			List<References> updatedReferences = new ArrayList<>();
-
-			for (ReferencesServices referenceServices : referencesServices) {
-
-				// Get only interventions provided on or after referral date
-				References reference = referenceServices.getReferences();
-				List<BeneficiariesInterventions> interventions = service.GetAllEntityByNamedQuery(
-						"BeneficiaryIntervention.findAllByBeneficiaryAndDate",
-						Instant.ofEpochMilli(reference.getDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate(),
-						beneficiary.getId());
-				Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(interventions,
-						serviceId);
-
-				if (referenceServiceStatus.intValue() != (referenceServices.getStatus())) {
-					referenceServices.setStatus(referenceServiceStatus);
-					referenceServices.setDateUpdated(new Date());
-					referenceServices.setUpdatedBy(subService.getCreatedBy());
-					referenceServices = service.update(referenceServices);
-
-					// Actualizar o status da referências
-					Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference, interventions);
-
-					if (referenceStatus.intValue() != reference.getStatus()) {
-						reference.setStatus(referenceStatus);
-						reference.setDateUpdated(new Date());
-						reference.setUpdatedBy(subService.getCreatedBy());
-						reference = service.update(reference);
-					}
-					updatedReferences.add(reference);
-				}
+			if (subService.getServices().getServiceType().equals("1")) {
+				beneficiary.setClinicalInterventions(beneficiary.getClinicalInterventions() + 1);
+			} else {
+				beneficiary.setCommunityInterventions(beneficiary.getCommunityInterventions() + 1);
 			}
-			ReferencesServicesObject referenceServiceObject = new ReferencesServicesObject(intervention,
-					updatedReferences);
+
+			service.update(beneficiary);
+
+			// Actualizar o status dos serviços solicitados
+			ReferencesServicesObject referenceServiceObject = updateReferences(intervention, beneficiary, subService);
 			return new ResponseEntity<>(referenceServiceObject, HttpStatus.OK);
 
 		} catch (Exception e) {
@@ -134,6 +108,10 @@ public class BeneficiaryInterventionController {
 				return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 			}
 
+			// FIXME: Remover esta gambiária após resolver o issue
+			Beneficiaries beneficiary = service.find(Beneficiaries.class, intervention.getId().getBeneficiaryId());
+			SubServices subService = null;
+
 			// if key was updated, entry should be disabled and a new one added
 			if (intervention.getId().getSubServiceId() != intervention.getSubServices().getId()
 					|| !intervention.getId().getDate().equals(intervention.getDate())) {
@@ -141,9 +119,6 @@ public class BeneficiaryInterventionController {
 				currentIntervention.setStatus(0);
 				currentIntervention.setDateUpdated(new Date());
 				service.delete(currentIntervention); // Must remove to allow new additions with this key afterwards
-				
-				//FIXME: Remover esta gambiária após resolver o issue
-				Beneficiaries beneficiary = service.find(Beneficiaries.class, intervention.getId().getBeneficiaryId());
 
 				BeneficiariesInterventions newInterv = new BeneficiariesInterventions();
 				newInterv.getId().setBeneficiaryId(beneficiary.getId());
@@ -165,8 +140,24 @@ public class BeneficiaryInterventionController {
 
 				service.Save(newInterv);
 
-				SubServices subService = service.find(SubServices.class, newInterv.getId().getSubServiceId());
+				subService = service.find(SubServices.class, newInterv.getId().getSubServiceId());
 				newInterv.setSubServices(subService);
+
+				if (intervention.getId().getSubServiceId() != intervention.getSubServices().getId()) {
+					SubServices subService1 = service.find(SubServices.class, intervention.getId().getSubServiceId());
+					if (!subService1.getServices().getServiceType().equals(subService.getServices().getServiceType())) {
+						if (subService1.getServices().getServiceType().equals("1")) {
+							beneficiary.setClinicalInterventions(beneficiary.getClinicalInterventions() - 1);
+							beneficiary.setCommunityInterventions(beneficiary.getCommunityInterventions() + 1);
+						} else {
+							beneficiary.setClinicalInterventions(beneficiary.getClinicalInterventions() + 1);
+							beneficiary.setCommunityInterventions(beneficiary.getCommunityInterventions() - 1);
+						}
+						service.update(beneficiary);
+					}
+				}
+
+				updateReferences(newInterv, beneficiary, subService);
 
 				return new ResponseEntity<>(newInterv, HttpStatus.OK);
 			}
@@ -184,12 +175,67 @@ public class BeneficiaryInterventionController {
 			currentIntervention.setUpdatedBy(intervention.getUpdatedBy());
 
 			BeneficiariesInterventions updatedIntervention = service.update(currentIntervention);
+
+			if (updatedIntervention.getStatus() == 0) {
+				Beneficiaries beneficiary1 = updatedIntervention.getBeneficiaries();
+				if (updatedIntervention.getSubServices().getServices().getServiceType().equals("1")) {
+					beneficiary1.setClinicalInterventions(beneficiary1.getClinicalInterventions() - 1);
+				} else {
+					beneficiary1.setCommunityInterventions(beneficiary1.getCommunityInterventions() - 1);
+				}
+				service.update(beneficiary1);
+			}
+			
+			subService = service.find(SubServices.class, intervention.getId().getSubServiceId());
+
+			updateReferences(updatedIntervention, beneficiary, subService);
+
 			return new ResponseEntity<>(updatedIntervention, HttpStatus.OK);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	private ReferencesServicesObject updateReferences(BeneficiariesInterventions intervention,
+			Beneficiaries beneficiary, SubServices subService) {
+		Integer serviceId = subService.getServices().getId();
+		List<ReferencesServices> referencesServices = service.GetAllEntityByNamedQuery(
+				"ReferencesServices.findByBeneficiaryAndService", beneficiary.getId(), serviceId);
+
+		List<References> updatedReferences = new ArrayList<>();
+
+		for (ReferencesServices referenceServices : referencesServices) {
+
+			// Get only interventions provided on or after referral date
+			References reference = referenceServices.getReferences();
+			List<BeneficiariesInterventions> interventions = service.GetAllEntityByNamedQuery(
+					"BeneficiaryIntervention.findAllByBeneficiaryAndDate",
+					Instant.ofEpochMilli(reference.getDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate(),
+					beneficiary.getId());
+			Integer referenceServiceStatus = ServiceCompletionRules.getReferenceServiceStatus(interventions, serviceId);
+
+			if (referenceServiceStatus.intValue() != (referenceServices.getStatus())) {
+				referenceServices.setStatus(referenceServiceStatus);
+				referenceServices.setDateUpdated(new Date());
+				referenceServices.setUpdatedBy(subService.getCreatedBy());
+				referenceServices = service.update(referenceServices);
+
+				// Actualizar o status da referências
+				Integer referenceStatus = ServiceCompletionRules.getReferenceStatus(reference, interventions);
+
+				if (referenceStatus.intValue() != reference.getStatus()) {
+					reference.setStatus(referenceStatus);
+					reference.setDateUpdated(new Date());
+					reference.setUpdatedBy(subService.getCreatedBy());
+					reference = service.update(reference);
+				}
+				updatedReferences.add(reference);
+			}
+		}
+		ReferencesServicesObject referenceServiceObject = new ReferencesServicesObject(intervention, updatedReferences);
+		return referenceServiceObject;
 	}
 
 	@GetMapping(path = "/byBeneficiaryId/{beneficiaryId}", produces = "application/json")
@@ -203,23 +249,50 @@ public class BeneficiaryInterventionController {
 		}
 	}
 
-	@GetMapping(path = "/countByBeneficiary", produces = "application/json")
-	public ResponseEntity<List<CountIntervention>> countByBeneficiary() {
+	@GetMapping(path = "/countAllInterventionsAndbByServiceType", produces = "application/json")
+	public ResponseEntity<List<CountIntervention>> countByBeneficiaryAndServiceType() {
 		try {
-			List<CountIntervention> interventions = beneficiariyInterventionService.findInterventionsPerBeneficiary();
+			List<CountIntervention> interventions = beneficiariyInterventionService
+					.countAllInterventionsAndbByServiceType();
 			return new ResponseEntity<>(interventions, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-		
+
 	@GetMapping(path = "/byBeneficiariesIds", produces = "application/json")
 	public ResponseEntity<List<BeneficiariesInterventions>> getByBeneficiariesIds(
 			@RequestParam(name = "params") Integer[] params) {
 		try {
 			List<BeneficiariesInterventions> interventions = beneficiariyInterventionService
 					.findByBeneficiariesIds(params);
-			 
+
+			return new ResponseEntity<>(interventions, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping(path = "/countByBeneficiaryAndServiceType/{beneficiaryId}", produces = "application/json")
+	public ResponseEntity<List<CountIntervention>> countByBeneficiaryAndServiceType(
+			@PathVariable Integer beneficiaryId) {
+		try {
+			List<CountIntervention> interventions = beneficiariyInterventionService
+					.countInterventionsByBeneficiaryAndServiceType(beneficiaryId);
+
+			return new ResponseEntity<>(interventions, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping(path = "/countByBeneficiaryAndAgeBandAndLevel/{beneficiaryId}/{ageBand}/{level}", produces = "application/json")
+	public ResponseEntity<List<CountIntervention>> countInterventionsByBeneficiaryAndAgeBandAndLevel(
+			@PathVariable Integer beneficiaryId, @PathVariable Integer ageBand, @PathVariable Integer level) {
+		try {
+			List<CountIntervention> interventions = beneficiariyInterventionService
+					.countInterventionsByBeneficiaryAndAgeBandAndLevel(beneficiaryId, ageBand, level);
+
 			return new ResponseEntity<>(interventions, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

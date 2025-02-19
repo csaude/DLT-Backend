@@ -1,0 +1,5 @@
+Instructions:
+1. # crontab -e
+2. copy bellow content to the end of the file and save it (it sets a cron job to run everyday at 3 am)
+
+0 3 * * * mysql -udbusername -pdbpassword db_name -e "CALL inactivate_users()"

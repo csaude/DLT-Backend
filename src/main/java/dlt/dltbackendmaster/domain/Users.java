@@ -51,12 +51,21 @@ import dlt.dltbackendmaster.serializers.UssSerializer;
 		@NamedNativeQuery(name = "Users.findByLocalities", query = "SELECT u.* FROM users u "
 				+ "LEFT JOIN users_localities ul on ul.user_id = u.id "
 				+ "where ul.locality_id in (:localities)", resultClass = Users.class),
-		@NamedNativeQuery(name = "Users.findByLocalitiesAndDateCreated", query = "SELECT u.* FROM users u "
+		@NamedNativeQuery(name = "Users.findByUsAndOrganization", query = "SELECT distinct u.* FROM users u "
+				+ "LEFT JOIN users_us uu on uu.user_id = u.id  " 
 				+ "LEFT JOIN users_localities ul on ul.user_id = u.id "
+				+ "INNER JOIN us us on ul.locality_id = us.locality_id " 
+				+ "where (uu.us_id in (:us) "
+				+ "or u.profile_id = 18 " 
+				+ "and us.id = :us) " 
+				+ "and u.partner_id = :organization "
+				+ "and u.status = 1", resultClass = Users.class),
+		@NamedNativeQuery(name = "Users.findByLocalitiesAndDateCreated", query = "SELECT u.* FROM users u "
+				+ "LEFT JOIN users_localities ul on ul.user_id = u.id " 
 				+ "where ul.locality_id in (:localities) "
 				+ "and u.date_created >= :lastpulledat", resultClass = Users.class),
 		@NamedNativeQuery(name = "Users.findByLocalitiesAndDateUpdated", query = "SELECT u.* FROM users u "
-				+ "LEFT JOIN users_localities ul on ul.user_id = u.id "
+				+ "LEFT JOIN users_localities ul on ul.user_id = u.id " 
 				+ "where ul.locality_id in (:localities) "
 				+ "and u.date_created < :lastpulledat "
 				+ "and u.date_updated >= :lastpulledat", resultClass = Users.class),
@@ -68,29 +77,32 @@ import dlt.dltbackendmaster.serializers.UssSerializer;
 				+ "left join fetch u.users_provinces up on up.user_id = u.id "
 				+ "where up.province_id in (:provinces)", resultClass = Users.class), })
 
-@NamedQueries({ @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u "
-															+ " LEFT JOIN u.districts d "
-															+ " Where u.username like :searchUsername "
-															+ " AND (:searchUserCreator IS NULL OR u.createdBy = :searchUserCreator OR u.updatedBy =:searchUserCreator) "
-											                + " AND (:searchDistrict IS NULL OR d.id = :searchDistrict) "
-															+ ""),
+@NamedQueries({ @NamedQuery(name = "Users.findAll", query = "SELECT distinct u FROM Users u "
+				+ " LEFT JOIN u.districts d " 
+				+ " Where concat(u.name,u.surname) like concat('%',:searchName,'%') "
+				+ " AND u.username like :searchUsername "
+				+ " AND (:searchUserCreator IS NULL OR u.createdBy = :searchUserCreator OR u.updatedBy =:searchUserCreator) "
+				+ " AND (:searchDistrict IS NULL OR d.id = :searchDistrict) " 
+				+ ""),
 		@NamedQuery(name = "Users.findByAlocatProvinces", query = "SELECT u.id as id, u.username as username FROM Users u INNER JOIN u.provinces p where p.id in (:provinces)"),
 		@NamedQuery(name = "Users.findByAlocatDistricts", query = "SELECT u.id as id, u.username as username FROM Users u INNER JOIN u.districts d where d.id in (:districts)"),
 		@NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u where u.username = :username"),
 		@NamedQuery(name = "Users.findByUsId", query = "SELECT u FROM Users u INNER JOIN u.us us where us.id in (:us) and u.status = 1"),
-		@NamedQuery(name = "Users.findByLocalityId", query = "SELECT u "
-															+ "FROM Users u "
-															+ "INNER JOIN u.us us "
-															+ "INNER JOIN us.locality l "
-															+ "where l.id in (:l) "
-															+ "and u.status = 1"),
+		@NamedQuery(name = "Users.findByLocalityId", query = "SELECT u " 
+				+ "FROM Users u " 
+				+ "INNER JOIN u.us us "
+				+ "INNER JOIN us.locality l " 
+				+ "where l.id in (:l) " 
+				+ "and u.status = 1"),
 		@NamedQuery(name = "Users.findByResetPasswordToken", query = "SELECT u FROM Users u where u.recoverPasswordToken = :recoverPasswordToken"),
 		@NamedQuery(name = "Users.findByProfiles", query = "SELECT u FROM Users u where u.profiles.id in (:profiles)"),
 		@NamedQuery(name = "Users.findByProfilesAndOrganization", query = "SELECT u FROM Users u where u.profiles.id in (:profiles) and u.partners.id = :organizationId"),
 		@NamedQuery(name = "Users.findByDateCreated", query = "select u from Users u where u.dateUpdated is null and u.dateCreated > :lastpulledat"),
 		@NamedQuery(name = "Users.findByDateUpdated", query = "select u from Users u where (u.dateUpdated >= :lastpulledat) or (u.dateUpdated >= :lastpulledat and u.dateCreated = u.dateUpdated)"),
 		@NamedQuery(name = "Users.findUsernames", query = "SELECT u.id as id, u.username as username FROM Users u"),
-		@NamedQuery(name = "Users.findById", query = "SELECT u " + "FROM Users u " + "left join fetch u.localities "
+		@NamedQuery(name = "Users.findById", query = "SELECT u " 
+				+ "FROM Users u " 
+				+ "left join fetch u.localities "
 				+ "where u.id = :id"), })
 public class Users implements java.io.Serializable {
 
@@ -144,6 +156,8 @@ public class Users implements java.io.Serializable {
 
 	private String recoverPasswordToken;
 
+	private Date lastLoginDate;
+
 	private Date passwordLastChangeDate;
 
 	private Set<Locality> localities = new HashSet<Locality>(0);
@@ -159,6 +173,10 @@ public class Users implements java.io.Serializable {
 	private String recoverPasswordOrigin;
 
 	public Users() {
+	}
+
+	public Users(Integer id) {
+		this.id = id;
 	}
 
 	public Users(Partners partners, Profiles profiles, String surname, String name, String phoneNumber, String email,
@@ -209,7 +227,7 @@ public class Users implements java.io.Serializable {
 			Set<District> district, String surname, String name, String phoneNumber, String email, String username,
 			String password, Integer newPassword, String entryPoint, Set<Us> us, int status, Byte isLocked,
 			Byte isExpired, Byte isCredentialsExpired, Byte isEnabled, int createdBy, Date dateCreated,
-			Integer updatedBy, Date dateUpdated, Date passwordLastChangeDate) {
+			Integer updatedBy, Date dateUpdated, Date lastLoginDate, Date passwordLastChangeDate) {
 		super();
 		this.id = id;
 		this.localities = locality;
@@ -235,16 +253,16 @@ public class Users implements java.io.Serializable {
 		this.dateCreated = dateCreated;
 		this.updatedBy = updatedBy;
 		this.dateUpdated = dateUpdated;
+		this.lastLoginDate = lastLoginDate;
 		this.passwordLastChangeDate = passwordLastChangeDate;
 	}
 
 	public Users(UsersSyncModel model, String timestamp) {
 		Long t = Long.valueOf(timestamp);
 		Date regDate = new Date(t);
-		
+
 		Long lastChange = Long.valueOf(model.getPassword_last_change_date());
 		Date lastChangeDate = new Date(lastChange);
-
 
 		this.partners = new Partners(model.getPartner_id());
 		this.profiles = new Profiles(model.getProfile_id());
@@ -263,9 +281,17 @@ public class Users implements java.io.Serializable {
 		this.offlineId = model.getId();
 		this.dateCreated = regDate;
 		this.dateUpdated = regDate;
-
 		this.passwordLastChangeDate = lastChangeDate;
 
+		try {
+			String dateString = model.getLast_login_date();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date lastLoginDate = dateFormat.parse(dateString);
+			this.lastLoginDate = lastLoginDate;
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -359,7 +385,6 @@ public class Users implements java.io.Serializable {
 		this.username = username;
 	}
 
-	@JsonIgnore
 	@Column(name = "password", nullable = false, length = 150)
 	public String getPassword() {
 		return this.password;
@@ -497,6 +522,35 @@ public class Users implements java.io.Serializable {
 		this.recoverPasswordToken = recoverPasswordToken;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "last_login_at", length = 19)
+	public Date getLastLoginDate() {
+		return lastLoginDate;
+	}
+
+	public void setLastLoginDate(Date lastLoginDate) {
+		this.lastLoginDate = lastLoginDate;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "password_last_change_date", length = 19)
+	public Date getPasswordLastChangeDate() {
+		return passwordLastChangeDate;
+	}
+
+	public void setPasswordLastChangeDate(Date passwordLastChangeDate) {
+		this.passwordLastChangeDate = passwordLastChangeDate;
+	}
+
+	@Column(name = "recover_password_origin", length = 50)
+	public String getRecoverPasswordOrigin() {
+		return recoverPasswordOrigin;
+	}
+
+	public void setRecoverPasswordOrigin(String recoverPasswordOrigin) {
+		this.recoverPasswordOrigin = recoverPasswordOrigin;
+	}
+
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "users_localities", catalog = "dreams_db", joinColumns = {
 			@JoinColumn(name = "user_id", nullable = false, updatable = false) }, inverseJoinColumns = {
@@ -575,10 +629,11 @@ public class Users implements java.io.Serializable {
 			int[] usIds = us.stream().mapToInt(Us::getId).toArray();
 
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		    String dateString = dateFormat.format(passwordLastChangeDate != null? passwordLastChangeDate : dateCreated);
-		        
-			int[] localitiesIds = localities.stream().mapToInt(Locality::getId).toArray();
+			String dateString = dateFormat
+					.format(passwordLastChangeDate != null ? passwordLastChangeDate : dateCreated);
+		    String lastLoginDate = dateFormat.format(this.lastLoginDate);
 
+			int[] localitiesIds = localities.stream().mapToInt(Locality::getId).toArray();
 
 			user.put("name", name);
 			user.put("surname", surname);
@@ -596,9 +651,8 @@ public class Users implements java.io.Serializable {
 			user.put("profile_id", profiles.getId());
 			user.put("online_id", id); // flag to control if entity is synchronized with the backend
 			user.put("organization_name", partners == null ? null : partners.getName());
-
+			user.put("last_login_date", lastLoginDate);
 			user.put("password_last_change_date", dateString);
-
 
 		} else { // ensure online_id is updated first
 			user.put("online_id", id);
@@ -617,43 +671,24 @@ public class Users implements java.io.Serializable {
 		this.username = model.getUsername();
 		this.password = model.getPassword();
 		this.entryPoint = model.getEntry_point();
-		// this.locality.setId(model.getLocality_id());
 		this.partners.setId(model.getPartner_id());
 		this.profiles.setId(model.getProfile_id());
 
-		
 		String dateString = model.getPassword_last_change_date();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String lastLogin = model.getLast_login_date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
-		    Date date = dateFormat.parse(dateString);
-		    long lastChangeTimestamp = date.getTime();
-		    //System.out.println(lastChangeTimestamp);
-		    //Long lastChange = Long.valueOf(model.getPassword_last_change_date());
+			Date date = dateFormat.parse(dateString);
+			long lastChangeTimestamp = date.getTime();
 			Date lastChangeDate = new Date(lastChangeTimestamp);
 			this.passwordLastChangeDate = lastChangeDate;
-		    
+			
+			Date lastLoginDate = lastLogin == null ? null : dateFormat.parse(lastLogin);
+			this.lastLoginDate = lastLoginDate;
+
 		} catch (ParseException e) {
-		    e.printStackTrace();
+			e.printStackTrace();
 		}
 
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "password_last_change_date", length = 19)
-	public Date getPasswordLastChangeDate() {
-		return passwordLastChangeDate;
-	}
-
-	public void setPasswordLastChangeDate(Date passwordLastChangeDate) {
-		this.passwordLastChangeDate = passwordLastChangeDate;
-	}
-
-	@Column(name = "recover_password_origin", length = 50)
-	public String getRecoverPasswordOrigin() {
-		return recoverPasswordOrigin;
-	}
-
-	public void setRecoverPasswordOrigin(String recoverPasswordOrigin) {
-		this.recoverPasswordOrigin = recoverPasswordOrigin;
 	}
 }

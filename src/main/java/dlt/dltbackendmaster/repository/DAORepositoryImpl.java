@@ -83,7 +83,7 @@ public class DAORepositoryImpl implements DAORepository {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public <T> T GetUniqueEntityByNamedQuery(String query, Object... params) {
 		Query q = getCurrentSession().getNamedQuery(query);
-		
+
 		int i = 0;
 		for (Parameter param : q.getParameters()) {
 			q.setParameter(param, params[i++]);
@@ -100,20 +100,22 @@ public class DAORepositoryImpl implements DAORepository {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <T> T GetUniqueEntityByNamedQuery(String query, String searchNui, String searchName, Integer searchUserCreator, Integer searchDistrict, Object... params) {
+	public <T> T GetUniqueEntityByNamedQuery(String query, String searchNui, String searchName,
+			Integer searchUserCreator, Integer searchDistrict, Object... params) {
 		Query q = getCurrentSession().getNamedQuery(query);
-		
+
 		int i = 0;
 		for (Parameter param : q.getParameters()) {
-			if(!"searchNui".equals(param.getName()) && !"searchName".equals(param.getName()) && !"searchUserCreator".equals(param.getName()) && !"searchDistrict".equals(param.getName())) {
+			if (!"searchNui".equals(param.getName()) && !"searchName".equals(param.getName())
+					&& !"searchUserCreator".equals(param.getName()) && !"searchDistrict".equals(param.getName())) {
 				q.setParameter(param, params[i]);
 				i++;
-			}else {
-				q.setParameter("searchNui", "%"+searchNui+"%");
-				q.setParameter("searchName", "%"+searchName+"%");
-				q.setParameter("searchUserCreator",searchUserCreator); 
-				q.setParameter("searchDistrict", searchDistrict); 
-			}	
+			} else {
+				q.setParameter("searchNui", "%" + searchNui + "%");
+				q.setParameter("searchName", "%" + searchName + "%");
+				q.setParameter("searchUserCreator", searchUserCreator);
+				q.setParameter("searchDistrict", searchDistrict);
+			}
 		}
 
 		List<T> results = q.list();
@@ -127,19 +129,84 @@ public class DAORepositoryImpl implements DAORepository {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <T> T GetUniqueEntityByNamedQuery(String query, String searchNui, Integer searchUserCreator, Integer searchDistrict, Object... params) {
+	public <T> T GetUniqueUserEntityByNamedQuery(String query, String searchName, String searchUsername,
+			Integer searchUserCreator, Integer searchDistrict, Object... params) {
 		Query q = getCurrentSession().getNamedQuery(query);
-		
+
 		int i = 0;
 		for (Parameter param : q.getParameters()) {
-			if(!"searchNui".equals(param.getName()) && !"searchUserCreator".equals(param.getName()) && !"searchDistrict".equals(param.getName())) {
+			if (!"searchName".equals(param.getName()) && !"searchUsername".equals(param.getName())
+					&& !"searchUserCreator".equals(param.getName()) && !"searchDistrict".equals(param.getName())) {
 				q.setParameter(param, params[i]);
 				i++;
-			}else {
-				q.setParameter("searchNui", "%"+searchNui+"%");
-				q.setParameter("searchUserCreator",searchUserCreator); 
-				q.setParameter("searchDistrict", searchDistrict); 
-			}	
+			} else {
+				q.setParameter("searchName", "%" + searchName + "%");
+				q.setParameter("searchUsername", "%" + searchUsername + "%");
+				q.setParameter("searchUserCreator", searchUserCreator);
+				q.setParameter("searchDistrict", searchDistrict);
+			}
+		}
+
+		List<T> results = q.list();
+
+		T foundentity = null;
+		if (!results.isEmpty()) {
+			// ignores multiple results
+			foundentity = results.get(0);
+		}
+		return foundentity;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> T GetUniqueUserEntityByNamedQuery(String query, String searchName, String searchUsername,
+			Integer searchUserCreator, Integer searchDistrict, Integer searchEntryPoint, Object... params) {
+		Query q = getCurrentSession().getNamedQuery(query);
+
+		int i = 0;
+		for (Parameter param : q.getParameters()) {
+			if (!"searchName".equals(param.getName()) && !"searchUsername".equals(param.getName())
+					&& !"searchUserCreator".equals(param.getName()) && !"searchDistrict".equals(param.getName())
+					&& !"searchEntryPoint".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			} else {
+				q.setParameter("searchName", "%" + searchName + "%");
+				q.setParameter("searchUsername", "%" + searchUsername + "%");
+				q.setParameter("searchUserCreator", searchUserCreator);
+				q.setParameter("searchDistrict", searchDistrict);
+				q.setParameter("searchEntryPoint", searchEntryPoint);
+			}
+		}
+
+		List<T> results = q.list();
+
+		T foundentity = null;
+		if (!results.isEmpty()) {
+			// ignores multiple results
+			foundentity = results.get(0);
+		}
+		return foundentity;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> T GetUniqueEntityByNamedQuery(String query, String searchNui, Integer searchUserCreator,
+			Integer searchDistrict, Date searchStartDate, Date searchEndDate, Object... params) {
+		Query q = getCurrentSession().getNamedQuery(query);
+
+		int i = 0;
+		for (Parameter param : q.getParameters()) {
+			if (!"searchNui".equals(param.getName()) && !"searchUserCreator".equals(param.getName())
+					&& !"searchDistrict".equals(param.getName()) && !"searchStartDate".equals(param.getName())
+					&& !"searchEndDate".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			} else {
+				q.setParameter("searchNui", "%" + searchNui + "%");
+				q.setParameter("searchUserCreator", searchUserCreator);
+				q.setParameter("searchDistrict", searchDistrict);
+				q.setParameter("searchStartDate", searchStartDate);
+				q.setParameter("searchEndDate", searchEndDate);
+			}
 		}
 
 		List<T> results = q.list();
@@ -166,161 +233,270 @@ public class DAORepositoryImpl implements DAORepository {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchNui, Integer searchUserCreator, Integer searchDistrict, Object... params) {
+	public <T> List<T> GetEntityByNamedQuery(String query, int beneficiaryId, List<Integer> servicesIds) {
 		Query q = getCurrentSession().getNamedQuery(query);
-		int i = 0;
-		
 
-		for (Parameter param : q.getParameters()) {
-			if(!"searchNui".equals(param.getName()) && !"searchUserCreator".equals(param.getName()) && !"searchDistrict".equals(param.getName())) {
-				q.setParameter(param, params[i]);
-				i++;
-			}else {
-				q.setParameter("searchNui", "%"+searchNui+"%");
-				q.setParameter("searchUserCreator",searchUserCreator); 
-				q.setParameter("searchDistrict", searchDistrict); 
-			}	
-		}
+		q.setParameter("beneficiaryId", beneficiaryId);
+		q.setParameter("servicesIds", servicesIds);
 
-		List<T> results = q
-				.setFirstResult(pageIndex*pageSize)
-				.setMaxResults(pageSize)
-				.getResultList();
+		List<T> results = q.getResultList();
 
 		return results;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchNui, String searchName, Integer searchUserCreator, Integer searchDistrict, Object... params) {
+	public <T> List<T> GetEntityByNamedQuery(String query, Integer beneficiaryId, Integer ageBand, Integer level) {
 		Query q = getCurrentSession().getNamedQuery(query);
-		int i = 0;
-		
 
-		for (Parameter param : q.getParameters()) {
-			if(!"searchNui".equals(param.getName()) && !"searchName".equals(param.getName()) && !"searchUserCreator".equals(param.getName()) && !"searchDistrict".equals(param.getName())) {
-				q.setParameter(param, params[i]);
-				i++;
-			}else {
-				q.setParameter("searchNui", "%"+searchNui+"%");
-				q.setParameter("searchName", "%"+searchName+"%");
-				q.setParameter("searchUserCreator",searchUserCreator); 
-				q.setParameter("searchDistrict", searchDistrict); 
-			}	
-		}
+		q.setParameter("beneficiaryId", beneficiaryId);
+		q.setParameter("ageBand", ageBand);
+		q.setParameter("level", level);
 
-		List<T> results = q
-				.setFirstResult(pageIndex*pageSize)
-				.setMaxResults(pageSize)
-				.getResultList();
+		List<T> results = q.getResultList();
 
 		return results;
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public <T> List<T> GetAllPagedUserEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchUsername, Integer searchUserCreator, Integer searchDistrict, Object... params) {
+	public <T> List<T> GetEntityByNamedQuery(String query, String name, Date dateOfBirth, int locality) {
 		Query q = getCurrentSession().getNamedQuery(query);
-		int i = 0;
-		
 
-		for (Parameter param : q.getParameters()) {
-			if(!"searchUsername".equals(param.getName()) && !"searchUserCreator".equals(param.getName()) && !"searchDistrict".equals(param.getName())) {
-				q.setParameter(param, params[i]);
-				i++;
-			}else {
-				q.setParameter("searchUsername", "%"+searchUsername+"%");
-				q.setParameter("searchUserCreator", searchUserCreator); 
-				q.setParameter("searchDistrict", searchDistrict);  
-			}	
-		}
+		q.setParameter("name", name);
+		q.setParameter("dateOfBirth", dateOfBirth);
+		q.setParameter("locality", locality);
 
-		List<T> results = q
-				.setFirstResult(pageIndex*pageSize)
-				.setMaxResults(pageSize)
-				.getResultList();
+		List<T> results = q.getResultList();
 
 		return results;
 	}
 
-    @Override
-    public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, Date searchStartDate,
-            Date searchEndDate, Object... params) {
-        Query q = getCurrentSession().getNamedQuery(query);
-        int i = 0;
-        
-        for (Parameter param : q.getParameters()) {
-            if(!"searchEndDate".equals(param.getName()) && !"searchStartDate".equals(param.getName())) {
-                q.setParameter(param, params[i]);
-                i++;
-            }else {
-                q.setParameter("searchStartDate", searchStartDate);
-                q.setParameter("searchEndDate", searchEndDate); 
-            }   
-        }
-        List<T> results = q
-                .setFirstResult(pageIndex*pageSize)
-                .setMaxResults(pageSize)
-                .getResultList();
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchNui,
+			Integer searchUserCreator, Integer searchDistrict, Date searchStartDate, Date searchEndDate,
+			Object... params) {
+		Query q = getCurrentSession().getNamedQuery(query);
+		int i = 0;
 
-        return results;
-    }
-    
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public <T> List<T> GetAllEntityByNamedNativeQuery(String query, Object... params) {
-        Query q = getCurrentSession().getNamedNativeQuery(query);
-        int i = 0;
-        for (Parameter param : q.getParameters()) {
-            q.setParameter(param, params[i++]);
-        }
-
-        List<T> results = q.getResultList();
-
-        return results;
-    }
-    
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public <T> List<T> GetByNamedNativeQuery(String query, List<Integer> districts, Date startDate, Date endDate, Object... params) {
-        Query q = getCurrentSession().getNamedNativeQuery(query);
-        int i = 0;
-   
-        for (Parameter param : q.getParameters()) {
-			if(!"districts".equals(param.getName()) && !"startDate".equals(param.getName()) && !"endDate".equals(param.getName())) {
+		for (Parameter param : q.getParameters()) {
+			if (!"searchNui".equals(param.getName()) && !"searchUserCreator".equals(param.getName())
+					&& !"searchDistrict".equals(param.getName()) && !"searchStartDate".equals(param.getName())
+					&& !"searchEndDate".equals(param.getName())) {
 				q.setParameter(param, params[i]);
 				i++;
-			}else {
-				q.setParameter("districts", districts);
-				q.setParameter("startDate", startDate);
-				q.setParameter("endDate", endDate); 
-			}	
+			} else {
+				q.setParameter("searchNui", "%" + searchNui + "%");
+				q.setParameter("searchUserCreator", searchUserCreator);
+				q.setParameter("searchDistrict", searchDistrict);
+				q.setParameter("searchStartDate", searchStartDate);
+				q.setParameter("searchEndDate", searchEndDate);
+			}
 		}
 
-        List<T> results = q.getResultList();
+		List<T> results = q.setFirstResult(pageIndex * pageSize).setMaxResults(pageSize).getResultList();
 
-        return results;
-    }
-    
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public <T> List<T> GetAllPagedEntityByNamedNativeQuery(String query, int pageIndex, int pageSize, Date startDate, Date endDate,  List<Integer>districts, Object... params) {
-        Query q = getCurrentSession().getNamedNativeQuery(query);
-        int i = 0;
-      
-        for (Parameter param : q.getParameters()) {
-			if(!"districts".equals(param.getName()) && !"startDate".equals(param.getName()) && !"endDate".equals(param.getName())) {
+		return results;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchNui,
+			String searchName, Integer searchUserCreator, Integer searchDistrict, Object... params) {
+		Query q = getCurrentSession().getNamedQuery(query);
+		int i = 0;
+
+		for (Parameter param : q.getParameters()) {
+			if (!"searchNui".equals(param.getName()) && !"searchName".equals(param.getName())
+					&& !"searchUserCreator".equals(param.getName()) && !"searchDistrict".equals(param.getName())) {
 				q.setParameter(param, params[i]);
 				i++;
-			}else {
-				q.setParameter("districts", districts);
-				q.setParameter("startDate", startDate);
-				q.setParameter("endDate", endDate); 
-			}	
+			} else {
+				q.setParameter("searchNui", "%" + searchNui + "%");
+				q.setParameter("searchName", "%" + searchName + "%");
+				q.setParameter("searchUserCreator", searchUserCreator);
+				q.setParameter("searchDistrict", searchDistrict);
+			}
 		}
 
-        List<T> results = q
-                .setFirstResult(pageIndex*pageSize)
-                .setMaxResults(pageSize)
-                .getResultList();
+		List<T> results = q.setFirstResult(pageIndex * pageSize).setMaxResults(pageSize).getResultList();
 
-        return results;
-    }
+		return results;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> List<T> GetAllPagedUserEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchName,
+			String searchUsername, Integer searchUserCreator, Integer searchDistrict, Object... params) {
+		Query q = getCurrentSession().getNamedQuery(query);
+		int i = 0;
+
+		for (Parameter param : q.getParameters()) {
+			if (!"searchName".equals(param.getName()) && !"searchUsername".equals(param.getName())
+					&& !"searchUserCreator".equals(param.getName()) && !"searchDistrict".equals(param.getName())
+					&& !"searchEntryPoint".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			} else {
+				q.setParameter("searchName", "%" + searchName + "%");
+				q.setParameter("searchUsername", "%" + searchUsername + "%");
+				q.setParameter("searchUserCreator", searchUserCreator);
+				q.setParameter("searchDistrict", searchDistrict);
+			}
+		}
+
+		List<T> results = q.setFirstResult(pageIndex * pageSize).setMaxResults(pageSize).getResultList();
+
+		return results;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> List<T> GetAllPagedUserEntityByNamedQuery(String query, int pageIndex, int pageSize, String searchName,
+			String searchUsername, Integer searchUserCreator, Integer searchDistrict, Integer searchEntryPoint,
+			Object... params) {
+		Query q = getCurrentSession().getNamedQuery(query);
+		int i = 0;
+
+		for (Parameter param : q.getParameters()) {
+			if (!"searchName".equals(param.getName()) && !"searchUsername".equals(param.getName())
+					&& !"searchUserCreator".equals(param.getName()) && !"searchDistrict".equals(param.getName())
+					&& !"searchEntryPoint".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			} else {
+				q.setParameter("searchName", "%" + searchName + "%");
+				q.setParameter("searchUsername", "%" + searchUsername + "%");
+				q.setParameter("searchUserCreator", searchUserCreator);
+				q.setParameter("searchDistrict", searchDistrict);
+				q.setParameter("searchEntryPoint", searchEntryPoint);
+			}
+		}
+
+		List<T> results = q.setFirstResult(pageIndex * pageSize).setMaxResults(pageSize).getResultList();
+
+		return results;
+	}
+
+	@Override
+	public <T> List<T> GetAllPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, Date searchStartDate,
+			Date searchEndDate, Object... params) {
+		Query q = getCurrentSession().getNamedQuery(query);
+		int i = 0;
+
+		for (Parameter param : q.getParameters()) {
+			if (!"searchEndDate".equals(param.getName()) && !"searchStartDate".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			} else {
+				q.setParameter("searchStartDate", searchStartDate);
+				q.setParameter("searchEndDate", searchEndDate);
+			}
+		}
+		List<T> results = q.setFirstResult(pageIndex * pageSize).setMaxResults(pageSize).getResultList();
+
+		return results;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> List<T> GetAllEntityByNamedNativeQuery(String query, Object... params) {
+		Query q = getCurrentSession().getNamedNativeQuery(query);
+		int i = 0;
+		for (Parameter param : q.getParameters()) {
+			q.setParameter(param, params[i++]);
+		}
+
+		List<T> results = q.getResultList();
+
+		return results;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> List<T> GetByNamedNativeQuery(String query, Integer district, Date startDate, Date endDate,
+			Object... params) {
+		Query q = getCurrentSession().getNamedNativeQuery(query);
+		int i = 0;
+
+		for (Parameter param : q.getParameters()) {
+			if (!"district".equals(param.getName()) && !"startDate".equals(param.getName())
+					&& !"endDate".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			} else {
+				q.setParameter("district", district);
+				q.setParameter("startDate", startDate);
+				q.setParameter("endDate", endDate);
+			}
+		}
+
+		List<T> results = q.getResultList();
+
+		return results;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> List<T> GetByNamedNativeQuery(String query, Integer district, String startDate, String endDate,
+			Object... params) {
+		Query q = getCurrentSession().getNamedNativeQuery(query);
+		int i = 0;
+
+		for (Parameter param : q.getParameters()) {
+			if (!"district".equals(param.getName()) && !"startDate".equals(param.getName())
+					&& !"endDate".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			} else {
+				q.setParameter("district", district);
+				q.setParameter("startDate", startDate);
+				q.setParameter("endDate", endDate);
+			}
+		}
+
+		List<T> results = q.getResultList();
+
+		return results;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> List<T> GetAllPagedEntityByNamedNativeQuery(String query, int pageIndex, int pageSize, Date startDate,
+			Date endDate, List<Integer> districts, Object... params) {
+		Query q = getCurrentSession().getNamedNativeQuery(query);
+		int i = 0;
+
+		for (Parameter param : q.getParameters()) {
+			if (!"districts".equals(param.getName()) && !"startDate".equals(param.getName())
+					&& !"endDate".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			} else {
+				q.setParameter("districts", districts);
+				q.setParameter("startDate", startDate);
+				q.setParameter("endDate", endDate);
+			}
+		}
+
+		List<T> results = q.setFirstResult(pageIndex * pageSize).setMaxResults(pageSize).getResultList();
+
+		return results;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <T> List<T> GetAllPagedEntityByNamedNativeQuery(String query, int pageIndex, int pageSize, String startDate,
+			String endDate, List<Integer> districts, Object... params) {
+		Query q = getCurrentSession().getNamedNativeQuery(query);
+		int i = 0;
+
+		for (Parameter param : q.getParameters()) {
+			if (!"districts".equals(param.getName()) && !"startDate".equals(param.getName())
+					&& !"endDate".equals(param.getName())) {
+				q.setParameter(param, params[i]);
+				i++;
+			} else {
+				q.setParameter("districts", districts);
+				q.setParameter("startDate", startDate);
+				q.setParameter("endDate", endDate);
+			}
+		}
+
+		List<T> results = q.setFirstResult(pageIndex * pageSize).setMaxResults(pageSize).getResultList();
+
+		return results;
+	}
 
 	@Override
 	public <T> T find(Class<T> klass, Object id) {

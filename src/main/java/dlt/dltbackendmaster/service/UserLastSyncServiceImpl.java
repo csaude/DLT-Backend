@@ -15,21 +15,23 @@ public class UserLastSyncServiceImpl implements UserLastSyncService {
 	private DAOService service;
 
 	@Override
-	public UserLastSync saveLastSyncDate(String username) {
+	public UserLastSync saveLastSyncDate(String username, String appVersion) {
 		Users user = service.GetUniqueEntityByNamedQuery("Users.findByUsername", username);
-		UserLastSync userSyncCOntrol = service.GetUniqueEntityByNamedQuery("UserLastSync.findByUsername", username);
+		UserLastSync userSyncControl = service.GetUniqueEntityByNamedQuery("UserLastSync.findByUsername", username);
 
-		if (userSyncCOntrol != null) {
-			userSyncCOntrol.setUser(user);
-			userSyncCOntrol.setLastSyncDate(new Date());
-			service.update(userSyncCOntrol);
+		if (userSyncControl != null) {
+			userSyncControl.setUser(user);
+			userSyncControl.setLastSyncDate(new Date());
+			userSyncControl.setAppVersion(appVersion);
+			service.update(userSyncControl);
 
-			return userSyncCOntrol;
-		} else {			
+			return userSyncControl;
+		} else {
 			UserLastSync userLastSync = new UserLastSync();
 			userLastSync.setUsername(username);
 			userLastSync.setUser(user);
 			userLastSync.setLastSyncDate(new Date());
+			userLastSync.setAppVersion(appVersion);
 			service.Save(userLastSync);
 
 			return userLastSync;

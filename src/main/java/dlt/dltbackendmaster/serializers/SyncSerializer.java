@@ -1,6 +1,7 @@
 package dlt.dltbackendmaster.serializers;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,12 +39,12 @@ import dlt.dltbackendmaster.domain.watermelondb.UsersSyncModel;
 
 public class SyncSerializer {
 
-	public static String createSyncObject(SyncObject<UsersSync> users, SyncObject<Province> provinces, SyncObject<District> districts, SyncObject<Locality> localities,
-			SyncObject<Profiles> profiles, SyncObject<Partners> partners, SyncObject<Us> us,
-			SyncObject<Beneficiaries> beneficiaries, SyncObject<BeneficiariesInterventions> beneficiariesInterventions,
-			SyncObject<Neighborhood> neighborhoods, SyncObject<Services> services, SyncObject<SubServices> subServices,
-			SyncObject<References> references, SyncObject<ReferencesServices> referencesServices, String lastPulledAt)
-			throws JsonProcessingException {
+	public static String createSyncObject(SyncObject<UsersSync> users, SyncObject<Province> provinces,
+			SyncObject<District> districts, SyncObject<Locality> localities, SyncObject<Profiles> profiles,
+			SyncObject<Partners> partners, SyncObject<Us> us, SyncObject<Beneficiaries> beneficiaries,
+			SyncObject<BeneficiariesInterventions> beneficiariesInterventions, SyncObject<Neighborhood> neighborhoods,
+			SyncObject<Services> services, SyncObject<SubServices> subServices, SyncObject<References> references,
+			SyncObject<ReferencesServices> referencesServices, String lastPulledAt) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode changesNode = mapper.createObjectNode();
 		changesNode.set("users", createUserSyncObject(users, lastPulledAt));
@@ -75,15 +76,15 @@ public class SyncSerializer {
 		// created users
 		List<UsersSync> createdUsers = mapper.convertValue(users.getCreated(), new TypeReference<List<UsersSync>>() {
 		});
-		List<ObjectNode> createdlist = createdUsers.stream().map((UsersSync element) -> element.toObjectNode(lastPulledAt))
-				.collect(Collectors.toList());
+		List<ObjectNode> createdlist = createdUsers.stream()
+				.map((UsersSync element) -> element.toObjectNode(lastPulledAt)).collect(Collectors.toList());
 		ArrayNode arrayCreated = mapper.createArrayNode();
 		arrayCreated.addAll(createdlist);
 		// updated users
 		List<UsersSync> updatedUsers = mapper.convertValue(users.getUpdated(), new TypeReference<List<UsersSync>>() {
 		});
-		List<ObjectNode> updatedlist = updatedUsers.stream().map((UsersSync element) -> element.toObjectNode(lastPulledAt))
-				.collect(Collectors.toList());
+		List<ObjectNode> updatedlist = updatedUsers.stream()
+				.map((UsersSync element) -> element.toObjectNode(lastPulledAt)).collect(Collectors.toList());
 		ArrayNode arrayUpdated = mapper.createArrayNode();
 		arrayUpdated.addAll(updatedlist);
 		// deleted users
@@ -124,7 +125,7 @@ public class SyncSerializer {
 		userNode.set("deleted", arrayDeleted);
 		return userNode;
 	}
-	
+
 	public static ObjectNode createProvinceSyncObject(SyncObject<Province> provinces) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		// created
@@ -151,7 +152,7 @@ public class SyncSerializer {
 		userNode.set("deleted", arrayDeleted);
 		return userNode;
 	}
-	
+
 	public static ObjectNode createDistrictsSyncObject(SyncObject<District> districts) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		// created
@@ -268,15 +269,15 @@ public class SyncSerializer {
 		List<Beneficiaries> createdObjs = mapper.convertValue(beneficiaries.getCreated(),
 				new TypeReference<List<Beneficiaries>>() {
 				});
-		List<ObjectNode> createdList = createdObjs.stream().map((Beneficiaries element) -> element.toObjectNode(lastPulledAt))
-				.collect(Collectors.toList());
+		List<ObjectNode> createdList = createdObjs.stream()
+				.map((Beneficiaries element) -> element.toObjectNode(lastPulledAt)).collect(Collectors.toList());
 		ArrayNode arrayCreated = mapper.createArrayNode();
 		arrayCreated.addAll(createdList);
 		List<Beneficiaries> updatedObjs = mapper.convertValue(beneficiaries.getUpdated(),
 				new TypeReference<List<Beneficiaries>>() {
 				});
-		List<ObjectNode> updatedList = updatedObjs.stream().map((Beneficiaries element) -> element.toObjectNode(lastPulledAt))
-				.collect(Collectors.toList());
+		List<ObjectNode> updatedList = updatedObjs.stream()
+				.map((Beneficiaries element) -> element.toObjectNode(lastPulledAt)).collect(Collectors.toList());
 		ArrayNode arrayUpdated = mapper.createArrayNode();
 		arrayUpdated.addAll(updatedList);
 		List<Integer> deletedObjs = mapper.convertValue(beneficiaries.getDeleted(), new TypeReference<List<Integer>>() {
@@ -300,6 +301,17 @@ public class SyncSerializer {
 		// mapper.convertValue(beneficiariesInterventions.getCreated(),
 		// new TypeReference<List<BeneficiaryIntervention>>() {});
 		List<BeneficiariesInterventions> createdObjs = beneficiariesInterventions.getCreated();
+
+		List<String> offlineIds = new ArrayList<>();
+		for (BeneficiariesInterventions bi : createdObjs) {
+			String offlineId = bi.getOfflineId() == null ? bi.getId().toString() : bi.getOfflineId();
+
+			if (offlineIds.contains(offlineId)) {
+				System.out.println(offlineId);
+			}
+			offlineIds.add(offlineId);
+		}
+
 		List<ObjectNode> createdList = createdObjs.stream()
 				.map((BeneficiariesInterventions element) -> element.toObjectNode(lastPulledAt))
 				.collect(Collectors.toList());
@@ -448,15 +460,15 @@ public class SyncSerializer {
 				new TypeReference<List<References>>() {
 				});
 
-		List<ObjectNode> createdList = createdObjects.stream().map((References element) -> element.toObjectNode(lastPulledAt))
-				.collect(Collectors.toList());
+		List<ObjectNode> createdList = createdObjects.stream()
+				.map((References element) -> element.toObjectNode(lastPulledAt)).collect(Collectors.toList());
 		ArrayNode arrayCreated = mapper.createArrayNode();
 		arrayCreated.addAll(createdList);
 		List<References> updatedObjs = mapper.convertValue(references.getUpdated(),
 				new TypeReference<List<References>>() {
 				});
-		List<ObjectNode> updatedList = updatedObjs.stream().map((References element) -> element.toObjectNode(lastPulledAt))
-				.collect(Collectors.toList());
+		List<ObjectNode> updatedList = updatedObjs.stream()
+				.map((References element) -> element.toObjectNode(lastPulledAt)).collect(Collectors.toList());
 		ArrayNode arrayUpdated = mapper.createArrayNode();
 		arrayUpdated.addAll(updatedList);
 		List<Integer> deletedObjs = mapper.convertValue(references.getDeleted(), new TypeReference<List<Integer>>() {
@@ -469,22 +481,19 @@ public class SyncSerializer {
 		return referencesNode;
 	}
 
-	private static ObjectNode createReferenceServicesSyncObject(
-			SyncObject<ReferencesServices> refencesServices, String lastPulledAt)
-			throws JsonProcessingException {
+	private static ObjectNode createReferenceServicesSyncObject(SyncObject<ReferencesServices> refencesServices,
+			String lastPulledAt) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 
 		List<ReferencesServices> createdObjs = refencesServices.getCreated();
 		List<ObjectNode> createdList = createdObjs.stream()
-				.map((ReferencesServices element) -> element.toObjectNode(lastPulledAt))
-				.collect(Collectors.toList());
+				.map((ReferencesServices element) -> element.toObjectNode(lastPulledAt)).collect(Collectors.toList());
 		ArrayNode arrayCreated = mapper.createArrayNode();
 		arrayCreated.addAll(createdList);
 
 		List<ReferencesServices> updatedObjs = refencesServices.getUpdated();
 		List<ObjectNode> updatedList = updatedObjs.stream()
-				.map((ReferencesServices element) -> element.toObjectNode(lastPulledAt))
-				.collect(Collectors.toList());
+				.map((ReferencesServices element) -> element.toObjectNode(lastPulledAt)).collect(Collectors.toList());
 		ArrayNode arrayUpdated = mapper.createArrayNode();
 		arrayUpdated.addAll(updatedList);
 		List<Integer> deletedObjs = mapper.convertValue(refencesServices.getDeleted(),
@@ -575,7 +584,7 @@ public class SyncSerializer {
 		}
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static SyncObject<ReferenceServicesSyncModel> readReferenceServicesSyncObject(String changes)
 			throws JsonMappingException, JsonProcessingException {
@@ -592,7 +601,7 @@ public class SyncSerializer {
 
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static SyncObject<ReferenceSyncModel> readReferencesSyncObject(String changes)
 			throws JsonMappingException, JsonProcessingException {

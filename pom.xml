@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>dlt</groupId>
 	<artifactId>dlt-api</artifactId>
-	<version>0.1</version>
+	<version>1.4.0</version>
 	<name>dlt-backend-master</name>
 	<description>Master project for DLT</description>
 	<packaging>war</packaging>
@@ -78,6 +78,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.geode</groupId>
+			<artifactId>spring-geode-starter</artifactId>
+			<version>1.2.12.RELEASE</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>javax.mail</groupId>
@@ -145,23 +155,23 @@
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
 		</dependency>
-		
-		 <!-- Apache POI for Excel -->
-	    <dependency>
-	        <groupId>org.apache.poi</groupId>
-	        <artifactId>poi</artifactId>
-	        <version>5.0.0</version>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.apache.poi</groupId>
-	        <artifactId>poi-ooxml</artifactId>
-	        <version>5.0.0</version>
-	    </dependency>
-	    
-	    <dependency>
-		  <groupId>net.sf.jasperreports</groupId>
-		  <artifactId>jasperreports</artifactId>
-		  <version>6.13.0</version>
+
+		<!-- Apache POI for Excel -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>5.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>5.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.13.0</version>
 		</dependency>
 
 	</dependencies>

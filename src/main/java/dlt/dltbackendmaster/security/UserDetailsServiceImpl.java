@@ -48,8 +48,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			List<Users> users = service.findByJPQuery(QUERY_FIND_USER_BY_USERNAME, todo);
 			
 			if(users != null && !users.isEmpty()) {
-				Account account = new Account(users.get(0));
+				Users user = users.get(0);
+				Account account = new Account(user);
 				detailsChecker.check(account);
+				
+				Date now = new Date();
+				user.setLastLoginDate(now);
+				user.setDateUpdated(now);
+				
+				service.update(user);
 
 				return account;
 			}

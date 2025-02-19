@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.gemfire.config.annotation.EnableCompression;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dlt.dltbackendmaster.domain.Locality;
+import dlt.dltbackendmaster.domain.OldPasswords;
 import dlt.dltbackendmaster.domain.Users;
 import dlt.dltbackendmaster.security.EmailSender;
 import dlt.dltbackendmaster.security.UserDetailsServiceImpl;
@@ -34,6 +36,7 @@ import dlt.dltbackendmaster.security.utils.PasswordGenerator;
 import dlt.dltbackendmaster.service.DAOService;
 
 @RestController
+@EnableCompression
 @RequestMapping("/api/users")
 public class UserController {
 	Logger logger = LoggerFactory.getLogger(BeneficiaryController.class);
@@ -67,29 +70,30 @@ public class UserController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@GetMapping(path = "/paged", produces = "application/json")
-    public ResponseEntity<List<Users>> get(
-    		@RequestParam(name = "userId") Integer userId, 
-    		@RequestParam(name = "level") String level, 
-    		@RequestParam(name = "params",required = false) @Nullable Integer[] params,
-    		@RequestParam(name = "pageIndex") int pageIndex,
-    		@RequestParam(name = "pageSize") int pageSize,
-    		@RequestParam(name = "searchUsername", required = false) @Nullable String searchUsername,
-    		@RequestParam(name = "searchUserCreator", required = false) @Nullable Integer searchUserCreator,
-    		@RequestParam(name = "searchDistrict", required = false) @Nullable Integer searchDistrict
-    		) {
+	public ResponseEntity<List<Users>> get(@RequestParam(name = "userId") Integer userId,
+			@RequestParam(name = "level") String level,
+			@RequestParam(name = "params", required = false) @Nullable Integer[] params,
+			@RequestParam(name = "pageIndex") int pageIndex, @RequestParam(name = "pageSize") int pageSize,
+			@RequestParam(name = "searchName", required = false) @Nullable String searchName,
+			@RequestParam(name = "searchUsername", required = false) @Nullable String searchUsername,
+			@RequestParam(name = "searchUserCreator", required = false) @Nullable Integer searchUserCreator,
+			@RequestParam(name = "searchDistrict", required = false) @Nullable Integer searchDistrict) {
+		
+		searchName = searchName.replaceAll(" ", "%");
 
-        try {
-            List<Users> users = service.GetAllPagedUserEntityByNamedQuery("Users.findAll", pageIndex, pageSize, searchUsername, searchUserCreator, searchDistrict);
+		try {
+			List<Users> users = service.GetAllPagedUserEntityByNamedQuery("Users.findAll", pageIndex, pageSize,
+					searchName, searchUsername, searchUserCreator, searchDistrict);
 
-            return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+			return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	@GetMapping(path = "/{Id}", produces = "application/json")
 	public ResponseEntity<Users> get(@PathVariable Integer Id) {
@@ -195,12 +199,24 @@ public class UserController {
 		}
 
 		try {
+			String encodedPassword = passwordEncoder.encode(users.getRecoverPassword());
 			user.setNewPassword(0);
-			user.setPassword(passwordEncoder.encode(users.getRecoverPassword()));
+			user.setPassword(encodedPassword);
 			user.setUpdatedBy(user.getId());
 			user.setDateUpdated(new Date());
 			user.setPasswordLastChangeDate(new Date());
 			Users updatedUser = service.update(user);
+
+			List<OldPasswords> oldPasswords = service.GetAllEntityByNamedQuery("OldPasswords.findByUserId",
+					user.getId());
+
+			if (oldPasswords.size() == 3) {
+				OldPasswords oldPassword = (OldPasswords) oldPasswords.get(2);
+				service.delete(oldPassword);
+			}
+			OldPasswords oldPassword = new OldPasswords(encodedPassword, user, new Date());
+			service.Save(oldPassword);
+
 			logger.warn("User " + user.getUsername() + " changed password ");
 			return new ResponseEntity<>(updatedUser, HttpStatus.OK);
 		} catch (Exception e) {
@@ -226,7 +242,24 @@ public class UserController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
+	@GetMapping(path = "/usAndOrganization/{Id}/{organization}", produces = "application/json")
+	public ResponseEntity<List<Users>> getByUsAndOrganization(@PathVariable Integer Id,
+			@PathVariable Integer organization) {
+
+		if (Id == null || organization == null) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
+
+		try {
+			List<Users> user = service.GetAllEntityByNamedQuery("Users.findByUsAndOrganization", organization, Id);
+
+			return new ResponseEntity<>(user, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	@GetMapping(path = "/locality/{Id}", produces = "application/json")
 	public ResponseEntity<List<Users>> getByLocality(@PathVariable Integer Id) {
 
@@ -304,9 +337,9 @@ public class UserController {
 		}
 		return false;
 	}
-	
+
 	@GetMapping(path = "/get-usernames", produces = "application/json")
-	public ResponseEntity<List<Users>>  getNames() throws AccountLockedException {
+	public ResponseEntity<List<Users>> getNames() throws AccountLockedException {
 		try {
 			List<Users> user = service.GetAllEntityByNamedQuery("Users.findUsernames");
 
@@ -317,28 +350,28 @@ public class UserController {
 	}
 
 	@GetMapping("/provinces")
-	public ResponseEntity<List<Users>> getUsersPrv(@RequestParam("provinces") List<String> provinces){
+	public ResponseEntity<List<Users>> getUsersPrv(@RequestParam("provinces") List<String> provinces) {
 		try {
 			List<Integer> provIds = provinces.stream().map(Integer::parseInt).collect(Collectors.toList());
-			
+
 			List<Users> user = service.GetAllEntityByNamedQuery("Users.findByAlocatProvinces", provIds);
 			return ResponseEntity.ok(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}		
+		}
 	}
 
 	@GetMapping("/districts")
-	public ResponseEntity<List<Users>> getUsers(@RequestParam("districts") List<String> districts){
+	public ResponseEntity<List<Users>> getUsers(@RequestParam("districts") List<String> districts) {
 		try {
 			List<Integer> distIds = districts.stream().map(Integer::parseInt).collect(Collectors.toList());
-			
+
 			List<Users> user = service.GetAllEntityByNamedQuery("Users.findByAlocatDistricts", distIds);
 			return ResponseEntity.ok(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}		
+		}
 	}
 }

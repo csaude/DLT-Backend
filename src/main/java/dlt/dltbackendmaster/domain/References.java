@@ -44,6 +44,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "and b.nui like :searchNui "
 																+ " AND (:searchUserCreator IS NULL OR rb.id = :searchUserCreator OR u.id =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "	
+																+ " AND ((:searchStartDate IS NULL AND :searchEndDate IS NULL) "
+																+ " OR (r.dateCreated BETWEEN :searchStartDate AND :searchEndDate)) "
 																+ "order by r.id desc "),
 		@NamedQuery(name = "References.findAllPending", query = "SELECT r FROM References r "
 																+ "left join fetch r.beneficiaries b "
@@ -65,6 +67,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "and b.nui like :searchNui "
 																+ " AND (:searchUserCreator IS NULL OR rb.id = :searchUserCreator OR u.id =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
+																+ " AND ((:searchStartDate IS NULL AND :searchEndDate IS NULL) "
+																+ " OR (r.dateCreated BETWEEN :searchStartDate AND :searchEndDate)) "
 																+ "and (r.userCreated in (:strUsersIds) "
 																+ "or r.notifyTo.id in (:usersIds) "
 																+ "or r.referredBy.id in (:usersIds) "
@@ -124,6 +128,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "and b.nui like :searchNui "
 																+ " AND (:searchUserCreator IS NULL OR rb.id = :searchUserCreator OR u.id =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
+																+ " AND ((:searchStartDate IS NULL AND :searchEndDate IS NULL) "
+																+ " OR (r.dateCreated BETWEEN :searchStartDate AND :searchEndDate)) "
 																+ "and r.status <> 3 "
 																+ "order by r.id desc"
 																),
@@ -147,6 +153,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "and b.nui like :searchNui "
 																+ " AND (:searchUserCreator IS NULL OR rb.id = :searchUserCreator OR u.id =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
+																+ " AND ((:searchStartDate IS NULL AND :searchEndDate IS NULL) "
+																+ " OR (r.dateCreated BETWEEN :searchStartDate AND :searchEndDate)) "
 																+ "and r.status <> 3 "
 																+ "order by r.id desc"
 																),
@@ -170,6 +178,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "and b.nui like :searchNui "
 																+ " AND (:searchUserCreator IS NULL OR rb.id = :searchUserCreator OR u.id =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR b.district.id = :searchDistrict) "
+																+ " AND ((:searchStartDate IS NULL AND :searchEndDate IS NULL) "
+																+ " OR (r.dateCreated BETWEEN :searchStartDate AND :searchEndDate)) "
 																+ "and r.status <> 3 "
 																+ "order by r.id desc"
 																),
@@ -193,6 +203,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ " and r.beneficiaries.nui like :searchNui "
 																+ " AND (:searchUserCreator IS NULL OR rb.id = :searchUserCreator OR u.id =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR r.beneficiaries.district.id = :searchDistrict) "
+																+ " AND ((:searchStartDate IS NULL AND :searchEndDate IS NULL) "
+																+ " OR (r.dateCreated BETWEEN :searchStartDate AND :searchEndDate)) "
 																+ "order by r.id desc"),
 		@NamedQuery(name = "References.findCountAllPending", query = "SELECT count(r.id) FROM References r "
 																+ "left join r.beneficiaries "
@@ -209,6 +221,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ " and r.beneficiaries.nui like :searchNui "
 																+ " AND (:searchUserCreator IS NULL OR r.referredBy.id = :searchUserCreator OR r.notifyTo.id =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR r.beneficiaries.district.id = :searchDistrict) "
+																+ " AND ((:searchStartDate IS NULL AND :searchEndDate IS NULL) "
+																+ " OR (r.dateCreated BETWEEN :searchStartDate AND :searchEndDate)) "
 																),
 	    @NamedQuery(name = "References.findCountPendingByLocalities", query = "SELECT count(r.id) FROM  References r "
 																+ "where r.beneficiaries.neighborhood.locality.id in (:localities) "
@@ -222,6 +236,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ " and r.beneficiaries.nui like :searchNui "
 																+ " AND (:searchUserCreator IS NULL OR r.referredBy.id = :searchUserCreator OR r.notifyTo.id =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR r.beneficiaries.district.id = :searchDistrict) "
+																+ " AND ((:searchStartDate IS NULL AND :searchEndDate IS NULL) "
+																+ " OR (r.dateCreated BETWEEN :searchStartDate AND :searchEndDate)) "
 																),
 	    @NamedQuery(name = "References.findCountPendingByDistricts", query = "SELECT count(r.id) FROM  References r "
 																+ "where r.beneficiaries.district.id in (:districts) "
@@ -235,6 +251,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ " and r.beneficiaries.nui like :searchNui "
 																+ " AND (:searchUserCreator IS NULL OR r.referredBy.id = :searchUserCreator OR r.notifyTo.id =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR r.beneficiaries.district.id = :searchDistrict) "
+																+ " AND ((:searchStartDate IS NULL AND :searchEndDate IS NULL) "
+																+ " OR (r.dateCreated BETWEEN :searchStartDate AND :searchEndDate)) "
 																),
 	    @NamedQuery(name = "References.findCountPendingByProvinces", query = "SELECT count(r.id) FROM  References r "
 																+ "where r.beneficiaries.district.province.id in (:provinces) "
@@ -251,6 +269,8 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ " and r.beneficiaries.nui like :searchNui "
 																+ " AND (:searchUserCreator IS NULL OR r.referredBy.id = :searchUserCreator OR r.notifyTo.id =:searchUserCreator) "
 												                + " AND (:searchDistrict IS NULL OR r.beneficiaries.district.id = :searchDistrict) "
+																+ " AND ((:searchStartDate IS NULL AND :searchEndDate IS NULL) "
+																+ " OR (r.dateCreated BETWEEN :searchStartDate AND :searchEndDate)) "
 																+ "and (r.userCreated in (:strUsersIds) "
 																+ "or r.notifyTo.id in (:usersIds) "
 																+ "or r.referredBy.id in (:usersIds) "
@@ -294,7 +314,7 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "left join fetch r.referredBy "
 																+ "left join fetch r.us "
 																+ "left join fetch r.notifyTo "
-																+ " where r.status in (0,1,2) "
+																+ " where r.status in (0,1) "
 																+ " and (r.notifyTo.id = :userId or r.referredBy.id = :userId) "
 																+ " and r.dateCreated < :lastpulledat "
 																+ " and r.dateUpdated >= :lastpulledat"
@@ -330,11 +350,18 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 																+ "left join fetch r.us "
 																+ "left join fetch r.notifyTo "
 																+ "where r.beneficiaries.id in (:beneficiariesIds) "
-																+ "and r.status in (0,1) "
+																+ "and r.status in (0,1,2) "
 																+ "and r.dateCreated < :lastpulledat "
 																+ "and r.dateUpdated >= :lastpulledat"
 																),
+		@NamedQuery(name = "References.findByOfflineId", query = "SELECT r FROM References r "
+																+ "where r.offlineId = :offlineId "),
 		
+		@NamedQuery(name = "References.countByBeneficiary",
+													    query = "SELECT ref.beneficiaries.id AS beneficiary_id, COUNT(ref.beneficiaries.id) AS total " 
+													            +"FROM References ref " 
+													            +"WHERE ref.beneficiaries.id = :beneficiaryId " 
+													            +"GROUP BY ref.beneficiaries.id"),
 })
 public class References implements java.io.Serializable {
 
@@ -699,10 +726,10 @@ public class References implements java.io.Serializable {
 		this.date = model.getDate();
 		this.remarks = model.getRemarks();
 		this.referTo = model.getRefer_to();
-		this.notifyTo.setId(model.getNotify_to());
-		this.referredBy.setId(model.getReferred_by());
+		this.notifyTo = model.getNotify_to() == 0 ? null : new Users(model.getNotify_to());
+		this.referredBy = model.getReferred_by() == 0 ? null : new Users(model.getReferred_by());
 //		this.status = model.getStatus();
-		this.us.setId(model.getUs_id());
+		this.us = model.getUs_id() == 0 ? null : new Us(model.getUs_id());
 		this.cancelReason = model.getCancel_reason();
 		this.otherReason = model.getOther_reason();
 		this.userCreated = model.getUser_created();
