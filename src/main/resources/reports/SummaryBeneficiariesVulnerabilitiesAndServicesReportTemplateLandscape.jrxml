@@ -400,7 +400,7 @@
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Sessões de Prevenção do VBG"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Sessões de Prevenção de Violência"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
 				<reportElement x="300" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="82006223-e41b-4177-8bfb-a1ba707f1a5b"/>
@@ -410,7 +410,7 @@
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Data da Última Sessão: VBG"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Data da Última Sessão: Violência"]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
 				<reportElement x="320" y="108" width="20" height="29" isPrintWhenDetailOverflows="true" uuid="f836f216-5ea9-4a96-8f8a-7ae349d514ff"/>

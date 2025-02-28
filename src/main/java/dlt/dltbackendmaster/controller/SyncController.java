@@ -53,6 +53,7 @@ import dlt.dltbackendmaster.domain.ReferencesServicesId;
 import dlt.dltbackendmaster.domain.Services;
 import dlt.dltbackendmaster.domain.SubServices;
 import dlt.dltbackendmaster.domain.Us;
+import dlt.dltbackendmaster.domain.UserDetails;
 import dlt.dltbackendmaster.domain.UserLastSync;
 import dlt.dltbackendmaster.domain.Users;
 import dlt.dltbackendmaster.domain.UsersBeneficiariesCustomSync;
@@ -62,6 +63,7 @@ import dlt.dltbackendmaster.domain.watermelondb.BeneficiarySyncModel;
 import dlt.dltbackendmaster.domain.watermelondb.ReferenceServicesSyncModel;
 import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 import dlt.dltbackendmaster.domain.watermelondb.SyncObject;
+import dlt.dltbackendmaster.domain.watermelondb.UserDetailsSyncModel;
 import dlt.dltbackendmaster.domain.watermelondb.UsersSyncModel;
 import dlt.dltbackendmaster.serializers.SyncSerializer;
 import dlt.dltbackendmaster.service.DAOService;
@@ -69,6 +71,7 @@ import dlt.dltbackendmaster.service.SequenceGenerator;
 import dlt.dltbackendmaster.service.UserLastSyncService;
 import dlt.dltbackendmaster.service.UsersBeneficiariesCustomSyncService;
 import dlt.dltbackendmaster.service.VulnerabilityHistoryService;
+import dlt.dltbackendmaster.service.VulnerabilityService;
 import dlt.dltbackendmaster.util.ServiceCompletionRules;
 import dlt.dltbackendmaster.util.Utility;
 
@@ -88,6 +91,9 @@ public class SyncController {
 
 	@Autowired
 	private VulnerabilityHistoryService vulnerabilityHistoryService;
+
+	@Autowired
+	private VulnerabilityService vulnerabilityService;
 
 	@Autowired
 	private UserLastSyncService userLastSyncService;
@@ -591,6 +597,7 @@ public class SyncController {
 		SyncObject<BeneficiaryInterventionSyncModel> interventions;
 		SyncObject<ReferenceSyncModel> references;
 		SyncObject<ReferenceServicesSyncModel> referencesServices;
+		SyncObject<UserDetailsSyncModel> userDetails;
 
 		try {
 			users = SyncSerializer.readUsersSyncObject(changes);
@@ -598,6 +605,7 @@ public class SyncController {
 			interventions = SyncSerializer.readInterventionsSyncObject(changes);
 			references = SyncSerializer.readReferencesSyncObject(changes);
 			referencesServices = SyncSerializer.readReferenceServicesSyncObject(changes);
+			userDetails = SyncSerializer.readUserDetailsSyncObject(changes);
 
 			// created entities
 			if (beneficiaries != null && beneficiaries.getCreated().size() > 0) {
@@ -612,6 +620,7 @@ public class SyncController {
 							setPartner(created, beneficiary);
 							beneficiary.setCreatedBy(userId);
 							beneficiary.setDateUpdated(new Date());
+							beneficiary.setVulnerable(vulnerabilityService.isVulnerable(beneficiary) ? 1 : 0);
 							Integer beneficiaryId = (Integer) service.Save(beneficiary);
 							vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
 							beneficiariesIds.put(created.getId(), beneficiaryId);
@@ -636,6 +645,7 @@ public class SyncController {
 							Beneficiaries beneficiary = new Beneficiaries(updated, lastPulledAt);
 							beneficiary.setCreatedBy(userId);
 							setPartner(updated, beneficiary);
+							beneficiary.setVulnerable(vulnerabilityService.isVulnerable(beneficiary) ? 1 : 0);
 							Integer beneficiaryId = (Integer) service.Save(beneficiary);
 							vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
 							beneficiariesIds.put(updated.getId(), beneficiaryId);
@@ -649,6 +659,7 @@ public class SyncController {
 						beneficiary.setUpdatedBy(userId);
 						setPartner(updated, beneficiary);
 						beneficiary.update(updated, lastPulledAt);
+						beneficiary.setVulnerable(vulnerabilityService.isVulnerable(beneficiary) ? 1 : 0);
 						service.update(beneficiary);
 						vulnerabilityHistoryService.saveVulnerabilityHistory(beneficiary);
 						beneficiariesIds.put(updated.getId(), updated.getOnline_id());
@@ -955,6 +966,47 @@ public class SyncController {
 							referenceServices.update(updated, lastPulledAt);
 							service.update(referenceServices);
 						}
+					}
+				}
+			}
+
+			// UserDetails Creation
+			if (userDetails != null && userDetails.getCreated().size() > 0) {
+				List<UserDetailsSyncModel> createdList = mapper.convertValue(userDetails.getCreated(),
+						new TypeReference<List<UserDetailsSyncModel>>() {
+						});
+
+				for (UserDetailsSyncModel created : createdList) {
+					try {
+						UserDetails updatedUserDetail = service.GetUniqueEntityByNamedQuery("UserDetails.findByUserId",
+						created.getUser_id());
+						if(updatedUserDetail != null){
+							updatedUserDetail.update(created, lastPulledAt);
+							service.update(updatedUserDetail);
+						}else{
+							UserDetails createdUserDetail = new UserDetails(created, lastPulledAt);
+							service.Save(createdUserDetail);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+			// UserDetails Update
+			if (userDetails != null && userDetails.getUpdated().size() > 0) {
+				List<UserDetailsSyncModel> updatedList = mapper.convertValue(userDetails.getUpdated(),
+						new TypeReference<List<UserDetailsSyncModel>>() {
+						});
+
+				for (UserDetailsSyncModel updated : updatedList) {
+					try {
+						UserDetails updatedUserDetail = service.GetUniqueEntityByNamedQuery("UserDetails.findByUserId",
+								updated.getUser_id());
+						updatedUserDetail.update(updated, lastPulledAt);
+						service.update(updatedUserDetail);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 			}

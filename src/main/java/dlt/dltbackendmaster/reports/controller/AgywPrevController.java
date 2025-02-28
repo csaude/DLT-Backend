@@ -421,8 +421,8 @@ public class AgywPrevController {
 					"Número de Vulnerabilidades", "Incluida no Indicador AGYW_PREV / Beneficiaria DREAMS ?",
 					"Referências Clinicas não atendidas", "Referências Comunitárias não atendidas",
 					"Sessões de Recursos Sociais", "Data da Última Sessão: Recursos Sociais",
-					"Sessões de Prevenção do HIV", "Data da Última Sessão: HIV", "Sessões de Prevenção do VBG",
-					"Data da Última Sessão: VBG", "Sessões Educativas Incluindo SSR (No SAAJ) Primário para: 10-14",
+					"Sessões de Prevenção do HIV", "Data da Última Sessão: HIV", "Sessões de Prevenção do Violência",
+					"Data da Última Sessão: Violência", "Sessões Educativas Incluindo SSR (No SAAJ) Primário para: 10-14",
 					"Data da Última Sessão: SAAJ", "Sessões de Literacia Financeira",
 					"Data da Última Sessão: Literacia Financeira",
 					"Aconselhamento e Testagem em Saúde Primário para: 15+ ou Sexualmente Activas",
@@ -764,8 +764,8 @@ public class AgywPrevController {
 					"Número de Vulnerabilidades", "Incluida no Indicador AGYW_PREV / Beneficiaria DREAMS ?",
 					"Referências Clinicas não atendidas", "Referências Comunitárias não atendidas",
 					"Sessões de Recursos Sociais", "Data da Última Sessão: Recursos Sociais",
-					"Sessões de Prevenção do HIV", "Data da Última Sessão: HIV", "Sessões de Prevenção do VBG",
-					"Data da Última Sessão: VBG", "Sessões Educativas Incluindo SSR (No SAAJ) Primário para: 10-14",
+					"Sessões de Prevenção do HIV", "Data da Última Sessão: HIV", "Sessões de Prevenção do Violência",
+					"Data da Última Sessão: Violência", "Sessões Educativas Incluindo SSR (No SAAJ) Primário para: 10-14",
 					"Data da Última Sessão: SAAJ", "Sessões de Literacia Financeira",
 					"Data da Última Sessão: Literacia Financeira",
 					"Aconselhamento e Testagem em Saúde Primário para: 15+ ou Sexualmente Activas",
@@ -1092,8 +1092,8 @@ public class AgywPrevController {
 
 			// Define headers
 			String[] headers = { "Província", "Distrito", "NUI", "Idade Actual", "Faixa Etária Actual",
-					"Número de Vulnerabilidades", "Sessões de Recursos Sociais, Prevenção do HIV e VBG",
-					"Completude Recursos Sociais, Prevenção do HIV e VBG", "Sessões Educativas Incluindo SSR (No SAAJ)",
+					"Número de Vulnerabilidades", "Sessões de Recursos Sociais, Prevenção do HIV e Violência",
+					"Completude Recursos Sociais, Prevenção do HIV e Violência", "Sessões Educativas Incluindo SSR (No SAAJ)",
 					"Sessões de Literacia Financeira", "Aconselhamento e Testagem em Saúde",
 					"Promoção e Provisão de Preservativos" };
 

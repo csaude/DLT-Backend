@@ -399,6 +399,7 @@ public class Beneficiaries implements java.io.Serializable
     private Set<BeneficiariesInterventions> beneficiariesInterventionses = new HashSet<BeneficiariesInterventions>(0);
     private Set<References> referenceses = new HashSet<References>(0);
 	private int completionStatus;
+	private int vulnerable;
 	
 	public Beneficiaries() {}
 
@@ -431,7 +432,7 @@ public class Beneficiaries implements java.io.Serializable
                          String vbltDeficiencyType, Byte vbltMarriedBefore, Byte vbltPregnantBefore, Byte vbltChildren,
                          Byte vbltPregnantOrBreastfeeding, String vbltIsEmployed, String vbltTestedHiv, Byte vbltIdp,
                          Byte vbltSexuallyActive, Byte vbltPregnantOrHasChildren, Byte vbltMultiplePartners, Byte vbltIsMigrant,
-                         Byte vbltTraffickingVictim, Byte vbltSexualExploitation,Byte vbltSexualExploitationTraffickingVictim, String vbltSexploitationTime,
+                         Byte vbltTraffickingVictim, Byte vbltSexualExploitation, Byte vbltSexualExploitationTraffickingVictim, String vbltSexploitationTime,
                          Byte vbltVbgVictim, String vbltVbgType, String vbltVbgTime, Byte vbltAlcoholDrugsUse,
                          Byte vbltStiHistory, Byte vbltSexWorker, Byte vbltHouseSustainer, int status, int createdBy,
                          Date dateCreated, Integer updatedBy, Date dateUpdated, String offlineId,
@@ -994,7 +995,16 @@ public class Beneficiaries implements java.io.Serializable
         this.vbltSexualExploitation = vbltSexualExploitation;
     }
 
-    @Column(name = "vblt_sexploitation_time", length = 45)
+    @Column(name = "vblt_sexual_exploitation_trafficking_victim")
+    public Byte getVbltSexualExploitationTraffickingVictim() {
+		return vbltSexualExploitationTraffickingVictim;
+	}
+
+	public void setVbltSexualExploitationTraffickingVictim(Byte vbltSexualExploitationTraffickingVictim) {
+		this.vbltSexualExploitationTraffickingVictim = vbltSexualExploitationTraffickingVictim;
+	}
+
+	@Column(name = "vblt_sexploitation_time", length = 45)
     public String getVbltSexploitationTime() {
         return this.vbltSexploitationTime;
     }
@@ -1179,7 +1189,16 @@ public class Beneficiaries implements java.io.Serializable
 		this.completionStatus = completionStatus;
 	}
 
-    public ObjectNode toObjectNode(String lastPulledAt) {
+	@Column(name = "vulnerable")
+    public int getVulnerable() {
+		return vulnerable;
+	}
+
+	public void setVulnerable(int vulnerable) {
+		this.vulnerable = vulnerable;
+	}
+
+	public ObjectNode toObjectNode(String lastPulledAt) {
         ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule())
                                                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         mapper.setSerializationInclusion(Include.NON_NULL);
@@ -1372,15 +1391,6 @@ public class Beneficiaries implements java.io.Serializable
 		if (!id.equals(other.id))
 			return false;
 		return true;
-	}
-
-	@Column(name = "vblt_sexual_exploitation_trafficking_victim")
-	public Byte getVbltSexualExploitationTraffickingVictim() {
-		return vbltSexualExploitationTraffickingVictim;
-	}
-
-	public void setVbltSexualExploitationTraffickingVictim(Byte vbltSexualExploitationTraffickingVictim) {
-		this.vbltSexualExploitationTraffickingVictim = vbltSexualExploitationTraffickingVictim;
 	}
 
 }

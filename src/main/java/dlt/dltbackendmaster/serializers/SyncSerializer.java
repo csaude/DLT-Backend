@@ -35,6 +35,7 @@ import dlt.dltbackendmaster.domain.watermelondb.BeneficiaryVulnerabilitySyncMode
 import dlt.dltbackendmaster.domain.watermelondb.ReferenceServicesSyncModel;
 import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 import dlt.dltbackendmaster.domain.watermelondb.SyncObject;
+import dlt.dltbackendmaster.domain.watermelondb.UserDetailsSyncModel;
 import dlt.dltbackendmaster.domain.watermelondb.UsersSyncModel;
 
 public class SyncSerializer {
@@ -619,4 +620,18 @@ public class SyncSerializer {
 		return null;
 	}
 
+	public static SyncObject readUserDetailsSyncObject(String changes) throws JsonMappingException, JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode root = mapper.readTree(changes);
+		JsonNode changesNode = root.path("changes");
+
+		if (!changesNode.isMissingNode() && changesNode.has("user_details")) {
+			JsonNode userDetailsNode = changesNode.path("user_details");
+			@SuppressWarnings("unchecked")
+			SyncObject<UserDetailsSyncModel> userDetails = mapper.treeToValue(userDetailsNode,
+					(Class<SyncObject<UserDetailsSyncModel>>) (Object) SyncObject.class);
+			return userDetails;
+		}
+		return null;
+	}
 }
