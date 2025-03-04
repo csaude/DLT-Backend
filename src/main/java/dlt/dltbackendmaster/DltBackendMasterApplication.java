@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import dlt.dltbackendmaster.cfgs.AppConfig;
 import io.swagger.v3.oas.models.Components;
@@ -19,6 +20,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 
 @SpringBootApplication(exclude = HibernateJpaAutoConfiguration.class)
+@EnableJpaAuditing
 public class DltBackendMasterApplication extends SpringBootServletInitializer{
 
 	@Autowired

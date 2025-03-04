@@ -24,6 +24,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
@@ -48,6 +50,7 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
  */
 @Entity
 @Table(name = "beneficiaries_interventions", catalog = "dreams_db")
+@AuditTable(value = "audit_beneficiaries_interventions")
 @NamedQueries({ 
     @NamedQuery(name = "BeneficiaryIntervention.findByLocalities", query = "SELECT bi FROM  BeneficiariesInterventions bi "
                                                             + "left join fetch bi.beneficiaries b " 
@@ -238,7 +241,6 @@ public class BeneficiariesInterventions implements java.io.Serializable {
     }
 
 	@EmbeddedId
-
 	@AttributeOverrides({
 			@AttributeOverride(name = "beneficiaryId", column = @Column(name = "beneficiary_id", nullable = false)),
 			@AttributeOverride(name = "subServiceId", column = @Column(name = "sub_service_id", nullable = false)),
@@ -394,6 +396,7 @@ public class BeneficiariesInterventions implements java.io.Serializable {
 	}
 
 	@Column(name = "updated_by", length = 45)
+	@Audited
 	public String getUpdatedBy() {
 		return this.updatedBy;
 	}
@@ -404,6 +407,7 @@ public class BeneficiariesInterventions implements java.io.Serializable {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "date_updated", length = 19)
+	@Audited
 	public Date getDateUpdated() {
 		return this.dateUpdated;
 	}
