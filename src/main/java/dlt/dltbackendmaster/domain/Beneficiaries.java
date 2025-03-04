@@ -1393,4 +1393,15 @@ public class Beneficiaries implements java.io.Serializable
 		return true;
 	}
 
+
+	@Column(name = "vblt_sexual_exploitation_trafficking_victim")
+	public Byte getVbltSexualExploitationTraffickingVictim() {
+		return vbltSexualExploitationTraffickingVictim;
+	}
+
+	public void setVbltSexualExploitationTraffickingVictim(Byte vbltSexualExploitationTraffickingVictim) {
+		this.vbltSexualExploitationTraffickingVictim = vbltSexualExploitationTraffickingVictim;
+	}
+
 }
+

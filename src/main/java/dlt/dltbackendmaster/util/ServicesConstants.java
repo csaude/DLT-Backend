@@ -549,8 +549,6 @@ public class ServicesConstants
     public static final List<Integer> SIMPLIFIED_LITERACIA_FINANCEIRA_AFLATEEN = Arrays.asList(ORCAMENTOS_DINHEIRO_PODER,
                                                                                         APRENDENDO_GASTAR);
 
-
-
     public static final List<Integer> SIYAKHA_LIGHT_SERVICES = Arrays.asList(SIYAKHA_LIGHT_INSCRICAO,
     																			SIYAKHA_LIGHT_HPV_PMT, 
     																			SIYAKHA_LIGHT_VOCACIONAL, 

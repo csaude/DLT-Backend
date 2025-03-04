@@ -37,6 +37,7 @@ import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSAAJEduc
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedAvanteRapariga;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedAvanteRaparigaViolencePrevention;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedGuiaFacilitacao;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedFinancialLiteracyAflateen;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedSAAJEducationSessions;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedViolencePrevention15Plus;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSocialAssetsOldCurriculum;
@@ -71,6 +72,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -357,111 +360,6 @@ public class AgywPrevReport {
 					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
 							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
 							COMPLETED_PRIMARY_SERVICE, agywPrev.getBeneficiary_id());
-				}
-
-				if (completedDisagCombinedSocioEconomicApproaches(agywPrev) && ageOnEndDate < 26) {
-					if (ageOnEndDate == 25) {
-						int ageOnServiceDate = Utility.dateDiffInYears(agywPrev.getDate_of_birth(),
-								agywPrev.getApproaches_date());
-						if (ageOnServiceDate == 25) {
-							continue;
-						}
-					}
-					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
-							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
-							HAD_SOCIAL_ECONOMIC_APPROACHES, agywPrev.getBeneficiary_id());
-				}
-			}
-			if (hadSchoolAllowance(agywPrev)) {
-				addBeneficiary(reportObject, agywPrev.getDistrict_id(), getAgeBandIndex(agywPrev.getCurrent_age_band()),
-						getEnrollmentTimeIndex(enrollmentTime), HAD_SCHOLL_ALLOWANCE, agywPrev.getBeneficiary_id());
-			}
-		}
-
-		return reportObject;
-	}
-
-	public ReportObject processSimplified(Integer[] districts, String startDate, String endDate) {
-
-		ReportObject reportObject = new ReportObject(districts);
-
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-		List<AgywPrev> data = service.GetAllEntityByNamedNativeQuery("AgywPrev.findSimplifiedByDistricts",
-				Arrays.asList(districts), startDate, endDate);
-
-		LocalDate eDate = LocalDate.parse(endDate, formatter);
-
-		for (AgywPrev agywPrev : data) {
-
-			LocalDate enrollmentDate = agywPrev.getEnrollment_date().toInstant().atZone(ZoneId.systemDefault())
-					.toLocalDate();
-			LocalDate birthDate = agywPrev.getDate_of_birth().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-			int ageOnEndDate = Math.abs(Period.between(birthDate, eDate).getYears());
-			int enrollmentTime = (int) ChronoUnit.MONTHS.between(enrollmentDate, eDate);
-
-			if (agywPrev.getCurrent_age_band() == 1) { // 9-14
-				// AVANTE RAPARIGA
-				if (completedSimplifiedAvanteRapariga(agywPrev) && completedSimplifiedSAAJEducationSessions(agywPrev)) {
-					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
-							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
-							COMPLETED_PRIMARY_PACKAGE, agywPrev.getBeneficiary_id());
-				}
-				if (completedSimplifiedAvanteRapariga(agywPrev) || completedSimplifiedSAAJEducationSessions(agywPrev)) {
-					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
-							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
-							COMPLETED_PRIMARY_SERVICE, agywPrev.getBeneficiary_id());
-				}
-				if (startedSimplifiedAvanteRapariga(agywPrev) || startedSAAJEducationSessions(agywPrev)
-						|| startedAvanteRaparigaViolencePrevention(agywPrev) || startedPostViolenceCare_US(agywPrev)
-						|| startedPostViolenceCare_CM(agywPrev)) {
-					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
-							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
-							STARTED_SERVICE, agywPrev.getBeneficiary_id());
-				}
-				if (completedSimplifiedAvanteRaparigaViolencePrevention(agywPrev)) {
-					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
-							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
-							COMPLETED_VIOLENCE_SERVICE, agywPrev.getBeneficiary_id());
-				}
-				if (hadSchoolAllowance(agywPrev) || (agywPrev.getVblt_sexually_active() == null
-						|| agywPrev.getVblt_sexually_active() != null && agywPrev.getVblt_sexually_active() == 0)
-						&& (completedHIVTestingServices(agywPrev) || completedCondomsPromotionOrProvision(agywPrev))
-						|| completedPostViolenceCare_CM(agywPrev)) {
-					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
-							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
-							COMPLETED_SECONDARY_SERVICE, agywPrev.getBeneficiary_id());
-				}
-			} else { // 15-24
-				if (completedCondomsPromotionOrProvision(agywPrev) && completedSimplifiedGuiaFacilitacao(agywPrev)
-						&& completedHIVTestingServices(agywPrev) && completedFinancialLiteracyAflateen(agywPrev)) {
-					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
-							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
-							COMPLETED_PRIMARY_PACKAGE, agywPrev.getBeneficiary_id());
-				}
-				if (completedCondomsPromotionOrProvision(agywPrev) || completedSimplifiedGuiaFacilitacao(agywPrev)
-						|| completedHIVTestingServices(agywPrev) || completedFinancialLiteracyAflateen(agywPrev)) {
-					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
-							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
-							COMPLETED_PRIMARY_SERVICE, agywPrev.getBeneficiary_id());
-				}
-				if (hadSchoolAllowance(agywPrev) || completedCombinedSocioEconomicApproaches(agywPrev)
-						|| completedContraceptionsPromotionOrProvision(agywPrev)) {
-					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
-							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
-							COMPLETED_SECONDARY_SERVICE, agywPrev.getBeneficiary_id());
-				}
-				if (startedSimplifiedGuiaFacilitacao(agywPrev) || startedFinancialLiteracyAflateen(agywPrev)) {
-					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
-							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
-							STARTED_SERVICE, agywPrev.getBeneficiary_id());
-
-				}
-				if (completedSimplifiedViolencePrevention15Plus(agywPrev)) {
-					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
-							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
-							COMPLETED_VIOLENCE_SERVICE, agywPrev.getBeneficiary_id());
 				}
 
 				if (completedDisagCombinedSocioEconomicApproaches(agywPrev) && ageOnEndDate < 26) {
@@ -808,7 +706,7 @@ public class AgywPrevReport {
 
 		int total = 0;
 		for (int i = 0; i < ENROLLMENT_TIMES.length; i++) {
-			int subTotal = 0;
+			int enrollmentTimeSubTotal = 0;
 			for (int j = 0; j < AGE_BANDS.length - 1; j++) {
 				List<Integer> beneficiariesCompletedViolenceService = new ArrayList<>();
 				List<Integer> completedViolenceService = reportObject.getReportObject().get(district).get(AGE_BANDS[j])
@@ -822,12 +720,15 @@ public class AgywPrevReport {
 
 				resultObject.getBeneficiaries().get(ENROLLMENT_TIMES[i]).get(AGE_BANDS[j])
 						.addAll(beneficiariesCompletedViolenceService);
-				int count = beneficiariesCompletedViolenceService.size();
-				subTotal += count;
-				resultObject.getTotals().get(ENROLLMENT_TIMES[i]).put(AGE_BANDS[j], count);
+				
+				int ageBandTotal = beneficiariesCompletedViolenceService.size();
+				
+				enrollmentTimeSubTotal += ageBandTotal;
+				
+				resultObject.getTotals().get(ENROLLMENT_TIMES[i]).put(AGE_BANDS[j], ageBandTotal);
 			}
-			resultObject.getTotals().get(ENROLLMENT_TIMES[i]).put(AGE_BANDS[4], subTotal);
-			total += subTotal;
+			resultObject.getTotals().get(ENROLLMENT_TIMES[i]).put(AGE_BANDS[4], enrollmentTimeSubTotal);
+			total += enrollmentTimeSubTotal;
 		}
 		resultObject.setTotal(total);
 		return resultObject;
@@ -1065,5 +966,103 @@ public class AgywPrevReport {
 				Arrays.asList(beneficiariesIds));
 
 		return dataObjs;
+	}
+
+	public ReportObject processSimplified(Integer[] districts, String startDate, String endDate) {
+
+		ReportObject reportObject = new ReportObject(districts);
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+		List<AgywPrev> data = service.GetAllEntityByNamedNativeQuery("AgywPrev.findSimplifiedByDistricts",
+				Arrays.asList(districts), startDate, endDate);
+
+		LocalDate eDate = LocalDate.parse(endDate, formatter);
+
+		for (AgywPrev agywPrev : data) {
+
+			LocalDate enrollmentDate = agywPrev.getEnrollment_date().toInstant().atZone(ZoneId.systemDefault())
+					.toLocalDate();
+			LocalDate birthDate = agywPrev.getDate_of_birth().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+			int ageOnEndDate = Math.abs(Period.between(birthDate, eDate).getYears());
+			int enrollmentTime = (int) ChronoUnit.MONTHS.between(enrollmentDate, eDate);
+
+			if (agywPrev.getCurrent_age_band() == 1) { // 9-14
+				// AVANTE RAPARIGA
+				if (completedSimplifiedAvanteRapariga(agywPrev) && completedSimplifiedSAAJEducationSessions(agywPrev)) {
+					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
+							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
+							COMPLETED_PRIMARY_PACKAGE, agywPrev.getBeneficiary_id());
+				}
+				if (completedSimplifiedAvanteRapariga(agywPrev) || completedSimplifiedSAAJEducationSessions(agywPrev)) {
+					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
+							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
+							COMPLETED_PRIMARY_SERVICE, agywPrev.getBeneficiary_id());
+				}
+				if (startedSimplifiedAvanteRapariga(agywPrev) || startedSAAJEducationSessions(agywPrev)
+						|| startedAvanteRaparigaViolencePrevention(agywPrev) || startedPostViolenceCare_US(agywPrev)
+						|| startedPostViolenceCare_CM(agywPrev)) {
+					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
+							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
+							STARTED_SERVICE, agywPrev.getBeneficiary_id());
+				}
+				if (completedSimplifiedAvanteRaparigaViolencePrevention(agywPrev)) {
+					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
+							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
+							COMPLETED_VIOLENCE_SERVICE, agywPrev.getBeneficiary_id());
+				}
+				if (hadSchoolAllowance(agywPrev) || (agywPrev.getVblt_sexually_active() == null
+						|| agywPrev.getVblt_sexually_active() != null && agywPrev.getVblt_sexually_active() == 0)
+						&& (completedHIVTestingServices(agywPrev) || completedCondomsPromotionOrProvision(agywPrev))
+						|| completedPostViolenceCare_CM(agywPrev)) {
+					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
+							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
+							COMPLETED_SECONDARY_SERVICE, agywPrev.getBeneficiary_id());
+				}
+			} else { // 15-24
+				if (completedCondomsPromotionOrProvision(agywPrev) && completedSimplifiedGuiaFacilitacao(agywPrev)
+						&& completedHIVTestingServices(agywPrev) && completedSimplifiedFinancialLiteracyAflateen(agywPrev)) {
+					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
+							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
+							COMPLETED_PRIMARY_PACKAGE, agywPrev.getBeneficiary_id());
+				}
+				if (completedCondomsPromotionOrProvision(agywPrev) || completedSimplifiedGuiaFacilitacao(agywPrev)
+						|| completedHIVTestingServices(agywPrev) || completedFinancialLiteracyAflateen(agywPrev)) {
+					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
+							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
+							COMPLETED_PRIMARY_SERVICE, agywPrev.getBeneficiary_id());
+				}
+				if (hadSchoolAllowance(agywPrev) 
+						|| completedContraceptionsPromotionOrProvision(agywPrev)) {
+					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
+							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
+							COMPLETED_SECONDARY_SERVICE, agywPrev.getBeneficiary_id());
+				}
+				if (startedSimplifiedGuiaFacilitacao(agywPrev) || startedFinancialLiteracyAflateen(agywPrev)) {
+					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
+							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
+							STARTED_SERVICE, agywPrev.getBeneficiary_id());
+
+				}
+				if (completedSimplifiedViolencePrevention15Plus(agywPrev)) {
+					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
+							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
+							COMPLETED_VIOLENCE_SERVICE, agywPrev.getBeneficiary_id());
+				}
+
+				if (completedDisagCombinedSocioEconomicApproaches(agywPrev) && ageOnEndDate <= 25) {
+					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
+							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
+							HAD_SOCIAL_ECONOMIC_APPROACHES, agywPrev.getBeneficiary_id());
+				}
+			}
+			if (hadSchoolAllowance(agywPrev)) {
+				addBeneficiary(reportObject, agywPrev.getDistrict_id(), getAgeBandIndex(agywPrev.getCurrent_age_band()),
+						getEnrollmentTimeIndex(enrollmentTime), HAD_SCHOLL_ALLOWANCE, agywPrev.getBeneficiary_id());
+			}
+		}
+
+		return reportObject;
 	}
 }
