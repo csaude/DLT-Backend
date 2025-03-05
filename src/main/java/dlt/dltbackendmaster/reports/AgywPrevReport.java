@@ -1,7 +1,72 @@
 package dlt.dltbackendmaster.reports;
 
-import static dlt.dltbackendmaster.reports.utils.ReportsConstants.*;
-import static dlt.dltbackendmaster.util.ServiceCompletionRules.*;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.AGE_BANDS;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.COMPLETED_PRIMARY_PACKAGE;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.COMPLETED_PRIMARY_SERVICE;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.COMPLETED_SECONDARY_SERVICE;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.COMPLETED_VIOLENCE_SERVICE;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.COMPLETION_STATUSES;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.DISAGGREGATIONS;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.ENROLLMENT_TIMES;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.HAD_SCHOLL_ALLOWANCE;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.HAD_SOCIAL_ECONOMIC_APPROACHES;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.SERVICE_PACKAGES;
+import static dlt.dltbackendmaster.reports.utils.ReportsConstants.STARTED_SERVICE;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedAvanteEstudante;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedAvanteEstudanteHivPrevention;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedAvanteEstudanteSocialAssets;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedAvanteEstudanteViolencePrevention;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedAvanteRapariga;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedAvanteRaparigaHivPrevention;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedAvanteRaparigaSocialAssets;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedAvanteRaparigaViolencePrevention;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedCombinedSocioEconomicApproaches;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedCondomsPromotionOrProvision;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedContraceptionsPromotionOrProvision;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedDisagCombinedSocioEconomicApproaches;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedFinancialLiteracy;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedFinancialLiteracyAflateen;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedFinancialLiteracyAflatoun;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedGbvSessions;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedGuiaFacilitacao;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedGuiaFacilitacaoHivPrevention;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedGuiaFacilitacaoViolencePrevention;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedHIVTestingServices;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedHivSessions;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedOtherSAAJServices;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedPostViolenceCare_CM;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedPostViolenceCare_US;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedPrep;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSAAJEducationSessions;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedAvanteRapariga;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedAvanteRaparigaHivPrevention;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedAvanteRaparigaSocialAssets;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedAvanteRaparigaViolencePrevention;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedGuiaFacilitacao;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedGuiaFacilitacaoHivPrevention;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedGuiaFacilitacaoViolencePrevention;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedSAAJEducationSessions;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedViolencePrevention15Plus;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSiyakhaComprehensive;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSiyakhaLight;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSocialAssetsOldCurriculum;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedViolencePrevention15Plus;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.hadSchoolAllowance;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.startedAvanteEstudante;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.startedAvanteEstudanteViolencePrevention;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.startedAvanteRapariga;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.startedAvanteRaparigaViolencePrevention;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.startedFinancialLiteracyAflateen;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.startedFinancialLiteracyAflatoun;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.startedGuiaFacilitacao;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.startedGuiaFacilitacaoSocialAssets15Plus;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.startedPostViolenceCare_CM;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.startedPostViolenceCare_US;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.startedSAAJEducationSessions;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.startedSimplifiedAvanteRapariga;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.startedSimplifiedGuiaFacilitacao;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.startedSocialAssetsOldCurriculum;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.startedViolencePrevention15Plus;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -43,6 +108,8 @@ public class AgywPrevReport {
 
 	private BeneficiariyService beneficiariyService;
 
+	private List<Integer> beneficiariesIds = new ArrayList<>();
+	
 	public AgywPrevReport(DAOService service) {
 		this.service = service;
 	}
@@ -66,11 +133,6 @@ public class AgywPrevReport {
 	public Map<Integer, Map<String, ResultObject>> getAgywPrevResultObject(Integer[] districts, String startDate,
 			String endDate, int reportType, boolean isFlagWriter) {
 		Map<Integer, Map<String, ResultObject>> agywPrevResultObject = new HashMap<>();
-
-		List<AgywPrev> data = getData(districts, startDate, endDate, reportType);
-
-		Map<Integer, List<Integer>> groupedByDistrict = data.stream().collect(Collectors.groupingBy(
-				AgywPrev::getDistrict_id, Collectors.mapping(AgywPrev::getBeneficiary_id, Collectors.toList())));
 
 		ReportObject reportObject = reportType == 1 ? process(districts, startDate, endDate)
 				: processSimplified(districts, startDate, endDate);
@@ -98,22 +160,21 @@ public class AgywPrevReport {
 					computeDiggregationHasSchoolAllowance(reportObject, district));
 			districtAgywPrevResultObject.put("completed-social-economic-approaches",
 					computeDiggregationCompletedSocialEconomicAllowance(reportObject, district));
+			
 
 			// Process District Summary
 
-			List<Integer> allIds = groupedByDistrict.get(district);
-
-			ResultObject ro = getTotalResultObject(allIds);
+			ResultObject ro = getTotalResultObject();
 			ro.setTotal(completedOnlyPrimaryPackage.getTotal() + completedPrimaryPackageAndSecondaryService.getTotal()
 					+ completedOnlyServiceNotPrimaryPackage.getTotal() + startedServiceDidNotComplete.getTotal());
 			districtAgywPrevResultObject.put("all-disaggregations-total", ro);
-			ro = getTotalResultObject(allIds);
+			ro = getTotalResultObject();
 			ro.setTotal(districtSummary.get("totalBeneficiaries").intValue());
 			districtAgywPrevResultObject.put("total-beneficiaries", ro);
-			ro = getTotalResultObject(allIds);
+			ro = getTotalResultObject();
 			ro.setTotal(districtSummary.get("maleBeneficiaries").intValue());
 			districtAgywPrevResultObject.put("male-beneficiaries", ro);
-			ro = getTotalResultObject(allIds);
+			ro = getTotalResultObject();
 			ro.setTotal(districtSummary.get("femaleBeneficiaries").intValue());
 			districtAgywPrevResultObject.put("female-beneficiaries", ro);
 
@@ -725,6 +786,10 @@ public class AgywPrevReport {
 
 	private void addBeneficiary(ReportObject reportObject, Integer district, Integer ageBand, Integer enrollmentTime,
 			Integer layering, Integer beneficiary) {
+		if(!beneficiariesIds.contains(beneficiary))
+		{
+			beneficiariesIds .add(beneficiary);
+		}
 		reportObject.getReportObject().get(district).get(AGE_BANDS[ageBand]).get(ENROLLMENT_TIMES[enrollmentTime])
 				.get(DISAGGREGATIONS[layering]).add(beneficiary);
 	}
@@ -842,6 +907,7 @@ public class AgywPrevReport {
 			total += subTotal;
 		}
 		resultObject.setTotal(total);
+		resultObject.setBeneficiariesIds(beneficiariesIds);
 		return resultObject;
 	}
 
@@ -1016,10 +1082,9 @@ public class AgywPrevReport {
 		}
 	}
 
-	private ResultObject getTotalResultObject(List<Integer> allIds) {
+	private ResultObject getTotalResultObject() {
 		ResultObject ro = new ResultObject();
 		ro.setBeneficiaries(null);
-		ro.setBeneficiariesIds(allIds);
 		ro.setTotals(null);
 
 		return ro;
