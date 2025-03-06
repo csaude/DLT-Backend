@@ -907,7 +907,6 @@ public class AgywPrevReport {
 			total += subTotal;
 		}
 		resultObject.setTotal(total);
-		resultObject.setBeneficiariesIds(beneficiariesIds);
 		return resultObject;
 	}
 
@@ -1086,6 +1085,7 @@ public class AgywPrevReport {
 		ResultObject ro = new ResultObject();
 		ro.setBeneficiaries(null);
 		ro.setTotals(null);
+		ro.setBeneficiariesIds(beneficiariesIds);
 
 		return ro;
 	}
