@@ -31,15 +31,15 @@ import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedOtherSAA
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedPostViolenceCare_CM;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedPostViolenceCare_US;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedPrep;
-import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSiyakhaLight;
-import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSiyakhaComprehensive;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSAAJEducationSessions;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedAvanteRapariga;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedAvanteRaparigaViolencePrevention;
-import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedGuiaFacilitacao;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedFinancialLiteracyAflateen;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedGuiaFacilitacao;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedSAAJEducationSessions;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSimplifiedViolencePrevention15Plus;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSiyakhaComprehensive;
+import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSiyakhaLight;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedSocialAssetsOldCurriculum;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.completedViolencePrevention15Plus;
 import static dlt.dltbackendmaster.util.ServiceCompletionRules.hadSchoolAllowance;
@@ -75,8 +75,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
-import org.apache.commons.lang3.StringUtils;
-
 import dlt.dltbackendmaster.domain.AgywPrev;
 import dlt.dltbackendmaster.reports.domain.PrimaryPackageRO;
 import dlt.dltbackendmaster.reports.domain.ReportObject;
@@ -97,6 +95,8 @@ public class AgywPrevReport {
 	private final DAOService service;
 
 	private BeneficiariyService beneficiariyService;
+
+	private static final List<Integer> PRIMARY_PACKAGE_COMPLET_STATUSES = Arrays.asList(2, 3);
 
 	public AgywPrevReport(DAOService service) {
 		this.service = service;
@@ -177,9 +177,12 @@ public class AgywPrevReport {
 			int ageOnEndDate = Math.abs(Period.between(birthDate, eDate).getYears());
 			int enrollmentTime = (int) ChronoUnit.MONTHS.between(enrollmentDate, eDate);
 
+			int completionStatus = agywPrev.getCompletion_status();
+
 			if (agywPrev.getCurrent_age_band() == 1) { // 9-14
 				if (agywPrev.getVblt_is_student() == 1) { // AVANTE ESTUDANTE
-					if ((completedAvanteEstudante(agywPrev) || ageOnEndDate == 14 && completedGuiaFacilitacao(agywPrev))
+					if (PRIMARY_PACKAGE_COMPLET_STATUSES.contains(completionStatus) || (completedAvanteEstudante(agywPrev)
+							|| ageOnEndDate == 14 && completedGuiaFacilitacao(agywPrev))
 							&& completedSAAJEducationSessions(agywPrev)
 							&& (completedFinancialLiteracy(agywPrev) || completedFinancialLiteracyAflatoun(agywPrev)
 									|| ageOnEndDate == 14 && completedFinancialLiteracyAflateen(agywPrev))
@@ -192,7 +195,7 @@ public class AgywPrevReport {
 											&& completedCondomsPromotionOrProvision(agywPrev))) {
 						addBeneficiary(reportObject, agywPrev.getDistrict_id(),
 								getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
-								COMPLETED_PRIMARY_PACKAGE, agywPrev.getBeneficiary_id());						
+								COMPLETED_PRIMARY_PACKAGE, agywPrev.getBeneficiary_id());
 					}
 					if ((completedAvanteEstudante(agywPrev) || ageOnEndDate == 14 && completedGuiaFacilitacao(agywPrev))
 							|| completedSAAJEducationSessions(agywPrev)
@@ -221,7 +224,8 @@ public class AgywPrevReport {
 								COMPLETED_VIOLENCE_SERVICE, agywPrev.getBeneficiary_id());
 					}
 				} else { // AVANTE RAPARIGA
-					if ((completedAvanteRapariga(agywPrev) || ageOnEndDate == 14 && completedGuiaFacilitacao(agywPrev))
+					if (PRIMARY_PACKAGE_COMPLET_STATUSES.contains(completionStatus) || (completedAvanteRapariga(agywPrev)
+							|| ageOnEndDate == 14 && completedGuiaFacilitacao(agywPrev))
 							&& completedSAAJEducationSessions(agywPrev)
 							&& (completedFinancialLiteracy(agywPrev) || completedFinancialLiteracyAflatoun(agywPrev)
 									|| ageOnEndDate == 14 && completedFinancialLiteracyAflateen(agywPrev))
@@ -310,8 +314,8 @@ public class AgywPrevReport {
 							STARTED_SERVICE, agywPrev.getBeneficiary_id());
 				}
 			} else { // 15-24
-				if (completedCondomsPromotionOrProvision(agywPrev) && completedGuiaFacilitacao(agywPrev)
-						&& completedHIVTestingServices(agywPrev)
+				if (PRIMARY_PACKAGE_COMPLET_STATUSES.contains(completionStatus) || completedCondomsPromotionOrProvision(agywPrev)
+						&& completedGuiaFacilitacao(agywPrev) && completedHIVTestingServices(agywPrev)
 						&& (completedFinancialLiteracy(agywPrev) || completedFinancialLiteracyAflateen(agywPrev))) {
 					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
 							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
@@ -1058,7 +1062,7 @@ public class AgywPrevReport {
 							HAD_SOCIAL_ECONOMIC_APPROACHES, agywPrev.getBeneficiary_id());
 				}
 			}
-			if (hadSchoolAllowance(agywPrev)) {
+			if (hadSchoolAllowance(agywPrev)|| completedCombinedSocioEconomicApproaches(agywPrev)|| completedSiyakhaLight(agywPrev)	|| completedSiyakhaComprehensive(agywPrev)) {
 				addBeneficiary(reportObject, agywPrev.getDistrict_id(), getAgeBandIndex(agywPrev.getCurrent_age_band()),
 						getEnrollmentTimeIndex(enrollmentTime), HAD_SCHOLL_ALLOWANCE, agywPrev.getBeneficiary_id());
 			}
