@@ -109,7 +109,7 @@ public class AgywPrevReport {
 	private BeneficiariyService beneficiariyService;
 
 	private List<Integer> beneficiariesIds = new ArrayList<>();
-	
+
 	public AgywPrevReport(DAOService service) {
 		this.service = service;
 	}
@@ -419,7 +419,7 @@ public class AgywPrevReport {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-		List<AgywPrev> data =  getData(districts, startDate, endDate, 2);
+		List<AgywPrev> data = getData(districts, startDate, endDate, 2);
 
 		LocalDate eDate = LocalDate.parse(endDate, formatter);
 
@@ -786,9 +786,8 @@ public class AgywPrevReport {
 
 	private void addBeneficiary(ReportObject reportObject, Integer district, Integer ageBand, Integer enrollmentTime,
 			Integer layering, Integer beneficiary) {
-		if(!beneficiariesIds.contains(beneficiary))
-		{
-			beneficiariesIds .add(beneficiary);
+		if (!beneficiariesIds.contains(beneficiary)) {
+			beneficiariesIds.add(beneficiary);
 		}
 		reportObject.getReportObject().get(district).get(AGE_BANDS[ageBand]).get(ENROLLMENT_TIMES[enrollmentTime])
 				.get(DISAGGREGATIONS[layering]).add(beneficiary);
@@ -1093,8 +1092,8 @@ public class AgywPrevReport {
 	public List<Object> getNewlyEnrolledAgywAndServices(Integer[] districts, Date startDate, Date endDate,
 			int pageIndex, int pageSize) {
 		List<Object> dataObjs = service.GetAllPagedEntityByNamedNativeQuery(
-				"AgywPrev.findByNewlyEnrolledAgywAndServices", pageIndex, pageSize, startDate, endDate,
-				Arrays.asList(districts));
+				"AgywPrev.findByNewlyEnrolledAgywAndServices", pageIndex, pageSize, Utility.atStartOfDay(startDate),
+				Utility.atEndOfDay(endDate), Arrays.asList(districts));
 
 		return dataObjs;
 	}
@@ -1102,8 +1101,8 @@ public class AgywPrevReport {
 	public List<Object> getNewlyEnrolledAgywAndServicesSummary(Integer[] districts, Date startDate, Date endDate,
 			int pageIndex, int pageSize) {
 		List<Object> dataObjs = service.GetAllPagedEntityByNamedNativeQuery(
-				"AgywPrev.findByNewlyEnrolledAgywAndServicesSummary", pageIndex, pageSize, startDate, endDate,
-				Arrays.asList(districts));
+				"AgywPrev.findByNewlyEnrolledAgywAndServicesSummary", pageIndex, pageSize,
+				Utility.atStartOfDay(startDate), Utility.atEndOfDay(endDate), Arrays.asList(districts));
 
 		return dataObjs;
 	}
@@ -1132,8 +1131,8 @@ public class AgywPrevReport {
 	public List<Object> getBeneficiariesNoVulnerabilities(Integer[] districts, Date startDate, Date endDate,
 			int pageIndex, int pageSize) {
 		List<Object> dataObjs = service.GetAllPagedEntityByNamedNativeQuery(
-				"AgywPrev.findByBeneficiariesNoVulnerabilities", pageIndex, pageSize, startDate, endDate,
-				Arrays.asList(districts));
+				"AgywPrev.findByBeneficiariesNoVulnerabilities", pageIndex, pageSize, Utility.atStartOfDay(startDate),
+				Utility.atEndOfDay(endDate), Arrays.asList(districts));
 
 		return dataObjs;
 	}

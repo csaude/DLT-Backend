@@ -331,7 +331,11 @@ import dlt.dltbackendmaster.serializers.UsSerializer;
 										+ ""),
 				@NamedQuery(name = "Beneficiary.findByIdAndBeforeCompletedAServiceButNotFullPrimaryPackage", query = "SELECT b FROM Beneficiaries b where b.id = :beneficiary_id and b.completionStatus < 1"),
 				@NamedQuery(name = "Beneficiary.findByIdAndBeforeCompletedExactlyPrimaryPackage", query = "SELECT b FROM Beneficiaries b where b.id = :beneficiary_id and b.completionStatus < 2"),
-				@NamedQuery(name = "Beneficiary.findByIdAndBeforeCompletedPrimaryPackageAndAdditionalServices", query = "SELECT b FROM Beneficiaries b where b.id = :beneficiary_id and b.completionStatus < 3"), 
+				@NamedQuery(name = "Beneficiary.findByIdAndBeforeCompletedPrimaryPackageAndAdditionalServices", query = "SELECT b FROM Beneficiaries b where b.id = :beneficiary_id and b.completionStatus < 3"),
+                @NamedQuery(name = "Beneficiary.findByPastCops",query = "select b from Beneficiaries b "
+						+ " where b.dateCreated < '2024-09-21' "
+						+ " and b.status = 1"
+						+ ""), 
 })
 public class Beneficiaries implements java.io.Serializable
 {

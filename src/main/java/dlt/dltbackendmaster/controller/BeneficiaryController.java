@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.gemfire.config.annotation.EnableCompression;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,9 @@ import dlt.dltbackendmaster.service.VulnerabilityService;
 @EnableCompression
 @RequestMapping("/api/beneficiaries")
 public class BeneficiaryController {
+
+	Logger logger = LoggerFactory.getLogger(BeneficiaryController.class);
+
 	private final DAOService service;
 
 	private SequenceGenerator generator;
@@ -303,5 +308,32 @@ public class BeneficiaryController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	@PutMapping(path = "/set-past-cop-beneficiaries-vulnerable-flag")
+	public void setPastCopBeneficiariesVulnerableFlag() {
+
+		logger.warn("Fetching past COPs beneficiaries");
+		List<Beneficiaries> beneficiaries = service.GetAllEntityByNamedQuery("Beneficiary.findByPastCops");
+		int beneficiariesCount = beneficiaries.size();
+		logger.warn("Found " + beneficiariesCount + " beneficiaries");
+
+		int count = 0;
+
+		logger.warn("Starting updating beneficiaries");
+		for (Beneficiaries beneficiary : beneficiaries) {
+			int vulnerable = vulnerabilityService.isVulnerablePastCops(beneficiary) ? 1 : 0;
+			if (vulnerable == 1) {
+				beneficiary.setVulnerable(vulnerable);
+				service.update(beneficiary);
+			}
+			count++;
+
+			if (count % 1000 == 0) {
+				logger.warn("Processed " + count + " beneficiaries of " + beneficiariesCount);
+			}
+		}
+		logger.warn("Processed " + count + " beneficiaries of " + beneficiariesCount);
+		logger.warn("Finished updating beneficiaries");
 	}
 }
