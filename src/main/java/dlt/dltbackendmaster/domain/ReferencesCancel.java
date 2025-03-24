@@ -1,17 +1,17 @@
 package dlt.dltbackendmaster.domain;
 public class ReferencesCancel {
-    private int[] ids;
+    private Integer[] ids;
     private int status;
     private int cancelReason;
     private String otherReason;
     private int updatedBy;
 
     
-    public int[] gitIds() {
+    public Integer[] gitIds() {
         return this.ids;
     } 
 
-    public void setIds(int[] ids){
+    public void setIds(Integer[] ids){
         this.ids = ids;
     }
 

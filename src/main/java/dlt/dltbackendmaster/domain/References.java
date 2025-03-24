@@ -411,6 +411,43 @@ import dlt.dltbackendmaster.domain.watermelondb.ReferenceSyncModel;
 													            +"FROM References ref " 
 													            +"WHERE ref.beneficiaries.id = :beneficiaryId " 
 													            +"GROUP BY ref.beneficiaries.id"),
+		@NamedQuery(name = "References.findPendingIdsByUserPermission", query = "SELECT r.id FROM References r "
+																+ "left join r.beneficiaries "
+																+ "left join r.referredBy "
+																+ "left join r.us "
+																+ "left join r.notifyTo "
+																+ "where r.status = 0 "
+																+ "and (r.userCreated in (:strUsersIds) "
+																+ " AND ((:searchStartDate IS NULL AND :searchEndDate IS NULL) "
+																+ " OR (r.dateCreated BETWEEN :searchStartDate AND :searchEndDate)) "
+																+ "or r.notifyTo.id in (:usersIds) "
+																+ "or r.referredBy.id in (:usersIds) "
+																+ "or r.us.id in (:ussId)) "
+																+ "order by r.id desc "),
+		@NamedQuery(name = "References.findPendingIdsByLocalities", query = "SELECT r.id FROM  References r "
+																+ "where r.beneficiaries.locality.id in (:localities) "
+																+ "and r.status = 0 "
+																),
+		@NamedQuery(name = "References.findPendingIdsByDistricts", query = "SELECT r.id FROM  References r "
+																+ "where r.beneficiaries.district.id in (:districts) "
+																+ "and r.status = 0 "
+																+ " AND ((:searchStartDate IS NULL AND :searchEndDate IS NULL) "
+																+ " OR (r.dateCreated BETWEEN :searchStartDate AND :searchEndDate)) "),
+		@NamedQuery(name = "References.findPendingIdsByProvinces", query = "SELECT r.id FROM  References r "
+																+ "where r.beneficiaries.district.province.id in (:provinces) "
+																+ "and r.status = 0 "
+																+ " AND ((:searchStartDate IS NULL AND :searchEndDate IS NULL) "
+																+ " OR (r.dateCreated BETWEEN :searchStartDate AND :searchEndDate)) "
+																),
+		@NamedQuery(name = "References.findAllPendingIds", query = "SELECT r.id FROM References r "
+																+ "left join r.beneficiaries "
+																+ "left join r.referredBy rb "
+																+ "left join r.us "
+																+ "left join r.notifyTo u "
+																+ "where r.status = 0 "
+																+ " AND ((:searchStartDate IS NULL AND :searchEndDate IS NULL) "
+																+ " OR (r.dateCreated BETWEEN :searchStartDate AND :searchEndDate)) "
+																+ "order by r.id desc"),
 })
 public class References implements java.io.Serializable {
 
