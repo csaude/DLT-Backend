@@ -1,6 +1,7 @@
 package dlt.dltbackendmaster.controller;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,6 +69,13 @@ public class BeneficiaryInterventionController {
 			Us us = service.find(Us.class, intervention.getUs().getId());
 			// FIXME: Remover esta gambiária após resolver o issue
 			Beneficiaries beneficiary = service.find(Beneficiaries.class, intervention.getId().getBeneficiaryId());
+				
+			LocalDate enrollmentDate = convertToLocalDate(beneficiary.getEnrollmentDate());
+			
+			if(intervention.getDate().isBefore(enrollmentDate)) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+			}
+			
 			intervention.setUs(us);
 			intervention.setBeneficiaries(beneficiary);
 			intervention.setDateCreated(new Date());
@@ -303,5 +311,14 @@ public class BeneficiaryInterventionController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	private static LocalDate convertToLocalDate(Date date) {
+	        if (date == null) {
+	            return null; 
+	        }
+	        return Instant.ofEpochMilli(date.getTime()) 
+	                      .atZone(ZoneId.systemDefault()) 
+	                      .toLocalDate(); 
 	}
 }
