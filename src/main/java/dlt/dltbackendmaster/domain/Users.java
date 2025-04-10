@@ -75,7 +75,12 @@ import dlt.dltbackendmaster.serializers.UssSerializer;
 				+ "where ud.district_id in (:districts)", resultClass = Users.class),
 		@NamedNativeQuery(name = "Users.findByProvinces", query = "SELECT u.* FROM users u "
 				+ "left join fetch u.users_provinces up on up.user_id = u.id "
-				+ "where up.province_id in (:provinces)", resultClass = Users.class), })
+				+ "where up.province_id in (:provinces)", resultClass = Users.class),
+		@NamedNativeQuery(name = "Users.findByProfileAndLocalities", query = "SELECT u.* FROM users u "
+				+ "LEFT JOIN users_localities ul on ul.user_id = u.id "
+				+ "where ul.locality_id in (:localities)"
+				+ "and u.profile_id = :profileId", resultClass = Users.class),		
+})
 
 @NamedQueries({ @NamedQuery(name = "Users.findAll", query = "SELECT distinct u FROM Users u "
 				+ " LEFT JOIN u.districts d " 

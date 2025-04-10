@@ -85,4 +85,6 @@ public interface DAOService {
 	<T> List<T> GetByParamsPagedEntityByNamedQuery(String query, int pageIndex, int pageSize, Object... params);
 	
 	<T> List<T> GetEntityByNamedQuery(String query, String name, Date dateOfBirth, int locality);
+	
+	<T> List<T> GetAllEntityByNamedQuery(String query, int profileId, List<Integer> localities);
 }

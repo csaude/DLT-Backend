@@ -633,5 +633,16 @@ public class DAORepositoryImpl implements DAORepository {
 
 		return results;
 	}
+	
+	public <T> List<T> GetAllEntityByNamedQuery(String query, int profileId, List<Integer> localities) {
+		Query q = getCurrentSession().getNamedQuery(query);
+
+		q.setParameter("profileId", profileId);
+		q.setParameter("localities", localities);
+
+		List<T> results = q.getResultList();
+
+		return results;
+	}
 
 }
