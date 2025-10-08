@@ -408,13 +408,13 @@ public class AgywPrevReport {
 			} else { // 15-24
 				if (PP_COMPLETION_STATUSES.contains(completionStatus) || completedCondomsPromotionOrProvision(agywPrev)
 						&& completedSimplifiedGuiaFacilitacao(agywPrev) && completedHIVTestingServices(agywPrev)
-						&& completedFinancialLiteracyAflateen(agywPrev)) {
+						&& completedSimplifiedFinancialLiteracyAflateen(agywPrev)) {
 					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
 							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
 							COMPLETED_PRIMARY_PACKAGE, agywPrev.getBeneficiary_id());
 				}
 				if (completedCondomsPromotionOrProvision(agywPrev) || completedSimplifiedGuiaFacilitacao(agywPrev)
-						|| completedHIVTestingServices(agywPrev) || completedFinancialLiteracyAflateen(agywPrev)) {
+						|| completedHIVTestingServices(agywPrev) || completedSimplifiedFinancialLiteracyAflateen(agywPrev)) {
 					addBeneficiary(reportObject, agywPrev.getDistrict_id(),
 							getAgeBandIndex(agywPrev.getCurrent_age_band()), getEnrollmentTimeIndex(enrollmentTime),
 							COMPLETED_PRIMARY_SERVICE, agywPrev.getBeneficiary_id());

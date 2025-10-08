@@ -108,7 +108,13 @@ public class SyncController {
 	@GetMapping(produces = "application/json")
 	public ResponseEntity get(@RequestParam(name = "lastPulledAt", required = false) @Nullable String lastPulledAt,
 			@RequestParam(name = "username") String username) throws ParseException {
-
+		
+		UsersSync user = service.GetUniqueEntityByNamedQuery("UsersSync.findByUsername", username);
+		
+		if (user.getStatus() == 0 || user.getIsEnabled() == 0 || user.getIsLocked()==1) {
+			return new ResponseEntity<>("User disabled", HttpStatus.FORBIDDEN);
+		}
+		
 		Date validatedDate;
 		List<UsersSync> usersCreated;
 		List<UsersSync> usersUpdated;
@@ -160,7 +166,6 @@ public class SyncController {
 		List<ReferencesServices> referenceServicesCreatedCustomized = new ArrayList<>();
 		List<ReferencesServices> referenceServicesUpdatedCustomized = new ArrayList<>();
 
-		UsersSync user = service.GetUniqueEntityByNamedQuery("UsersSync.findByUsername", username);
 		defineLevelAndParms(user);
 
 		Set<Integer> localitiesIds = new TreeSet<>();
